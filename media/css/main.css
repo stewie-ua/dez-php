@@ -1,0 +1,555 @@
+html, body, div, span, applet, object, iframe,
+p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* main css */
+
+
+html, body {
+    height: 100%;
+}
+
+html { background-color: #F3F3F3 }
+
+body, input, textarea {
+    /*font-family: 'Roboto Slab', serif;*/
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1, h1 a {
+    margin: 0 0 20px;
+    font-size: 28px;
+    color: #CE3A00;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+h1 a:hover { text-decoration: underline; }
+
+h3, h3 a {
+    margin: 0 0 15px;
+    font-size: 15px;
+    color: #485B66;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+h2, h2 a {
+    margin: 0 0 15px;
+    font-size: 22px;
+    color: #2E6C7C;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+h2 a:hover { text-decoration: underline; }
+
+.clr { clear: both; }
+
+.sy-errors,
+.sy-message-box {
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #000;
+    text-shadow: 1px 1px 0px #FFF;
+    font-weight: bold;
+}
+.sy-errors.sy-errors-critical { background: #FFC7B9; }
+.sy-errors.sy-errors-warning { background: #FFCF9A; }
+.sy-errors.sy-errors-notify { background: #F5FF80; }
+.sy-errors li, .sy-message-box li { line-height: 20px; }
+
+.sy-message-box.sy-message-success { background: #B7ECB7; }
+.sy-message-box.sy-message-info { background: #B6CBE5; }
+
+
+.sy-pagi {
+    text-align: center;
+    margin: 15px auto;
+}
+
+.sy-pagi a {
+    font-size: 14px;
+    text-decoration: none;
+    background: #ECECEC;
+    color: #525252;
+    padding: 4px 9px;
+    margin-right: 2px;
+    font-weight: bold;
+}
+
+.sy-pagi span.sy-pagi-active a {
+    color: #fff;
+    background: rgb(82, 94, 109);
+}
+
+.sy-pagi a:hover {
+    color: #fff;
+    background: rgb(149, 160, 173);
+}
+
+header {
+    width: 100%;
+    background: rgb(82, 94, 109);
+    height: 55px;
+    position: fixed;
+    /*box-shadow: 0px 2px 6px rgba(97, 97, 97, 0.91);*/
+    z-index: 2000;
+}
+
+header ul,
+header ul li {
+    display: inline-block;
+}
+
+header ul li a{
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #ECECEC;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+header ul li a:hover {
+    background: rgb(70, 80, 92);
+    color: #FFF;
+}
+
+header ul.menu {
+    position: absolute;
+    left: 315px;
+    top: 20px;
+}
+
+header ul.auth-block {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+
+input[type=button],
+input[type=submit] {
+    background: #2CA331;
+    border: 0;
+    color: #fff;
+    font-size: 15px;
+    padding: 7px 30px;
+    border-radius: 4px;
+    text-shadow: -1px -1px 0px rgba(7, 44, 0, 1);
+    cursor: pointer;
+    outline: none;
+}
+
+select {
+    padding: 8px 13px;
+    color: #171717;
+    border-radius: 3px;
+    border: 1px solid rgb(175, 175, 175);
+    outline: none;
+    background: #fff;
+}
+
+/*input[type=button]:hover,
+input[type=submit]:hover {
+    box-shadow: 1px 1px 1px #0D2700;
+}*/
+
+input[type=button]:active,
+input[type=submit]:active {
+    box-shadow: inset 1px 1px 1px #226600;
+}
+
+input[type=text],
+input[type=password] {
+    padding: 8px 13px;
+    color: #535353;
+    border-radius: 3px;
+    border: 1px solid rgb(175, 175, 175);
+    outline: none;
+}
+
+input[type=text]:focus,
+input[type=password]:focus {
+    color: #000;
+}
+
+textarea {
+    width: 97%;
+    padding: 8px 13px;
+    color: #535353;
+    border-radius: 3px;
+    border: 1px solid rgb(175, 175, 175);
+    outline: none;
+    background: #fff;
+    min-height: 100px;
+    resize: none;
+}
+
+label > input,
+label > textarea,
+label > select,
+label > div{
+    display: block;
+    margin-bottom: 30px;
+    margin-top: 5px;
+}
+
+div.logo {
+    width: 300px;
+    font-weight: bold;
+    color: #E2E7EE;
+    font-size: 25px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 20px;
+    line-height: 55px;
+    height: 55px;
+    text-transform: uppercase;
+    background: rgb(70, 80, 92);
+}
+
+div.box {
+    height: inherit;
+    min-height: 100%;
+    box-sizing:border-box;
+    font-size: 14px;
+    padding-top: 55px;
+}
+
+div.left-block {
+    padding-top: 25px;
+    width: 300px;
+    float: left;
+    z-index: 1;
+    position: fixed;
+}
+
+div.left-block ul li a {
+    display: block;
+    color: #33434E;
+    padding: 15px 20px 15px 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+div.left-block ul li a:hover {
+    background: rgb(82, 94, 109);
+    color: #fff;
+}
+
+div.content {
+    height: auto;
+    box-sizing:border-box;
+    min-height: 100%;
+    margin-left: 300px;
+    padding: 30px;
+    background: #FFF;
+    z-index: 2;
+}
+
+div.auth-form {
+
+}
+
+div.form > form {
+    /*display: inline-block;*/
+}
+
+table.main {
+    width: 100%;
+}
+
+table.main thead tr td {
+    text-align: center;
+    background: #E7E9EC;
+    border-bottom: 3px solid rgb(125, 141, 153);
+    font-weight: bold;
+    color: #3C3C3C;
+}
+
+table.main tr td {
+    padding: 15px 10px;
+    border-bottom: 1px solid rgb(221, 221, 221);
+}
+
+table.main tr:nth-child(even) td {
+    background: #F5F5F5;
+}
+
+a.a-button {
+    font-size: 12px;
+    padding: 4px 8px;
+    background: #E0E0E0;
+    color: rgb(70, 80, 92);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a.a-button:hover {
+    background: rgb(70, 80, 92);
+    color: #fff;
+}
+
+a.a-button-hover-red:hover {
+    background: rgb(92, 3, 0);
+    color: #fff;
+}
+
+.center {
+    text-align: center;
+}
+
+/* Posts */
+
+.post {
+    margin-bottom: 50px;
+}
+
+.post-created {
+    color: #4D6780;
+    margin-bottom: 5px;
+    display: block;
+    font-size: 12px;
+    background: #F1F1F1;
+    padding: 12px 12px;
+}
+
+.post-created a {
+    color: rgb(70, 80, 92);
+}
+
+.post-created a:hover {
+    color: #000;
+}
+
+.post-created .post-tags a {
+    font-size: 12px;
+    padding: 4px 8px;
+    background: #E0E0E0;
+    color: rgb(70, 80, 92);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.post-created .post-tags a:hover {
+    background: rgb(70, 80, 92);
+    color: #fff;
+}
+
+.post-text {
+    line-height: 25px;
+    font-size: 15px;
+    margin: 10px 0px;
+}
+
+.post-text * {
+    color: #102736;
+}
+
+.post-text:hover * {
+    color: #000;
+}
+
+.post-text a {
+    color: rgb(70, 80, 92);
+}
+
+.cloud-tags {
+    text-align: center;
+    margin: 20px 10px;
+}
+
+div.left-block div.cloud-tags ul li a {
+    display: block;
+    padding: 8px;
+    color: #fff;
+    background: rgb(82, 94, 109);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+    margin: 3px;
+}
+
+div.left-block div.cloud-tags ul li a:hover {
+    border: 0;
+    box-shadow: none;
+    background-color: rgb(70, 80, 92);
+}
+
+div.left-block div.cloud-tags ul li {
+    display: inline-block;
+}
+
+
+/* End. Posts */
+
+/* Codes */
+
+.code-list {
+
+}
+
+.code-list .code-item {
+    display: inline-block;
+    margin: 8px 4px;
+}
+
+.code-list .code-item a {
+    color: rgb(82, 94, 109);
+    text-decoration: none;
+    display: block;
+    padding: 25px 36px;
+    position: relative;
+    height: 30px;
+    width: 120px;
+    background-color: #EEEEEE;
+}
+
+.code-list .code-item a:hover {
+    background-color: #e1e1e1;
+}
+
+.code-list .code-item .item-title {
+    display: block;
+    top: -5px;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.code-list .code-item a .item-lang,
+.code-list .code-item .item-added{
+    position: absolute;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.code-list .code-item a .item-added{
+    right: 7px;
+    bottom: 5px;
+}
+
+.code-list .code-item a .item-lang{
+    left: -5px;
+    bottom: -5px;
+    display: block;
+    height: 34px;
+    width: 34px;
+    border-radius: 17px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 34px;
+    color: rgb(38, 41, 44);
+}
+
+.code-list .code-item a:hover .item-lang { color: #fff; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.56); }
+
+.code-list .code-item a.lang-php .item-lang { background: #87A1F3; }
+.code-list .code-item a:hover.lang-php .item-lang { background: #3552AC; }
+
+.code-list .code-item a.lang-js .item-lang { background: #E7CA6C; }
+.code-list .code-item a:hover.lang-js .item-lang { background: #f7d000; }
+
+.code-list .code-item a.lang-html .item-lang { background: #FC9770; }
+.code-list .code-item a:hover.lang-html .item-lang { background: #FF6A31; }
+
+.code-list .code-item a.lang-css .item-lang { background: #85DBFC; }
+.code-list .code-item a:hover.lang-css .item-lang { background: #1FB7F1; }
+
+div.left-block .code-latest {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+div.left-block .code-latest ul li {
+    padding: 20px 0px;
+    border-bottom: 1px solid rgb(167, 173, 177);
+}
+
+div.left-block .code-latest ul li a {
+    display: inline-block;
+    padding: 0px;
+}
+
+div.left-block .code-latest ul li a:hover {
+    background-color: transparent;
+    color: rgb(38, 41, 44);
+}
+
+div.left-block .code-latest ul li span{
+    font-size: 11px;
+    display: inline-block;
+    color: #4F575F;
+    margin-top: 5px;
+}
+
+div.left-block .code-latest ul li span.code-added {
+    float: right;
+}
+
+div.left-block .code-latest ul li .item-lang {
+    background: #25425C;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 15px;
+}
+
+a.go-links {
+    color: #0983BD;
+    text-decoration: none;
+    border-bottom: 1px dashed #0983BD;
+    display: inline-block;
+    margin-bottom: 13px;
+}
+
+/* End. Codes */

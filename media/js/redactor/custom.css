@@ -1,0 +1,31 @@
+.redactor-toolbar {
+    background: rgb(82, 94, 109); height: 32px;
+}
+
+.redactor-toolbar li a {
+   color: rgb(225, 228, 233);
+}
+
+.redactor-toolbar li a:hover {
+   background: rgb(49, 57, 66);
+   color: #fff;
+}
+
+.redactor-toolbar li a:active,
+.redactor-toolbar li a.redactor-act {
+   background: rgb(49, 57, 66);
+   color: #fff;
+}
+
+#redactor-modal header {
+    border: 0px;
+    background-color: transparent;
+    width: auto;
+    height: auto;
+    position: relative;
+    box-shadow: none;
+}
+
+.redactor-toolbar li a {
+    /*text-shadow: 1px 1px 0px #000;*/
+}

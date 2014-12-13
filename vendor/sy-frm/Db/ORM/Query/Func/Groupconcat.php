@@ -1,0 +1,12 @@
+<?php
+
+    namespace Sy\ORM\Query\Func;
+
+    use \Sy\ORM\Query;
+
+    class Groupconcat extends Query\Func {
+        protected function _createExpression() {
+            $this->expression   = 'GROUP_CONCAT('. $this->column['table'] .'.'. $this->column['name'] .')';
+            return $this;
+        }
+    }

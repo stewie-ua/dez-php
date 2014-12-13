@@ -1,0 +1,2 @@
+INSERT INTO `system_auth` (`id`, `login`, `email`, `level_access`, `password`, `added_at`) VALUES
+(1, 'admin', 'vania.gontarenko@gmail.com', '1107330082.270600.2114.16', '8e2b0e6d2c6d4bfe4912343ef563346e', '2014-03-02 14:00:29');
