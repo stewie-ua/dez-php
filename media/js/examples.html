@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM JS examples</title>
+
+    <script src="dom.js"></script>
+</head>
+<body>
+    <div class="parent">
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child">
+            <h1>DOM JS</h1>
+            <span>Examples</span>
+        </div>
+    </div>
+    <script>
+        DOM.ready(function() {
+            console.dir(DOM(document.body));
+        });
+    </script>
+</body>
+</html>
