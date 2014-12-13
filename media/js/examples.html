@@ -6,7 +6,7 @@
 
     <script src="dom.js"></script>
 </head>
-<body>
+<body title="DOM JS examples">
     <div class="parent">
         <div class="child"></div>
         <div class="child"></div>
@@ -19,7 +19,7 @@
     </div>
     <script>
         DOM.ready(function() {
-            console.dir(DOM(document.body));
+            console.dir(DOM('body').data({title: 'testObj'}).data('title'));
         });
     </script>
 </body>

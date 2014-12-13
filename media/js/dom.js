@@ -29,6 +29,29 @@ var DOM = (function() {
         return object instanceof Node;
     }
 
+    function each(object, callback) {
+        if (!isFunction(callback)) return console.error('Each: callback is not a function');
+
+        if (isObject(object)) {
+            for (var key in object) {
+                callback(key, object[key]);
+            }
+        }
+        else if (isArray(object)) {
+            var i = 0, l = object.length;
+            for (; i < l; i++) {
+                callback(object[i], i);
+            }
+        }
+        else return console.error('Each: invalid arguments');
+    }
+
+    /**
+     * Create elements list
+     *
+     * @param selector
+     * @constructor
+     */
     function Element(selector) {
         var elements;
 
@@ -60,42 +83,115 @@ var DOM = (function() {
         each: {
             value: function(callback) {
                 [].forEach.call(this, callback);
+                return this;
             }
         },
 
         click: {
             value: function(callback) {
-                this.each(function(item) {
+                return this.each(function(item) {
                     item.addEventListener('click', callback);
                 });
-
-                return this;
             }
         },
 
         show: {
             value: function () {
-                this.each(function(item) {
+                return this.each(function(item) {
                     item.style.display = 'block';
                 });
-
-                return this;
             }
         },
 
         hide: {
             value: function () {
-                this.each(function(item) {
+                return this.each(function(item) {
                     item.style.display = 'none';
                 });
+            }
+        },
 
-                return this;
+        attr: {
+            value: function(key, value) {
+                if (isString(value)) {
+                    return this.each(function(item) {
+                        item.setAttribute(key, value);
+                    });
+                }
+
+                return this[0].getAttribute(key);
+            }
+        },
+
+        data: {
+            value: function(key, value) {
+                if (isString(value) || isObject(key)) {
+                    return this.each(function(item) {
+                        isObject(key) && each(key, function(name, val) {
+                            item.dataset[name] = val;
+                        });
+
+                        isString(value) && (item.dataset[key] = value);
+                    });
+                }
+
+                return this[0].dataset[key];
+            }
+        },
+
+        append: {
+            value: function(html) {
+                return this.each(function(item) {
+                    item.insertAdjacentHTML('beforeend', html);
+                });
+            }
+        },
+
+        after: {
+            value: function(html) {
+                return this.each(function(item) {
+                    item.insertAdjacentHTML('afterend', html);
+                });
+            }
+        },
+
+        prepend: {
+            value: function(html) {
+                return this.each(function(item) {
+                    item.insertAdjacentHTML('afterbegin', html);
+                });
+            }
+        },
+
+        before: {
+            value: function(html) {
+                return this.each(function(item) {
+                    item.insertAdjacentHTML('beforebegin', html);
+                });
+            }
+        },
+
+        text: {
+            value: function(text) {
+                if (isString(text)) {
+                    return this.each(function(item) {
+                        item.innerText = text;
+                    });
+                }
+
+                return this[0].innerHTML;
             }
         },
 
         html: {
             value: function(html) {
-                return isString(html) ? (this[0].innerHTML = html) && this : this[0].innerHTML;
+                if (isString(html)) {
+                    return this.each(function(item) {
+                        item.innerHTML = html;
+                    })
+                }
+
+                return this[0].innerHTML;
             }
         }
     });
