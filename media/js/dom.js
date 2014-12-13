@@ -73,7 +73,6 @@ var DOM = (function() {
     }
 
     Object.defineProperties(Element.prototype, {
-
         length: {
             get: function() {
                 return Object.keys(this).length;
@@ -107,6 +106,36 @@ var DOM = (function() {
             value: function () {
                 return this.each(function(item) {
                     item.style.display = 'none';
+                });
+            }
+        },
+
+        hasClass: {
+            value: function(name) {
+                return this[0].classList.contains(name)
+            }
+        },
+
+        addClass: {
+            value: function(name) {
+                return this.each(function(item) {
+                    item.classList.add(name);
+                });
+            }
+        },
+
+        removeClass: {
+            value: function(name) {
+                return this.each(function(item) {
+                    item.classList.remove(name);
+                });
+            }
+        },
+
+        toggleClass: {
+            value: function(name) {
+                return this.each(function(item) {
+                    item.classList.toggle(name);
                 });
             }
         },
