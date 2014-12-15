@@ -46,6 +46,10 @@ var DOM = (function() {
         else return console.error('Each: invalid arguments');
     }
 
+    function toArray(object) {
+        return [].slice.call(object);
+    }
+
     /**
      * Create elements list
      *
@@ -76,7 +80,9 @@ var DOM = (function() {
         length: {
             get: function () {
                 return Object.keys(this).length;
-            }
+            },
+
+            set: function() { }
         }
     });
 
@@ -126,19 +132,48 @@ var DOM = (function() {
         },
 
         parent: function() {
+            [].splice.call(this, 0, this.length, this[0].parentNode);
 
+            return this;
         },
 
         parents: function(selector) {
+            var elem = this[0], i = 0;
 
+            [].splice.call(this, 0);
+
+            while((elem = elem.parentNode)) {
+                if (elem.nodeType === 1) {
+                    if (selector && elem.matches(selector)) {
+                        this[0] = elem;
+                        break;
+                    }
+                    else this[i++] = elem;
+                }
+            }
+
+            return this;
         },
 
         find: function(selector) {
+            var parents = toArray(this),
+                elements = [ ];
+            [].splice.call(this, 0);
 
+            parents.forEach(function(item) {
+                elements = elements.concat(toArray(item.querySelectorAll(selector)));
+            }.bind(this));
+
+            elements.forEach(function(item, index) {
+                this[index] = item;
+            }.bind(this));
+
+            return this;
         },
 
         eq: function(index) {
-
+            [].splice.call(this, 0, this.length, this[index]);
+            return this;
         },
 
         click: function(callback) {
