@@ -3,12 +3,12 @@
 ?>
 <style>
 
-    .debugger-wrap {
+    .sy-debug-wrap {
         position: relative;
         font-size: 10px;
     }
 
-    .debugger {
+    .debug {
         position: fixed;
         bottom: 0px;
         width: 100%;
@@ -20,17 +20,17 @@
         line-height: 30px;
     }
 
-    .debugger li {
+    .debug li {
         display: inline-block;
         text-shadow: 1px 1px 1px #fff;
     }
 
-    .debugger .system-info {
+    .debug .system-info {
         float: right;
         margin-right: 10px;
     }
 
-    .debugger .debugger-name {
+    .debug .debug-name {
         margin-left: 10px;
         margin-right: 10px;
         background: #C43F00;
@@ -42,7 +42,7 @@
         text-shadow: 1px 1px 0px #000;
     }
 
-    .debugger-wrap pre {
+    .debug-wrap pre {
         font-family: "courier new";
         font-size: 12px;
         border: 1px solid rgb(172, 172, 172);
@@ -77,6 +77,7 @@
     }
 
     .debug-content{
+        display: none;
         position: fixed;
         bottom: 30px;
         background: rgba(226, 222, 222, 0.93);
@@ -100,75 +101,66 @@
         border-radius: 6px;
     }
 
+    .debug-content h3 {
+        margin: 20px;
+        color: #272727;
+        font-size: 20px;
+        text-shadow: 1px 1px 1px #fff;
+    }
+
     .debug-content-box {
         margin: 20px;
+        white-space: pre-wrap;
+        font-size: 12px;
+        font-family: 'courier new';
+        border: 1px solid #B1B1B1;
+        padding: 20px;
+        border-radius: 4px;
+        background: #FFF;
     }
 
 </style>
-<?php
-    $sqlJson = [];
-    foreach( $data['sql'] as $sql ) {
-        $sqlJson[] = HTML::tag( 'pre', $sql, [] );
-    }
-?>
 <script>
-
-    window.addEventListener("DOMContentLoaded", function() {
-        document.querySelector('#debug-close-button').addEventListener('click', function() {
-            hideElement( 'debug-content' );
-        }, false);
-
-        DOM.get('.debug-links').click(function(e) {
-            if (e.target.tagName.toLowerCase() == 'a') {
-                console.log(e.target);
+    var debugData               = [];
+    debugData['sql-data']       = <?= json_encode( join( "\n\n---\n\n", $data['sql'] ) ) ?>;
+    debugData['request-data']   = <?= json_encode( var_export( $_REQUEST, true ) ) ?>;
+    debugData['session-data']   = <?= json_encode( var_export( $_SESSION, true ) ) ?>;
+    debugData['dump-data']      = <?= json_encode( var_export( $data['dump'], true ) ) ?>;
+    DOM.ready(function(){
+        DOM('#debug-close-button').click(function(e){ DOM('#debug-content').hide(); });
+        DOM('.debug-links a').click(function(e){
+            DOM('#debug-content').show();
+            var self = DOM(e.target);
+            if( debugData[self.data( 'name' )] ) {
+                DOM('.debug-content h3').html( self.html() );
+                DOM('.debug-content-box').html(debugData[self.data( 'name' )]);
             }
         });
-        console.dir(DOM.get('.debug-links'))
-    }, false);
-
-
-
-
-
-
-    var getById = function( id ){ return document.getElementById( id );},
-        hideElement = function( id ) { document.getElementById( id ).style.display = 'none'; },
-        showElement = function( id ) { document.getElementById( id ).style.display = 'block'; };
-    var debugSql        = <?= json_encode( $sqlJson ) ?>,
-        debugSession    = <?= json_encode( var_export( $_SESSION, true ) ) ?>;
+    });
 </script>
-<div class="debugger-wrap">
+<div class="sy-debug-wrap">
+
     <div class="debug-content" id="debug-content">
-        <div class="debug-content-box"><b>NULL</b></div>
+        <h3>Title...</h3>
+        <pre class="debug-content-box"></pre>
         <a id="debug-close-button" class="close" href="javascript: return false;">Close [X]</a>
     </div>
-    <div class="debugger">
+
+    <div class="debug">
 
         <ul class="debug-links">
-            <li>
-                <span class="debugger-name">
-                    <?php print $data['debugger_name']; ?>
-                </span>
-            </li>
-            <li><a href="javascript:void(0)">SQL <b>(<?= count( $data['sql'] ) ?>)</b></a></li>
-            <li><a href="javascript:void(0)">Request</a></li>
-            <li><a href="javascript:void(0)">Session</a></li>
-            <li><a href="javascript:void(0)">Auth</a></li>
+            <li><span class="debug-name"><?php print $data['debugger_name']; ?></span></li>
+            <li><a data-name="sql-data" href="javascript:void(0)">SQL <b>(<?= count( $data['sql'] ) ?>)</b></a></li>
+            <li><a data-name="request-data" href="javascript:void(0)">Request</a></li>
+            <li><a data-name="session-data" href="javascript:void(0)">Session</a></li>
+            <li><a data-name="dump-data" href="javascript:void(0)">Dump</a></li>
         </ul>
 
         <ul class="system-info">
-            <li>
-                <b><?php print \Sy::poweredBy(); ?></b> |
-            </li>
-            <li>
-                ENV: <b><?php print \Sy::env(); ?></b> |
-            </li>
-            <li>
-                Use memory: <b><?php print \Sy::getMemoryUse(); ?>kB</b> |
-            </li>
-            <li>
-                Execute time: <b><?php print \Sy::getTimeDiff(); ?>s</b>
-            </li>
+            <li><b><?php print \Sy::poweredBy(); ?></b> | </li>
+            <li>ENV: <b><?php print \Sy::env(); ?></b> | </li>
+            <li>Memory: <b><?php print \Sy::getMemoryUse(); ?>kB</b> | </li>
+            <li>Time: <b><?php print \Sy::getTimeDiff(); ?>s</b></li>
         </ul>
         <div style="clear: both;"></div>
     </div>

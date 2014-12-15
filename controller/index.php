@@ -120,6 +120,8 @@
                     array( 'name', 'lol', '=' )
                 );
 
+            Sy\Helper\Debug::instance()->value( $qb );
+
             $encoded = Utils\Crypt::instance()->encode( $qb->query(), '1' );
             $decoded = Utils\Crypt::instance()->decode( $encoded, '1' );
 

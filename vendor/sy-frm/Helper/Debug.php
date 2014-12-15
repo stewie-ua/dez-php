@@ -24,7 +24,7 @@
         }
 
         public function value( $value = null ) {
-            $this->data['value'][] = $value;
+            $this->data['dump'][] = $value;
         }
 
         public function render() {
