@@ -1,5 +1,21 @@
-var DOM = (function() {
-    "use strict";
+(function (){
+    'use strict';
+
+    var root = this;
+
+    function createDescriptors(object, properties) {
+        var descriptors = { };
+        Object.keys(properties).forEach(function(key) {
+            descriptors[key] = Object.getOwnPropertyDescriptor(properties, key);
+            descriptors[key].enumerable = false;
+        });
+
+        return descriptors;
+    }
+
+    function toArray(object) {
+        return [].slice.call(object);
+    }
 
     function isArray(array) {
         return Array.isArray(array);
@@ -25,10 +41,6 @@ var DOM = (function() {
         return list instanceof HTMLCollection;
     }
 
-    function isNode(object) {
-        return object instanceof Node;
-    }
-
     function each(object, callback) {
         if (!isFunction(callback)) return console.error('Each: callback is not a function');
 
@@ -46,109 +58,88 @@ var DOM = (function() {
         else return console.error('Each: invalid arguments');
     }
 
-    function toArray(object) {
-        return [].slice.call(object);
-    }
+    var DOM = root.DOM = function( selector ) {
+        return new DOMElements(selector);
+    };
 
     /**
-     * Create elements list
-     *
-     * @param selector
+     * Static properties
+     */
+    DOM.isElement       = isElement;
+    DOM.isElementsList  = isElementsList;
+
+    DOM.extend = function(properties) {
+        Object.defineProperties(DOMElements.prototype, createDescriptors({}, properties));
+    };
+
+    DOM.ready = function(callback) {
+        if (!isFunction(callback)) return false;
+        document.addEventListener('DOMContentLoaded', function(e) {
+            callback.call(DOM, DOM, e);
+        }, false);
+    };
+
+    /**
+     * DOM elements collection
+     * @param {string|Element|HTMLCollection} selector
      * @constructor
      */
-    function Elements(selector) {
-        var elements;
+    function DOMElements( selector ) {
+        if (isElement(selector)) { this.push(selector); return; }
 
-        if (isElementsList(selector)) {
-            elements = selector;
-        }
-        else if (isNode(selector)) {
-            this[0] = selector;
-            return ;
-        }
-        else if (isString(selector)) {
-            elements = document.querySelectorAll(selector);
-
-        } else throw Error('Vania dolboeb!');
-
-        [].forEach.call(elements, function(item, index) {
-            this[index] = item;
-        }.bind(this));
+        try {
+            var elements = isElementsList(selector) ? selector : document.querySelectorAll(selector),
+                i = 0, l = elements.length;
+            for (; i < l; i++) this.push(elements[i]);
+        } catch (e) { }
     }
 
-    Object.defineProperties(Elements.prototype, {
-        length: {
-            get: function () {
-                return Object.keys(this).length;
-            },
-
-            set: function() { }
+    DOMElements.prototype = Object.create(Array.prototype, {
+        constructor: {
+            value: DOMElements
         }
     });
 
-    Elements.extend = function(properties) {
-        var proto = { };
-        each(properties, function(key, item) {
-            proto[key] = { value: item }
-        });
-
-        return Object.defineProperties(this.prototype, proto);
-    };
-
-    Elements.extend({
-        /**
-         * Each elements
-         * @param {Function} callback
-         * @returns {Elements}
-         */
+    /**
+     * Base methods
+     */
+    DOM.extend({
         each: function(callback) {
-            [].forEach.call(this, callback);
+            this.forEach(function(item, index) {
+                callback.call(item, item, index);
+            });
+
             return this;
         },
 
-        /**
-         * Inner or get element text
-         * @param {String} text
-         * @returns {Elements}
-         */
         text: function(text) {
-            if (isString(text)) {
-                return this.each(function(item) {
-                    item.innerText = text;
-                });
-            }
-
-            return this[0].innerHTML;
+            return text ? this.each(function() {
+                this.innerText = text;
+            }) : this[0].innerText;
         },
 
         html: function(html) {
-            if (isString(html)) {
-                return this.each(function(item) {
-                    item.innerHTML = html;
-                })
-            }
-
-            return this[0].innerHTML;
+            return html ? this.each(function(item) {
+                item.innerHTML = html;
+            }) : this[0].innerHTML;
         },
 
         parent: function() {
-            [].splice.call(this, 0, this.length, this[0].parentNode);
-
+            this.splice(0, this.length, this[0].parentNode);
             return this;
         },
 
         parents: function(selector) {
-            var elem = this[0], i = 0;
-
-            [].splice.call(this, 0);
+            var elem = this[0];
+            this.splice(0);
 
             while((elem = elem.parentNode)) {
                 if (elem.nodeType === 1) {
-                    if (selector && elem.matches(selector)) {
-                        this[0] = elem;
-                        break;
+                    if (selector) {
+                        if (elem.matches(selector)) { this.push(elem); break; }
+                    } else {
+                        this.push(elem);
                     }
-                    else this[i++] = elem;
                 }
             }
 
@@ -156,122 +147,174 @@ var DOM = (function() {
         },
 
         find: function(selector) {
-            var parents = toArray(this),
-                elements = [ ];
-            [].splice.call(this, 0);
+            var matches = [ ];
 
-            parents.forEach(function(item) {
-                elements = elements.concat(toArray(item.querySelectorAll(selector)));
-            }.bind(this));
+            this.each(function() {
+                matches = matches.concat( toArray(this.querySelectorAll(selector)) );
+            });
 
-            elements.forEach(function(item, index) {
-                this[index] = item;
+            this.splice(0);
+            matches.forEach(function(item) {
+                this.push(item);
             }.bind(this));
 
             return this;
         },
 
         eq: function(index) {
-            [].splice.call(this, 0, this.length, this[index]);
+            this.splice(0, this.length, this[index]);
             return this;
         },
 
-        click: function(callback) {
-            return this.each(function(item) {
-                item.addEventListener('click', callback);
-            });
-        },
-
         append: function(html) {
-            return this.each(function(item) {
-                item.insertAdjacentHTML('beforeend', html);
+            return this.each(function() {
+                this.insertAdjacentHTML('beforeend', html);
             });
         },
 
         after: function(html) {
-            return this.each(function(item) {
-                item.insertAdjacentHTML('afterend', html);
+            return this.each(function() {
+                this.insertAdjacentHTML('afterend', html);
             });
         },
 
         prepend: function(html) {
-            return this.each(function(item) {
-                item.insertAdjacentHTML('afterbegin', html);
+            return this.each(function() {
+                this.insertAdjacentHTML('afterbegin', html);
             });
         },
 
         before: function(html) {
-            return this.each(function(item) {
-                item.insertAdjacentHTML('beforebegin', html);
+            return this.each(function() {
+                this.insertAdjacentHTML('beforebegin', html);
             });
         },
 
         attr: function(key, value) {
-            if (isString(value)) {
-                return this.each(function(item) {
-                    item.setAttribute(key, value);
-                });
-            }
-
-            return this[0].getAttribute(key);
+            return value ? this.each(function() {
+                this.setAttribute(key, value);
+            }) : this[0].getAttribute(key);
         },
 
         data: function(key, value) {
-            if (isString(value) || isObject(key)) {
-                return this.each(function(item) {
-                    isObject(key) && each(key, function(name, val) {
-                        item.dataset[name] = val;
-                    });
-
-                    isString(value) && (item.dataset[key] = value);
+            return value || isObject(key) ? this.each(function(item) {
+                isObject(key) && each(key, function(name, val) {
+                    item.dataset[name] = val;
                 });
-            }
 
-            return this[0].dataset[key];
+                isString(value) && (item.dataset[key] = value);
+            }) : this[0].dataset[key];
         },
 
+        remove: function() {
+
+        }
+    });
+
+    /**
+     * Methods for elements classes
+     */
+    DOM.extend({
         hasClass: function(name) {
             return this[0].classList.contains(name);
         },
 
         addClass: function(name) {
-            return this.each(function(item) {
-                item.classList.add(name);
+            return this.each(function() {
+                this.classList.add(name);
             });
         },
 
         removeClass: function(name) {
-            return this.each(function(item) {
-                item.classList.remove(name);
+            return this.each(function() {
+                this.classList.remove(name);
             });
         },
 
         toggleClass: function(name) {
-            return this.each(function(item) {
-                item.classList.toggle(name);
-            });
-        },
-
-        show: function () {
-            return this.each(function(item) {
-                item.style.display = 'block';
-            });
-        },
-
-        hide: function () {
-            return this.each(function(item) {
-                item.style.display = 'none';
+            return this.each(function() {
+                this.classList.toggle(name);
             });
         }
     });
 
-    return function(selector) {
-        return new Elements(selector);
-    };
-}());
+    /**
+     * Methods for elements styles
+     */
+    DOM.extend({
+        show: function () {
+            return this.each(function() {
+                this.style.display = 'block';
+            });
+        },
 
-DOM.ready = function(callback) {
-    if (typeof callback === 'function') {
-        document.addEventListener('DOMContentLoaded', callback, false);
-    }
-};
+        hide: function () {
+            return this.each(function() {
+                this.style.display = 'none';
+            });
+        },
+
+        css: function() {
+
+        },
+
+        width: function() {
+
+        },
+
+        height: function() {
+
+        }
+    });
+
+    /**
+     * Help methods
+     */
+    DOM.extend({
+        index: function() {
+
+        },
+
+        next: function() {
+
+        },
+
+        prev: function() {
+
+        },
+
+        first: function() {
+
+        },
+
+        last: function() {
+
+        }
+    });
+
+    /**
+     * Events methods
+     */
+    DOM.extend({
+        on: function() {
+
+        },
+
+        off: function() {
+
+        },
+
+        trigger: function() {
+
+        },
+
+        click: function() {
+
+        },
+
+        focus: function() {
+
+        }
+    });
+
+}.call(window.app || (window.app = Object.create(null))));
