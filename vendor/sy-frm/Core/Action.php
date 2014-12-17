@@ -13,8 +13,9 @@
             $controllerInstances    = [];
 
         private
-            $router     = null,
-            $request    = null;
+            $router         = null,
+            $request        = null,
+            $wrapperRoute   = null;
 
         protected function init( $router = null, $request = null ) {
             if( $router instanceOf Router && $request instanceOf Request ) {
@@ -62,6 +63,7 @@
         public function executeAction( Controller $controllerInstance, $action = null, array $methodArgs = [] ) {
             $actionName         = $action .'Action';
             if( $controllerInstance->hasMethod( $actionName ) ) {
+                $controllerInstance->setContext( $this->wrapperRoute );
                 $controllerInstance->beforeExecute();
                 $content    = call_user_func_array( array( $controllerInstance, $actionName ), $methodArgs );
                 $controllerInstance->afterExecute();
@@ -73,21 +75,18 @@
 
         public function execute() {
             $route          = $this->request->get( 'r', 'index/index' );
-            $routeResults   = $this->router->getResult( $route, $this->request->getMethod() );
+            $wrapperRoutes  = $this->router->getResult( $route, $this->request->getMethod() );
             $output         = [];
 
-            if( count( $routeResults ) > 0 ) {
-                foreach( $routeResults as $routeResult ) {
-                    $output[] = $this->_execute( $routeResult );
+            if( count( $wrapperRoutes ) > 0 ) {
+                foreach( $wrapperRoutes as $wrapperRoute ) {
+                    $this->wrapperRoute     = $wrapperRoute;
+                    $controller             = $this->getControllerInstance( $wrapperRoute->controllerName, $wrapperRoute->moduleName );
+                    $output[]               = $this->executeAction( $controller, $wrapperRoute->actionName, $wrapperRoute->params );
                 }
             }
 
-            return join( '<br />', $output );
-        }
-
-        private function _execute( $routeResult ) {
-            $controller     = $this->getControllerInstance( $routeResult->controllerName, $routeResult->moduleName );
-            return $this->executeAction( $controller, $routeResult->actionName, $routeResult->params );
+            return join( '<!-- Multi run -->', $output );
         }
 
     }

@@ -3,10 +3,16 @@
 
 	<routes>
 
-        <route match="admin" controller="admin" action="index" force-run="1" >
-            <route match="users" controller="admin" action="usersList" force-run="1" >
-                <route match="profile" controller="admin" action="profile" />
+        <route match="admin" controller="entry" action="index" force-run="1" module="admin_v1" >
+
+            <route match="auth" controller="auth" action="loginPage" module="admin_v1">
+
             </route>
+
+            <!--<route match="users" controller="user" action="list" module="admin_v1">
+                <route match="profile-{id|num}.html" controller="user" action="profile" />
+            </route>-->
+
         </route>
 
         <route match="index_page" controller="index" action="index" method="get"></route>

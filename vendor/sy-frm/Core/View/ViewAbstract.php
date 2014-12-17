@@ -8,9 +8,9 @@
             $templateDirectory  = null,
             $templateExt        = null;
 
-        public function __construct( $templateDirectory, $templateExt = 'php' ) {
-            $this->templateDirectory    = $templateDirectory;
-            $this->templateExt          = $templateExt;
+        public function __construct( & $templateDirectory, & $templateExt = 'php' ) {
+            $this->templateDirectory    = & $templateDirectory;
+            $this->templateExt          = & $templateExt;
         }
 
         protected function makeTemplateFile( $shortPath = null ) {

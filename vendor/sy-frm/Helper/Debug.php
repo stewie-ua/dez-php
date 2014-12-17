@@ -23,8 +23,8 @@
             $this->data['sql'][] = $query;
         }
 
-        public function value( $value = null ) {
-            $this->data['dump'][] = $value;
+        public function dump( $data = null ) {
+            $this->data['dump'][] = $data;
         }
 
         public function render() {

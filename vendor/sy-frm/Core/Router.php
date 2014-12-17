@@ -4,7 +4,7 @@
 
     use Sy\Error\Exception,
         Sy\Utils,
-        Sy\Core\Router\Result as ResultWrapper;
+        Sy\Core\Router\Wrapper;
 
 	class Router extends Object {
 
@@ -147,11 +147,11 @@
         }
 
         private function _collectResult( array $prepareResult = [] ) {
-            $wrapResult = ResultWrapper::instance( $prepareResult );
-            if( $wrapResult->forceRun ) {
-                $this->resultStack['forceRun'][]    = $wrapResult;
+            $wrapRoute = Wrapper::instance( $prepareResult );
+            if( $wrapRoute->forceRun ) {
+                $this->resultStack['forceRun'][]    = $wrapRoute;
             } else {
-                $this->resultStack['lastRoute']     = $wrapResult;
+                $this->resultStack['lastRoute']     = $wrapRoute;
             }
         }
 		
