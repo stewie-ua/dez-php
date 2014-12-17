@@ -204,6 +204,10 @@
 
                 isString(value) && (item.dataset[key] = value);
             }) : this[0].dataset[key];
+        },
+
+        remove: function() {
+
         }
     });
 
@@ -248,6 +252,43 @@
             return this.each(function() {
                 this.style.display = 'none';
             });
+        },
+
+        css: function() {
+
+        },
+
+        width: function() {
+
+        },
+
+        height: function() {
+
+        }
+    });
+
+    /**
+     * Help methods
+     */
+    DOM.extend({
+        index: function() {
+
+        },
+
+        next: function() {
+
+        },
+
+        prev: function() {
+
+        },
+
+        first: function() {
+
+        },
+
+        last: function() {
+
         }
     });
 
@@ -260,6 +301,10 @@
         },
 
         off: function() {
+
+        },
+
+        trigger: function() {
 
         },
 
