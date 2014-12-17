@@ -1,6 +1,7 @@
 <?php
 
 	include_once './vendor/sy-frm/Sy.php';
+    include_once './constants.php';
 
     error_reporting( E_ALL );
     ini_set( 'display_errors', 'On' );
