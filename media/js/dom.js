@@ -3,7 +3,7 @@
 
     var root = this;
 
-    function createDescriptors(object, properties) {
+    function createDescriptors(properties) {
         var descriptors = { };
         Object.keys(properties).forEach(function(key) {
             descriptors[key] = Object.getOwnPropertyDescriptor(properties, key);
@@ -69,13 +69,13 @@
     DOM.isElementsList  = isElementsList;
 
     DOM.extend = function(properties) {
-        Object.defineProperties(DOMElements.prototype, createDescriptors({}, properties));
+        Object.defineProperties(DOMElements.prototype, createDescriptors(properties));
     };
 
     DOM.ready = function(callback) {
         if (!isFunction(callback)) return false;
         document.addEventListener('DOMContentLoaded', function(e) {
-            callback.call(DOM, DOM, e);
+            callback.call({ }, DOM, e);
         }, false);
     };
 
@@ -207,7 +207,10 @@
         },
 
         remove: function() {
-
+            this.each(function(element) {
+                element.parentNode.removeChild(element);
+                this.shift();
+            }.bind(this));
         }
     });
 
@@ -254,16 +257,16 @@
             });
         },
 
-        css: function() {
-
-        },
-
-        width: function() {
-
-        },
-
-        height: function() {
-
+        css: function(name, value) {
+            return this.each(function() {
+                if (isObject(name)) {
+                    each(name, function(key, val) {
+                        this.style[key] = val;
+                    }.bind(this));
+                } else{
+                    this.style[name] = value;
+                }
+            });
         }
     });
 
@@ -272,23 +275,17 @@
      */
     DOM.extend({
         index: function() {
-
-        },
-
-        next: function() {
-
-        },
-
-        prev: function() {
-
+            return this[0] ? toArray(this[0].parentNode.children).indexOf(this[0]) : -1;
         },
 
         first: function() {
-
+            this.splice(0, this.length, this[0]);
+            return this;
         },
 
         last: function() {
-
+            this.splice(0, this.length, this.slice(-1)[0]);
+            return this;
         }
     });
 
