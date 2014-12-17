@@ -5,7 +5,7 @@
     use Sy\Core\Object;
     use Sy\Core\SingletonTrait;
 
-    class Result extends Object {
+    class Wrapper extends Object {
 
         use SingletonTrait;
 

@@ -104,7 +104,7 @@
 
             $this->attach( 'db', ORM::connect() );
 
-            if( \Sy::cfg()->path( 'debug/enable' ) ) {
+            if( \Sy::cfg()->path( 'debug.enable' ) ) {
 
                 ORM\Common\Event::instance()->attach( 'query', function( $query = null ){
                     Helper\Debug::instance()->sql( $query );

@@ -4,105 +4,100 @@
 	
 	class Response {
 
-        use SingletonTrait;
+        use SingletonTrait, HasDataTrait;
 		
-		private $_headers 			= array(),
-				$_vars				= array(),
-				$_type				= 'default',
-				$_layout			= 'layout',
-				$_titleSeparator 	= null,
-				$_title 			= array();
+		private $view               = null,
+
+                $headers 			= [],
+				$data				= [],
+				$documentType		= 'default',
+				$layout			    = 'layout',
+				$titleSeparator 	= null,
+				$title 			    = [];
 		
 		protected function init(){
-			$baseCfg = \Sy::cfg( 'base' );
-			$this->setSeparator( $baseCfg['titleSeparator'] );
+			$this->setTitleSeparator( \Sy::cfg()->path( 'base.titleSeparator' ) );
+            $this->view     = new View( APP_PATH . DS . 'view' );
 		}
 
-		// Title
-		public function getSeparator(){
-			return $this->_titleSeparator;
+
+		public function getTitleSeparator(){
+			return $this->titleSeparator;
 		}
 
-		public function setSeparator( $separator = null ){
-			$this->_titleSeparator = $separator;
+		public function setTitleSeparator( $separator = null ){
+			$this->titleSeparator = $separator;
 		}
 
 		public function getTitle(){
-			return $this->_title;
+			return $this->title;
 		}
 
 		public function setTitle( $title ){
-			if( ! is_array( $title ) ){
-				$title = array( $title );
-			}
-			$this->_title = $title;
+			$this->title = [ $title ];
 		}
 
 		public function addTitle( $title ){
-			$this->_title[] = $title;
+			$this->title[] = $title;
 		}
-		// End title part
+
 
 		public function getType(){
-			return $this->_type;
+			return $this->documentType;
 		}
 		
 		public function setType( $type ){
-			$this->_type = (string) $type;
+			$this->documentType = $type;
 		}
 		
 		public function getLayout(){
-			return $this->_layout;
+			return $this->layout;
 		}
 		
-		public function setLayout( $layout_name ){
-			$this->_layout = (string) $layout_name;
-		}
-		
-		public function set( $name, $value ){		
-			if( is_string( $name ) && ! empty( $value ) ){
-				$this->_vars[$name] = $value;
-			}			
+		public function setLayout( $layout ){
+			$this->layout = $layout;
 		}
 
-        public function get( $name ) {
-            if( isset( $this->_vars[$name] ) ) {
-                return $this->_vars[$name];
-            }
-            return null;
+        public function setDirectory( $directory = null ) {
+            $this->view->setDirectory( $directory );
+            return $this;
+        }
+
+        public function getTemplateExt() {
+            $this->view->getTemplateExt();
+        }
+
+        public function setTemplateExt( $templateExt = null ) {
+            $this->view->setTemplateExt( $templateExt );
+        }
+		
+		protected function & getData() {
+            return $this->data;
         }
 		
 		public function render(){
 			$this->_beforeRender();
-			return \Sy::app()->view->render( $this->_layout, $this->_vars );
+			return $this->view->render( $this->getLayout(), $this->getData() );
 		}
 		
 		public function setHeader( $name, $value ){
-			$name 	= (string) $name;
-			$value	= (string) $value;
-			
-			$this->_headers[] = array(
-				'name' 	=> $name,
-				'value'	=> $value
-			);			
+			$this->headers[] = [ $name, $value ];
 		}
 		
 		public function & getHeaders(){
-			return $this->_headers;
+			return $this->headers;
 		}
 		
 		public function sendHeaders(){
-			if( ! headers_sent() ){
-				foreach( $this->_headers as $header ){
-					header( $header['name'] .': '. $header['value'], false );
-				}
-			}
+			if( ! headers_sent() )
+                foreach( $this->headers as $header )
+                    header( $header[0] .': '. $header[1], false );
 		}
 
 		private function _beforeRender() {
 			$this->set( 'exec_time',    \Sy::getTimeDiff() );
 			$this->set( 'memory_use',   \Sy::getMemoryUse() );
-			$this->set( 'title',        join( $this->getSeparator(), $this->getTitle() ) );
+			$this->set( 'title',        join( $this->getTitleSeparator(), $this->getTitle() ) );
 		}
 		
 	}

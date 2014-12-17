@@ -29,6 +29,20 @@
             }
         }
 
+        public function setDirectory( $directory = null ) {
+            $this->templateDirectory = $directory;
+            return $this;
+        }
+
+        public function setTemplateExt( $templateExt = null ) {
+            $this->templateExt = $templateExt;
+            return $this;
+        }
+
+        public function getTemplateExt() {
+            return $this->templateExt;
+        }
+
         public function getDriver( $driver_name = 'native' ) {
             if( isset( $this->driver[$driver_name] ) ) {
                 return $this->driver[$driver_name];

@@ -24,6 +24,7 @@
         }
         
         public function leftmenuAction() {
+            dump( $this->getView() );
             return $this->render( 'inner/leftmenu', [] );
         }
 
