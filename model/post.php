@@ -1,8 +1,8 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Error\Error,
-        \Sy\Common\Validator;
+    use \Dez\Core,
+        \Dez\Error\Error,
+        \Dez\Common\Validator;
 
     class PostModel extends Core\Model {
 
@@ -30,8 +30,8 @@
         public function addAction() {
 
             $validator  = new Validator();
-            $request    = \Sy::app()->request;
-            $auth       = \Sy::app()->auth;
+            $request    = \Dez::app()->request;
+            $auth       = \Dez::app()->auth;
             $postData   = $request->post( 'post' );
 
             $post = \DB\Post::row();

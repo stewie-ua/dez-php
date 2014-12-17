@@ -1,9 +1,9 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Common\Validator,
-        \Sy\Error\Error,
-        \Sy\Utils;
+    use \Dez\Core,
+        \Dez\Common\Validator,
+        \Dez\Error\Error,
+        \Dez\Utils;
 
     class CommonController extends Core\Controller {
 
@@ -24,7 +24,6 @@
         }
         
         public function leftmenuAction() {
-            dump( $this->getView() );
             return $this->render( 'inner/leftmenu', [] );
         }
 

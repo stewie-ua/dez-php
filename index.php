@@ -1,24 +1,24 @@
 <?php
 
-	include_once './vendor/sy-frm/Sy.php';
+	include_once './vendor/dez-framework/Dez.php';
     include_once './constants.php';
 
     error_reporting( E_ALL );
     ini_set( 'display_errors', 'On' );
 
-	Sy::newWebApplication(
-		Sy::createConfig( APP_PATH . DS .'conf'. DS .'app.ini' )
+	Dez::newWebApplication(
+		Dez::createConfig( APP_PATH . DS .'conf'. DS .'app.ini' )
 	);
 
-    \Sy\Autoloader::addIncludeDirs( APP_PATH . DS . 'tables' );
-    \Sy\Autoloader::addIncludeDirs( APP_PATH . DS . 'helper' );
+    \Dez\Autoloader::addIncludeDirs( APP_PATH . DS . 'tables' );
+    \Dez\Autoloader::addIncludeDirs( APP_PATH . DS . 'helper' );
 
-	$app = Sy::app();
+	$app = dez::app();
 
     try {
-        $app->attach( 'auth', new \Sy\Core\Auth() );
+        $app->attach( 'auth', new \Dez\Core\Auth() );
     } catch( \Exception $e ) {
-        \Sy\Error\Error::critical( $e->getMessage() );
+        \Dez\Error\Error::critical( $e->getMessage() );
     }
 
     print $app->run();

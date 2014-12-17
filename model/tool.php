@@ -1,15 +1,15 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Error\Error,
-        \Sy\Common\Validator;
+    use \Dez\Core,
+        \Dez\Error\Error,
+        \Dez\Common\Validator;
 
     class ToolModel extends Core\Model {
 
         public function addTool( array $data = [] ) {
 
             $validator  = new Validator();
-            $auth       = \Sy::app()->auth;
+            $auth       = \Dez::app()->auth;
             $tool       = \DB\Tool::row();
 
             if( $auth->isLogged() ) {

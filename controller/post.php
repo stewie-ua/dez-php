@@ -1,8 +1,8 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Common\Validator,
-        \Sy\Error\Error;
+    use \Dez\Core,
+        \Dez\Common\Validator,
+        \Dez\Error\Error;
 
     class PostController extends Core\Controller {
 

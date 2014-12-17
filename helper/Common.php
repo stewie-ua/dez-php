@@ -2,8 +2,8 @@
 
     namespace Helper;
 
-    use \Sy\ORM\Common\Pagi,
-        \Sy\Utils\HTML;
+    use \Dez\ORM\Common\Pagi,
+        \Dez\Utils\HTML;
 
     class Common {
 

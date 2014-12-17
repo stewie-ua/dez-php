@@ -3,15 +3,15 @@
 
 	<routes>
 
-        <route match="admin" controller="entry" action="index" force-run="1" module="admin_v1" >
+        <route match="admin" controller="entry" action="index" force-run="1" module="dez-admin" >
 
-            <route match="auth" controller="auth" action="loginPage" module="admin_v1">
-
+            <route match="auth" controller="auth" action="loginPage">
+                <route match="go" controller="auth" action="loginGo" />
             </route>
 
-            <!--<route match="users" controller="user" action="list" module="admin_v1">
+            <route match="users" controller="user" action="list" module="admin_v1">
                 <route match="profile-{id|num}.html" controller="user" action="profile" />
-            </route>-->
+            </route>
 
         </route>
 
