@@ -93,11 +93,9 @@
     function DOMElements( selector ) {
         if (isElement(selector)) { this.push(selector); return; }
 
-        try {
-            var elements = isElementsList(selector) ? selector : document.querySelectorAll(selector),
-                i = 0, l = elements.length;
-            for (; i < l; i++) this.push(elements[i]);
-        } catch (e) { }
+        var elements = isElementsList(selector) ? selector : document.querySelectorAll(selector),
+            i = 0, l = elements.length;
+        for (; i < l; i++) this.push(elements[i]);
     }
 
     DOMElements.prototype = Object.create(Array.prototype, {
@@ -306,18 +304,28 @@
 
             if (selector) {
                 var delegateCallback = function(e) {
-                    (e.target.matches(selector) || e.target.parentNode.matches(selector)) && callback.call(e.target, e);
+                    if (e.target === this) return;
+                    if (e.target.matches(selector)) {
+                        return callback.call(e.target, e);
+                    }
+
+                    for (var i = 0, l = e.path.length; i < l; i++) {
+                        if (e.path[i].parentNode === this) break;
+                        if (e.path[i].matches(selector)) {
+                            callback.call(e.path[i], e); break;
+                        }
+                    }
                 }
             }
 
             return this.each(function() {
-                this.addEventListener(name, delegateCallback || callback);
+                this.addEventListener(name, delegateCallback || callback, false);
                 DOM.events.push({
                     name: name,
                     namespace: namespace,
                     node: this,
                     handler: delegateCallback || callback
-                })
+                });
             });
         },
 
@@ -326,7 +334,7 @@
             (~name.indexOf('.')) && (name = name.split('.')) && (namespace = name[1]) && (name = name[0]);
 
             return this.each(function() {
-                each(DOM.events, function(item, index) {
+                DOM.events.forEach(function(item, index) {
                     if (item.name === name && item.namespace === namespace && item.node === this) {
                         this.removeEventListener(name, item.handler);
                         DOM.events.splice(index, 1);

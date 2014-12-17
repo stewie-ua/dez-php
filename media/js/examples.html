@@ -20,7 +20,7 @@
                     <a href="#">Link 3</a>
                 </li>
                 <li>
-                    <a href="#"><span>222</span> Link 4</a>
+                    <a href="#"><div><span>222</span></div> Link 4</a>
                 </li>
             </ul>
         </div>
@@ -34,13 +34,16 @@
     </div>
     <script>
         app.DOM.ready(function($) {
-            $('.menu').on('click', 'a', function(event) {
-                $('.menu').trigger('myEvent', { })
+            $('.menu').on('click', 'a', function() {
+                console.log($(this).text());
             });
+            /*var html = '';
+            for (var i = 0, c = 5000; i < c; i++) html += '<div class="tests elem-'+ i +'">Element '+ i + '</div>';
+            $('body').append(html);
 
-            $('.menu').on('myEvent', function(e) {
-                console.log(e);
-            });
+            $('.tests').on('click', function() {
+                console.log($(this).text());
+            });*/
         });
     </script>
 </body>
