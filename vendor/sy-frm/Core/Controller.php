@@ -2,7 +2,7 @@
 	
 	namespace Sy\Core;
 	
-	class Controller{
+	class Controller extends Object {
 
         static private
 			$models = array();
@@ -28,17 +28,9 @@
 
         protected function forward( $path, array $args = array() ) {
             list( $controllerName, $actionName ) = explode( '/', $path );
-            $instance = \Sy::app()->action->getController( $controllerName );
-            return \Sy::app()->action->execAction( $instance, $actionName, $args );
-        }
-
-        protected function data( $key, $default = null ) {
-            $inputDataType = \Sy::app()->config->path( 'app/controller/input_data_type', 'post' );
-            if( $inputDataType == 'get' ) {
-                return $this->request->get( $key, $default );
-            } else {
-                return $this->request->post( $key, $default );
-            }
+            $action     = \Sy::app()->action;
+            $instance   = $action->getControllerInstance( $controllerName );
+            return $action->executeAction( $instance, $actionName, $args );
         }
 
         protected function getModel( $model_name = null ) {

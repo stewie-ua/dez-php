@@ -13,10 +13,10 @@
 
         protected
             $view   = null,
-            $data   = [ 'sql' => [], 'value' => [], 'profiler' => [] ];
+            $data   = [ 'sql' => [], 'dump' => [], 'profiler' => [] ];
 
         protected function init() {
-            $this->view = new Core\View( __DIR__ );
+            $this->view = Core\View::instance( __DIR__ );
         }
 
         public function sql( $query = null ) {

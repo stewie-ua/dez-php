@@ -13,7 +13,7 @@
 			$_conf      = null;
 
         static protected
-            $_aliases   = [];
+            $aliases   = [];
 
         /**
          * @return App|null
@@ -52,15 +52,11 @@
 		}
 
         static public function setAlias( $alias, $replacement = null ) {
-            static::$_aliases[$alias] = $replacement;
+            static::$aliases[$alias] = $replacement;
         }
 
         static public function getAlias( $value = null ) {
-            return str_replace(
-                array_keys( static::$_aliases ),
-                array_values( static::$_aliases ),
-                $value
-            );
+            return str_replace( array_keys( static::$aliases ), array_values( static::$aliases ), $value );
         }
 	
 		static public function t( $text ){

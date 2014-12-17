@@ -2,7 +2,9 @@
 	
 	namespace Sy\Core;
 	
-	class Response{
+	class Response {
+
+        use SingletonTrait;
 		
 		private $_headers 			= array(),
 				$_vars				= array(),
@@ -11,7 +13,7 @@
 				$_titleSeparator 	= null,
 				$_title 			= array();
 		
-		public function __construct(){
+		protected function init(){
 			$baseCfg = \Sy::cfg( 'base' );
 			$this->setSeparator( $baseCfg['titleSeparator'] );
 		}

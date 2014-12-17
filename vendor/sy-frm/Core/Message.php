@@ -12,11 +12,11 @@
             $session        = null;
 
         protected function init() {
-            $this->session = Session::instance();
-            if( ! $this->session->has( 'system_messages' ) ) {
-                $this->session->set( 'system_messages', static::$emptyStack );
+            static::$session = Session::instance();
+            if( ! static::$session->has( 'system_messages' ) ) {
+                static::$session->set( 'system_messages', static::$emptyStack );
             }
-            static::$stack = & $this->session->get( 'system_messages' );
+            static::$stack = & static::$session->get( 'system_messages' );
         }
 
         public function raiseSuccess( $message = null ) {

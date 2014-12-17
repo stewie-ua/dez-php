@@ -29,13 +29,16 @@
         font-family: "courier new";
         overflow-x: auto;
     }
-    .sy-error-body pre{
-        font-family: courier new;
-        font-size: 12px;
+    .sy-error-body pre {
         background: #fff;
         padding: 10px;
         border: 1px solid #000;
         white-space: pre-line;
+    }
+    .sy-error-body pre,
+    .sy-error-body pre * {
+        font-family: courier new;
+        font-size: 12px;
     }
     .sy-backtrace, .sy-backtrace *{
 	    font-family: courier new !important;

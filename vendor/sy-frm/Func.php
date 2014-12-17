@@ -2,9 +2,10 @@
 
     use Sy\Core;
 
-	function dump( $data = null ){		
+	function dump() {
+        $args = func_get_args();
 		ob_start();
-			var_dump( $data );
+			call_user_func_array( 'var_dump', $args );
 			$content = ob_get_contents();
 		ob_clean();
 		if( ! extension_loaded( 'xdebug' ) || ! in_array( strtolower( ini_get( 'html_errors' ) ), array( 'on', '1' ) ) ){
@@ -129,46 +130,20 @@
         return $client_ip;
     }
 
-    function import( $path ) {
-        list( $dirPath, $fileName ) = explode( ':', $path );
-
-        $fileName   .= '.php';
-        $dirPath    = explode( '.', $dirPath );
-
-        // find real path
-        $realPath = SY_PATH;
-        array_map( function( $item ) use ( & $realPath ){
-            $finded = glob( $realPath . DS . '*' );
-            foreach( $finded as $dirName ){
-                $dirName = basename( $dirName );
-                if( stripos( $dirName, $item ) !== false ) {
-                    $realPath .= DS . $dirName;
-                    break;
-                }
-            }
-        }, array_merge( $dirPath, array( $fileName ) ) );
-
-        require_once $realPath;
-    }
-
 	function getMicroTime() {
 		list( $usec, $sec ) = explode( ' ', microtime() );
 		return ( (float) $usec + (float) $sec );
 	}
 
 	function callModule( $route = null ){
-		if( $route == null ) {
-            return '<!-- Error callModule -->';
-        } else {
-            $requestClone            = clone \Sy::app()->request;
-            $requestClone->get['r']  = $route;
-            try {
-                $output = Sy::app()->action->execute( $requestClone );
-            } catch( Exception $e ) {
-                $output = $e->getMessage();
-            }
-            print $output;
+        $requestClone            = ( clone Sy::app()->request );
+        $requestClone->get['r']  = $route;
+        try {
+            $output = Sy::app()->action->setRequest( $requestClone )->execute();
+        } catch( Exception $e ) {
+            $output = $e->getMessage();
         }
+        print $output;
 	}
 
     function url( $url = null, $vars = array(), $host = false ) {

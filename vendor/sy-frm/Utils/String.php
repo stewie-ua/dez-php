@@ -2,7 +2,14 @@
 	
 	namespace Sy\Utils;
 
-	class String{
+	use Sy\Core\Object;
+    use Sy\Core\SingletonTrait;
+
+    class String extends Object {
+
+        use SingletonTrait;
+
+        protected function init() {}
 		
 		public function transliteration( $string = null, $safe = false ){
 			 // Таблица русского алфавита:
@@ -33,6 +40,10 @@
 
         public function wordToUppercase( $string ){
             return mb_convert_case( $string, MB_CASE_TITLE, 'UTF-8' );
+        }
+
+        static public function isEmpty( $value = null ) {
+            return ( is_string( $value ) && empty( $value ) );
         }
 		
 	}

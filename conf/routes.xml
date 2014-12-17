@@ -3,6 +3,12 @@
 
 	<routes>
 
+        <route match="admin" controller="admin" action="index" force-run="1" >
+            <route match="users" controller="admin" action="usersList" force-run="1" >
+                <route match="profile" controller="admin" action="profile" />
+            </route>
+        </route>
+
         <route match="index_page" controller="index" action="index" method="get"></route>
 
         <route match="common" controller="common" action="badRequest">

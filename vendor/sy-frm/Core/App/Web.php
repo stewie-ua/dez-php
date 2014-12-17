@@ -2,8 +2,11 @@
 
 	namespace Sy\Core\App;
 
-    use \Sy\Core,
+    use \Sy\Autoloader as Loader,
+        \Sy\Core,
+        \Sy\ORM,
         \Sy\Error,
+        \Sy\Error\Error as ErrorMessage,
         \Sy\Utils,
         \Sy\Helper;
 
@@ -16,49 +19,23 @@
 
             parent::__construct();
 
-			date_default_timezone_set( $config->path( 'base/time_zone' ) );
+            // @TODO do somethink
+			date_default_timezone_set( $config->path( 'base.time_zone' ) );
 
-			$this->config = $config;
-            $this->attachObject( 'session', Core\Session::instance() );
-
-			$this->initErrorHandler();
-			$this->addMainObjects();
+			$this->attach( 'config', $config );
 
             try {
                 $this->init();
             } catch ( \Exception $e ) {
-                Error\Error::fatal( $e->getMessage() );
+                ErrorMessage::fatal( Utils\HTML::tag( 'b', get_class( $e ) ) .': '. $e->getMessage() );
             }
 
-			$this->response->setTitle( $config->path( 'base/app_name' ) );
+			$this->response->setTitle( $config->path( 'base.app_name' ) );
 		}
 
-		public function registerRoute( $route, $args ){
-			return call_user_func_array( array( $this->action, 'registerHandlerOfRoute' ), array( $route, $args ) );
-		}
-
-        public function get() {
-            $args = func_get_args();
-
-            $route = array_shift( $args );
-            $this->registerRoute( $route, $args );
+        protected function initSession() {
+            $this->attach( 'session', Core\Session::instance() );
         }
-
-        public function post() {
-            if( $this->request->isPost() ) {
-                $args = func_get_args();
-                $route = array_shift( $args );
-                $this->registerRoute( $route, $args );
-            }
-        }
-
-		public function stream( $streamFunction = null ){
-			if( is_callable( $streamFunction ) ){
-				$this->response->setType( 'stream' );
-				$streamFunction();
-				return;
-			}
-		}
 
 		public function run(){
 			$response 		= $this->response;
@@ -70,18 +47,18 @@
 			}else{
 
 				try{
-                    $content = $this->action->execute( $this->request );
+                    $content = $this->action->execute();
 				}catch( \Exception $e ){
-                    Error\Error::fatal( $e->getMessage() );
+                    ErrorMessage::fatal( $e->getMessage() );
 				}
 
 				$this->addMainVarsForLayout();
 
 				if( $response->getType() == 'default' ){
 
-                    $debugBlock = ( $this->config->path( 'debug/enable' ) ? Helper\Debug::instance()->render() : null );
+                    $debugBlock = ( $this->config->path( 'debug.enable' ) ? Helper\Debug::instance()->render() : null );
 
-					$response->set( 'error_block',      Error\Error::instance()->render() );
+					$response->set( 'error_block',      ErrorMessage::instance()->render() );
                     $response->set( 'message_block',    Core\Message::instance()->render() );
                     $response->set( 'debug_block',      $debugBlock );
 					$response->set( 'content',          $content );
@@ -96,95 +73,120 @@
 			}
 		}
 
-		public function redirect( $url ){
-			$uri = Core\URI::getInstance( $url );
-			$url = $uri->buildURL( 'scheme', 'host', 'path', 'query' );
-			header( 'HTTP/1.1 302 Moved Temporarily' );
-			header( 'Location: ' . $url );
-			die;
-		}
-
-		public function page404(){
-			header( 'HTTP/1.1 404 Not Found' ); die;
-		}
-
-		public function page500(){
-			header( 'HTTP/1.1 500 Internal Server Error', true, 500 ); die;
-		}
-
 		private function init(){
-			$this->response->setHeader( 'X-Content-By', \Sy::poweredBy() );
-			$this->response->setHeader( 'X-Author', SY_AUTHOR );
+
+            $this->initSession();
+
+            $this->initError();
+
+            $this->initRequest();
+
+            $this->initRouter();
+
+            $this->initAction();
 
             $this->initDatabase();
 
-			$this->initRouter();
+            $this->initView();
+
+            $this->initResponse();
+
+			$this->response->setHeader( 'X-Content-By', \Sy::poweredBy() );
+			$this->response->setHeader( 'X-Author', SY_AUTHOR );
 
 		}
 
 		private function initDatabase() {
-            \Sy\Autoloader::addIncludeDirs( SY_PATH . DS . 'Db' );
-			\Sy\ORM::init( APP_PATH . DS . 'conf' . DS . 'app.ini', 'dev' );
-			$this->attachObject( 'db', \Sy\ORM::connect() );
+
+            Loader::addIncludeDirs( SY_PATH . DS . 'Db' );
+
+			ORM::init( APP_PATH . DS . 'conf' . DS . 'app.ini', 'dev' );
+
+            $this->attach( 'db', ORM::connect() );
+
             if( \Sy::cfg()->path( 'debug/enable' ) ) {
-                \Sy\ORM\Common\Event::instance()->attach( 'query', function( $query = null ){
+
+                ORM\Common\Event::instance()->attach( 'query', function( $query = null ){
                     Helper\Debug::instance()->sql( $query );
                 } );
+
             }
+
 		}
 
-		protected function initErrorHandler() {
+		protected function initError() {
 
 			register_shutdown_function( function(){
+
 				$error      = error_get_last();
-                $highlight = null;
+                $highlight  = null;
+
                 if( \Sy::app()->config->path( 'debug/enable_highlight' ) != 0 ) {
                     $highlight = Utils\Debug::highlight( $error );
                 }
 				switch( true ) {
 					case ( $error['type'] & ( E_ERROR | E_WARNING | E_COMPILE_ERROR ) ): {
-                        Error\Error::critical( $error['message'] . ' ['. $error['file'] .':'. $error['line'] .']' . $highlight );
+                        ErrorMessage::critical( $error['message'] . ' ['. $error['file'] .':'. $error['line'] .']' . $highlight );
 						break;
 					}
 					case ( $error['type'] & ( E_NOTICE ) ): {
-						Error\Error::notify( $error['message'] . ' ['. $error['file'] .':'. $error['line'] .']' . $highlight );
+                        ErrorMessage::notify( $error['message'] . ' ['. $error['file'] .':'. $error['line'] .']' . $highlight );
 						break;
 					}
-					default :{
+					default : {
 					    break;
 					}
 				}
 			});
+
 		}
 
-		protected function initRouter() {
-			$baseConf 	    = \Sy::cfg( 'base' );
-			$debugConfig 	= \Sy::cfg( 'debug' );
+        protected function initRequest() {
+            $this->attach( 'request', Core\Request::instance() );
+        }
 
-			$cacheDir 		= APP_PATH . DS . 'cache' . DS . 'system';
-			$xmlRoutes 		= APP_PATH . DS . 'conf' . DS . $baseConf['router_config'];
+        protected function initRouter() {
+            $config 	    = \Sy::cfg();
 
-			if( file_exists( $xmlRoutes ) ){
-				$this->attachObject( 'router', new Core\Router(
-					$xmlRoutes,
-					$cacheDir,
-					( (int) $debugConfig['enable'] === 1 )
-				));
-			}
-		}
+            $cacheDir 		= APP_PATH . DS . 'cache' . DS . 'system';
+            $xmlRoutes 		= APP_PATH . DS . 'conf' . DS . $config->path( 'base.router_config' );
 
-		private function addMainObjects(){
-			$this->attachObject( 'request', 	new Core\Request() );
-			$this->attachObject( 'view', 		new Core\View( null, 'phtml' ) );
-			$this->attachObject( 'action', 		new Core\Action() );
-			$this->attachObject( 'response', 	new Core\Response() );
-		}
+            $router = Core\Router::instance(  $xmlRoutes, $cacheDir, $config->path( 'debug.enable' ) );
+            $this->attach( 'router', $router );
+        }
+
+        protected function initAction() {
+            $this->attach( 'action', Core\Action::instance( $this->router, $this->request ) );
+        }
+
+        protected function initResponse() {
+            $this->attach( 'response', 	Core\Response::instance() );
+        }
+
+        protected function initView() {
+            $this->attach( 'view', Core\View::instance( null, 'phtml' ) );
+        }
 
 		private function addMainVarsForLayout(){
-			$config 	    = \Sy::cfg( 'base' );
-			// System vars for layout
-			$this->response->set( 'site_name', $config['app_name'] );
+			$config 	    = \Sy::cfg();
+			$this->response->set( 'site_name', $config->path( 'base.app_name' ) );
 			$this->response->set( 'base_url', Core\URI::base( true ) );
 		}
+
+        public function redirect( $url = null ){
+            $uri = Core\URI::getInstance( $url );
+            $url = $uri->buildURL( 'scheme', 'host', 'path', 'query' );
+            header( 'HTTP/1.1 302 Moved Temporarily' );
+            header( 'Location: ' . $url );
+            die;
+        }
+
+        public function errorCode404(){
+            header( 'HTTP/1.1 404 Not Found' ); die;
+        }
+
+        public function errorCode500(){
+            header( 'HTTP/1.1 500 Internal Server Error', true, 500 ); die;
+        }
 
 	}

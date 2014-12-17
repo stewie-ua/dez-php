@@ -2,7 +2,7 @@
 	
 	namespace Sy\Core;
 	
-	class Request {
+	class Request extends Object {
 
         use SingletonTrait;
 		
@@ -15,6 +15,7 @@
                 $cookie = array();
 
         protected function init(){
+
 			$this->method = $_SERVER['REQUEST_METHOD'];
 		
 			if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest' ){
@@ -24,7 +25,7 @@
 			$this->isPost   = ( $this->method == 'POST' );
             $this->isCli    = ( php_sapi_name() == 'cli' );
 
-			$gpc = array( & $_POST, & $_GET, & $_COOKIE );
+			$gpc            = [ $_POST, $_GET, $_COOKIE ];
 			
 			if( get_magic_quotes_gpc() == true ){	
 				$this->_stpipSlashesRecursive( $gpc );
@@ -33,6 +34,7 @@
 			$this->post 	= & $gpc[0];
 			$this->get 		= & $gpc[1];
 			$this->cookie	= & $gpc[2];
+
 		}
 
         public function isPost(){
@@ -45,6 +47,10 @@
 
         public function isCli(){
             return (boolean) $this->isCli;
+        }
+
+        public function getMethod() {
+            return $this->method;
         }
 
         public function requestURI(){

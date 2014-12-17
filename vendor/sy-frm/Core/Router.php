@@ -2,27 +2,40 @@
 	
 	namespace Sy\Core;
 
-	class Router{
+    use Sy\Error\Exception,
+        Sy\Utils,
+        Sy\Core\Router\Result as ResultWrapper;
+
+	class Router extends Object {
+
+        use SingletonTrait;
+
+		private
+            $routes		    = [],
+            $cacheDirectory	= __DIR__,
+            $cacheFile      = null,
+            $resultStack    = [ 'forceRun' => [], 'lastRoute' => [] ];
 		
-		private $routes		= array(),
-				$cache_dir	= __DIR__,
-                $cache_file = null;
-		
-		public function __construct( $routes_xml = 'routes.xml', $cache_dir = __DIR__, $debug = false ){
-			if( file_exists( $routes_xml ) ){
-				$this->cache_dir	= $cache_dir;
-				$cache_file			= $cache_dir . DIRECTORY_SEPARATOR . basename( $routes_xml ) . '.php';
-                $this->cache_file   = $cache_file;
-				if( file_exists( $cache_file ) && $debug === false ){
-					$this->routes       = include $cache_file;
+		protected function init( $routesXml = 'routes.xml', $cacheDirectory = __DIR__, $debug = false ) {
+
+			if( Utils\File::fileExists( $routesXml ) ){
+
+				$this->cacheDirectory	    = $cacheDirectory;
+				$cacheFile			        = $cacheDirectory . DIRECTORY_SEPARATOR . basename( $routesXml ) . '.php';
+                $this->cacheFile            = $cacheFile;
+
+				if( Utils\File::fileExists( $this->cacheFile ) && $debug == false ){
+					$this->routes       = include $cacheFile;
 				} else {
-					$xml			= simplexml_load_file( $routes_xml );
+					$xml			= simplexml_load_file( $routesXml );
 					$this->routes	= $this->_buildRoutes( $xml );
-					$this->_cache( $cache_file );
+					$this->_cache( $cacheFile );
 				}
+
 			} else {
-				throw new \Exception( 'File not found: '. $routes_xml );
+				throw new Exception\RuntimeError( 'File not found: '. $routesXml );
 			}
+
 		}
 
         public function get( $url ) {
@@ -42,53 +55,16 @@
         }
 
 		public function getResult( $url, $method = 'GET' ) {
-			$url 	= explode( '/', trim( $url, '/' ) );
-			$url 	= array_filter( $url, 'strlen' );
-			$result = $this->_find( $url, $this->routes['routes'], $method );
-
-			if( empty( $result ) ){
-				if( empty( $url ) ){
-					return $this->_indexPage();
-				}else{
-					return $this->_page404();
-				}
-			}
-
+			$parts 	    = array_filter( explode( '/', trim( $url, '/' ) ), 'strlen' );
+			$result     = $this->_find( $parts, $this->routes['routes'], $method );
 			return $result;
-		}
-		
-		public function addRule( $match = null, $controller = null, $action = null ){			
-			if( empty( $match ) || empty( $controller ) || empty( $action ) ){
-				throw new \Exception( 'Empty parameters' );
-			}
-			$match 				= trim( $match, '/' );	
-			$chunks				= explode( '/', $match );			
-			if( empty( $chunks ) ){
-				throw new \Exception( 'Not correctly rule' );
-			}
-			array_push( $this->routes['routes'], $this->_getRoutes( $chunks, $controller, $action ) );
 		}
 
         public function getCacheFile() {
-            return file_exists( $this->cache_file )
-                ? $this->cache_file
+            return file_exists( $this->cacheFile )
+                ? $this->cacheFile
                 : false;
         }
-
-		private function _getRoutes( $chunks, $controller, $action ){
-			$segment 					= array_shift( $chunks );
-			$attributes 				= array( 'keys' => array() );				
-			$attributes['match'] 		= $segment;
-			$attributes['controller'] 	= $controller;
-			$attributes['action'] 		= $action;
-			if( strpos( $attributes['match'], '{' ) !== false ){							
-				$this->_createRegexp( $attributes );
-			}
-			if( sizeOf( $chunks ) <> 0 ){
-				$attributes['children'] = array( $this->_getRoutes( $chunks, $controller, $action ) );
-			}			
-			return $attributes;
-		}
 		
 		private function _indexPage(){
 			$page	= 'index';
@@ -96,11 +72,11 @@
 				return ( $route['match'] == $page );
 			}); 
 			$route = current( $route );
-			return array(
+			return [
 				'controller'	=> $route['controller'],
 				'action'		=> $route['action'],
-				'values'		=> array()
-			);
+				'values'		=> []
+			];
 		}
 		
 		private function _page404(){
@@ -109,57 +85,79 @@
 				return ( $route['match'] == $page );
 			}); 
 			$route = current( $route );
-			return array(
+			return [
 				'controller'	=> $route['controller'],
 				'action'		=> $route['action'],
-				'values'		=> array()
-			);
+				'values'		=> []
+			];
 		}
 
-		private function _find( $url, $routes, $method = 'GET' ){
-			$result = array();
-			while( $segment = array_shift( $url ) ){				
+		private function _find( array $parts = [], $routes, $method = 'GET' ) {
+			while( $segment = array_shift( $parts ) ){
 				foreach( $routes as $route ) {
                     $methodSuccess = (
                         ! isset( $route['method'] )
                         || strtoupper( $route['method'] ) == strtoupper( $method )
                     );
-					if( ! isset( $route['regexp'] ) ){						
-						if( $route['match'] == $segment && $methodSuccess == true ) {
-							$result['controller']	= $route['controller'];
-							$result['action']		= $route['action'];														
-							if( ! isset( $result['values'] ) ){
-								$result['values'] = array();
-							}
-							if( isset( $route['children'] ) && ! empty( $route['children'] ) ){
-								$routes = & $route['children']; break;
-							}
-						}
-					}else{
-						if( preg_match( $route['regexp'], $segment, $matches ) && $methodSuccess == true ) {
-							$result['controller']	= $route['controller'];
-							$result['action']		= $route['action'];							
-							if( ! isset( $result['values'] ) ){
-								$result['values'] = array();
-							}							
-							foreach( $matches as $i => $finded ){
-								if( isset( $route['keys'][$i-1] ) ){
-									$result['values'][$route['keys'][$i-1]] = $finded;
-								}
-							}							
-							if( isset( $route['children'] ) && ! empty( $route['children'] ) ){
-								$routes = & $route['children']; break;
-							}
-						}
-					}
+                    $matches    = [];
+                    if( $methodSuccess && ( $route['match'] == $segment
+                            || ( isset( $route['regexp'] ) && preg_match( $route['regexp'], $segment, $matches ) ) )
+                    ) {
+                        $this->_handleResult( $route, $matches );
+                        if( isset( $route['children'] ) && count( $route['children'] ) > 0 ) {
+                            $routes = & $route['children']; break;
+                        }
+                    }
 				}
 			}
 
-			return $result;			
+            if( 0 >= ( count( $this->resultStack['forceRun'] ) + count( $this->resultStack['lastRoute'] ) ) ) {
+                $this->_handleResult( ( count( $parts ) > 0 ? $this->_page404() : $this->_indexPage() ) );
+            }
+
+            $resultStack        = $this->resultStack;
+
+            $this->resultStack  = [ 'forceRun' => [], 'lastRoute' => [] ];
+
+            $resultStack        = array_merge( $resultStack['forceRun'], [ $resultStack['lastRoute'] ] );
+            $resultStack        = array_filter( $resultStack, 'count' );
+
+			return $resultStack;
 		}
+
+        private function _handleResult( array $result = [], array $matches = [] ) {
+            $prepareResult = [
+                'controller'    => strtolower( $result['controller'] ),
+                'action'        => strtolower( $result['action'] ),
+                'method'        => isset( $result['method'] )       ? strtoupper( $result['method'] )   : 'GET',
+                'forceRun'      => isset( $result['force-run'] )    ? $result['force-run'] > 0          : false,
+                'module'        => isset( $result['module'] )       ? strtolower( $result['module'] )   : false,
+                'params'        => isset( $result['values'] )       ? $result['values']                 : [],
+            ];
+
+            if( count( $matches ) > 0 ) {
+                foreach( $matches as $i => $finded ){
+                    if( isset( $result['keys'][$i-1] ) ){
+                        $prepareResult['params'][$result['keys'][$i-1]] = $finded;
+                    }
+                }
+            }
+
+            $this->_collectResult( $prepareResult );
+        }
+
+        private function _collectResult( array $prepareResult = [] ) {
+            $wrapResult = ResultWrapper::instance( $prepareResult );
+            if( $wrapResult->forceRun ) {
+                $this->resultStack['forceRun'][]    = $wrapResult;
+            } else {
+                $this->resultStack['lastRoute']     = $wrapResult;
+            }
+        }
 		
-		private function _cache( $cache_file ){			
-			$dir_name = dirname( $cache_file );					
+		private function _cache( $cache_file ) {
+            // @TODO Use system cache!!!111
+			$dir_name = dirname( $cache_file );
 			if( ! is_dir( $dir_name ) ){
 				mkdir( $dir_name, 0777, true );
 			}						
@@ -168,46 +166,57 @@
 		}
 		
 		private function _buildRoutes( $xml ){
+
 			$system			= $xml->xpath( '/root/system' );
-			$routes			= $xml->xpath( '/root/routes' );			
+			$routes			= $xml->xpath( '/root/routes' );
+
 			return array(
 				'routes'	=> $this->_buildArray( @ $routes[0] ),
 				'system'	=> $this->_buildArray( @ $system[0] )
 			);			
 		}
 		
-		private function _buildArray( $nodes ){					
-			if( empty( $nodes ) ){
-				return false;
-			}
-			$params			= array();			
-			foreach( $nodes->children() as $node ){				
-				$attributes = array();					
+		private function _buildArray( $nodes ){
+
+			if( empty( $nodes ) ) return false;
+
+			$params			= [];
+
+			foreach( $nodes->children() as $node ){
+
+				$attributes = [];
+
 				foreach( $node->attributes() as $name => $value ){
 					$attributes[strtolower( $name )] = (string) $value;
-				}					
+				}
+
 				if( strpos( $attributes['match'], '{' ) !== false ){					
-					$attributes['keys']		= array();				
+					$attributes['keys']		= [];
 					$this->_createRegexp( $attributes );
-				}	
-				if( $node->count() > 0 ){
-					$attributes['children'] = $this->_buildArray( $node );
-				}					
+				}
+
+				if( $node->count() > 0 )
+                    $attributes['children'] = $this->_buildArray( $node );
+
 				$params[] = $attributes;
-			}			
+			}
+
 			return $params;			
 		}
 		
 		private function _createRegexp( & $attributes ){
-			$type2rexexp	= array(
+
+			$type2rexexp	= [
 				'num'	=> '(\d+)',
 				'str'	=> '(\w+)'
-			);
+			];
+
 			$attributes['regexp']	= preg_replace_callback( '/\{([-_\w]+)\|?(num|str)?\}/Uuis', function( $match ) use ( & $attributes, $type2rexexp ) {
 				$keys 	= & $attributes['keys'];			
 				$keys[] = $match[1];					
 				return isset( $match[2] ) ? $type2rexexp[$match[2]] : '(.+)';						
 			}, $attributes['match'] );
+
 			$attributes['regexp']	= '/^'. $attributes['regexp'] .'$/ui';	
 		}
 		

@@ -10,7 +10,7 @@
             $data = [];
 
         protected function init() {
-            session_name( \Sy::cfg()->path( 'base/session_name' ) );
+            session_name( \Sy::cfg()->path( 'base.session_name' ) );
             if( ! session_id() ){
                 session_start();
             }

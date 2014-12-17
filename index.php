@@ -2,6 +2,9 @@
 
 	include_once './vendor/sy-frm/Sy.php';
 
+    error_reporting( E_ALL );
+    ini_set( 'display_errors', 'On' );
+
 	Sy::newWebApplication(
 		Sy::createConfig( APP_PATH . DS .'conf'. DS .'app.ini' )
 	);
@@ -12,11 +15,9 @@
 	$app = Sy::app();
 
     try {
-        $app->attachObject( 'auth', new \Sy\Core\Auth() );
+        $app->attach( 'auth', new \Sy\Core\Auth() );
     } catch( \Exception $e ) {
         \Sy\Error\Error::critical( $e->getMessage() );
     }
-
-    $app->get( 'phpinfo', function(){ die( phpinfo() ); } );
 
     print $app->run();

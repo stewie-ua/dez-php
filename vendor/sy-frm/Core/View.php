@@ -2,7 +2,9 @@
 
     namespace Sy\Core;
 
-    class View {
+    class View extends Object {
+
+        use SingletonTrait;
 
         private
             $driver             = array(),
@@ -10,7 +12,7 @@
             $templateDirectory  = null,
             $templateExt        = null;
 
-        public function __construct( $templateDirectory = null, $templateExt = 'php' ) {
+        protected function init( $templateDirectory = null, $templateExt = 'php' ) {
             if( $templateDirectory == null ) {
                 $templateDirectory = APP_PATH . DS . 'view';
             }
