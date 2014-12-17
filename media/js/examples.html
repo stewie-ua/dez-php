@@ -8,7 +8,22 @@
 </head>
 <body title="DOM JS examples">
     <div class="parent">
-        <div class="child"></div>
+        <div class="child">
+            <ul class="menu">
+                <li>
+                    <a href="#">Link 1</a>
+                </li>
+                <li>
+                    <a href="#">Link 2</a>
+                </li>
+                <li>
+                    <a href="#">Link 3</a>
+                </li>
+                <li>
+                    <a href="#"><span>222</span> Link 4</a>
+                </li>
+            </ul>
+        </div>
         <div class="child"></div>
         <div class="child"></div>
         <div class="child"></div>
@@ -19,7 +34,13 @@
     </div>
     <script>
         app.DOM.ready(function($) {
-            console.dir($('.child'));
+            $('.menu').on('click', 'a', function(event) {
+                $('.menu').trigger('myEvent', { })
+            });
+
+            $('.menu').on('myEvent', function(e) {
+                console.log(e);
+            });
         });
     </script>
 </body>
