@@ -83,7 +83,7 @@
 			$page = 'error404';
 			$route	= array_filter( $this->routes['system'], function( $route ) use ( $page ) {
 				return ( $route['match'] == $page );
-			}); 
+			});
 			$route = current( $route );
 			return [
 				'controller'	=> $route['controller'],
@@ -93,6 +93,7 @@
 		}
 
 		private function _find( array $parts = [], $routes, $method = 'GET' ) {
+            $partsSize  = count( $parts );
 			while( $segment = array_shift( $parts ) ){
 				foreach( $routes as $route ) {
                     $methodSuccess = (
@@ -112,7 +113,7 @@
 			}
 
             if( 0 >= ( count( $this->resultStack['forceRun'] ) + count( $this->resultStack['lastRoute'] ) ) ) {
-                $this->_handleResult( ( count( $parts ) > 0 ? $this->_page404() : $this->_indexPage() ) );
+                $this->_handleResult( ( $partsSize > 0 ? $this->_page404() : $this->_indexPage() ) );
             }
 
             $resultStack        = $this->resultStack;
