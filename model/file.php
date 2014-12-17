@@ -1,18 +1,18 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Error\Error,
-        \Sy\Common\Validator;
+    use \Dez\Core,
+        \Dez\Error\Error,
+        \Dez\Common\Validator;
 
     class FileModel extends Core\Model {
 
         public function uploadImage() {
             $file   = $this->request->file( 'file' );
 
-            $app    = \Sy::app();
-            $fso    = new \Sy\Utils\FSO();
-            $string = new \Sy\Utils\String();
-            $image  = new \Sy\Utils\Image();
+            $app    = \Dez::app();
+            $fso    = new \Dez\Utils\FSO();
+            $string = new \Dez\Utils\String();
+            $image  = new \Dez\Utils\Image();
 
             $fileName       = rand( 100, 999 ) . time() .'_'. $string->transliteration( $file['name'], true );
             $avatarDir      = $app->config->path( 'app/upload/image_dir' )

@@ -2,7 +2,7 @@
 
     namespace DB;
 
-    use \Sy\ORM\Entity;
+    use \Dez\ORM\Entity;
 
     class XTags extends Entity\Table {
         static protected $tableName     = 'xref_tags';

@@ -1,10 +1,10 @@
 <?php
 
-use \Sy\Core,
-    \Sy\Common\Validator,
-    \Sy\Error\Error,
-    \Sy\Utils\NumConv,
-    \Sy\Utils\Crypt;
+use \Dez\Core,
+    \Dez\Common\Validator,
+    \Dez\Error\Error,
+    \Dez\Utils\NumConv,
+    \Dez\Utils\Crypt;
 
 class CodeController extends Core\Controller {
 

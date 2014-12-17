@@ -2,8 +2,8 @@
 
     namespace DB;
 
-    use \Sy\ORM\Entity,
-        \Sy\Utils\NumConv;
+    use \Dez\ORM\Entity,
+        \Dez\Utils\NumConv;
 
     class Url extends Entity\Table {
         static protected

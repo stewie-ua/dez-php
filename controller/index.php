@@ -1,9 +1,10 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Common\Validator,
-        \Sy\Error\Error,
-        \Sy\Utils;
+    use \Dez\Core,
+        \Dez\Common\Validator,
+        \Dez\Error\Error,
+        \Dez\Utils,
+        \Dez\Web;
 
     class IndexController extends Core\Controller {
 
@@ -17,12 +18,18 @@
         }
 
         public function page404Action(){
+
+            Web\Asset::css( '@cache/media/css/head.css' );
+            Web\Asset::css( '@media/css/style.css' );
+            Web\Asset::css( '@css/footer.css' );
+            Web\Asset::css( '@js/js-folder.css' );
+
             return sprintf( '<h2>Sorry, this page %s not found...</h2>', url() );
         }
 
         public function loginPageAction() {
             $this->response->addTitle( 'Авторизация' );
-            if( \Sy::app()->auth->isLogged() ) {
+            if( \Dez::app()->auth->isLogged() ) {
                 Error::critical( 'Вы уже авторизированы' );
             } else {
                 return $this->render( 'auth/login', array( ) );
@@ -36,7 +43,7 @@
             );
             if( $this->request->isPost() ) {
                 try {
-                    \Sy::app()->auth->login( array( $data['email'], $data['password'] ) );
+                    \Dez::app()->auth->login( array( $data['email'], $data['password'] ) );
                     $this->request->get( 'return_url', false )
                         ? $this->redirect( $this->request->get( 'return_url' ) )
                         : $this->redirect( '/' );
@@ -48,7 +55,7 @@
         }
 
         public function logoutAction() {
-            \Sy::app()->auth->logout();
+            \Dez::app()->auth->logout();
             $this->redirect( '/' );
         }
 
@@ -91,7 +98,7 @@
             } else {
                 if( $this->request->isPost() ) {
                     try {
-                        \Sy::app()->auth->add( array( $data['login'], $data['email'], $data['password'] ) );
+                        \Dez::app()->auth->add( array( $data['login'], $data['email'], $data['password'] ) );
                         $this->redirect( '/' );
                     } catch( \Exception $e ) {
                         Error::critical( $e->getMessage() );
@@ -107,7 +114,7 @@
 
             Core\Message::success( 'ok, all successfully' );
 
-            $qb = new \Sy\ORM\Query\Builder( \Sy::app()->db );
+            $qb = new \Dez\ORM\Query\Builder( \Dez::app()->db );
 
             $qb
                 ->select( array( 'id', 'name tagName', 'post.title postTitle' ) )
@@ -120,7 +127,7 @@
                     array( 'name', 'lol', '=' )
                 );
 
-            Sy\Helper\Debug::instance()->value( $qb );
+            Dez\Helper\Debug::instance()->value( $qb );
 
             $encoded = Utils\Crypt::instance()->encode( $qb->query(), '1' );
             $decoded = Utils\Crypt::instance()->decode( $encoded, '1' );

@@ -1,9 +1,9 @@
 <?php
 
-    use \Sy\Core,
-        \Sy\Error\Error,
-        \Sy\Common\Validator,
-        \Sy\Utils;
+    use \Dez\Core,
+        \Dez\Error\Error,
+        \Dez\Common\Validator,
+        \Dez\Utils;
 
     class CodeModel extends Core\Model {
 
@@ -16,7 +16,7 @@
             if( $codeItem->getPassword() != ''
                 && (
                     $codeItem->getAuthorId() > 0
-                    && $codeItem->getAuthorId() != \Sy::app()->auth->id()
+                    && $codeItem->getAuthorId() != \Dez::app()->auth->id()
                 ) )
             {
                 if( ! empty( $shareLink ) ) {
@@ -57,7 +57,7 @@
             );
             $validator->addRule(
                 new Validator\Rule( 'password', 'callback', function( $data ){
-                    return ( $data == '' || \Sy::app()->auth->isLogged() );
+                    return ( $data == '' || \Dez::app()->auth->isLogged() );
                 }, 'Чтобы ввести пароль Вас нужно авторизироватся' )
             );
             $validator->run();
@@ -65,7 +65,7 @@
             if( $validator->isError() ) {
                 Error::critical( join( '<br />', $validator->getErrors() ) );
             } else {
-                $auth = \Sy::app()->auth;
+                $auth = \Dez::app()->auth;
 
                 $code->setTitle( $data['title'] );
                 $code->setLanguage( $data['language'] );
