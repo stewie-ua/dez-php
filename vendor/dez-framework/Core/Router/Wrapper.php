@@ -36,8 +36,4 @@
             return $this->result['method'];
         }
 
-        public function getForceRun() {
-            return $this->result['forceRun'];
-        }
-
     }

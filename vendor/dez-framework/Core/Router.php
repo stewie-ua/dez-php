@@ -3,7 +3,7 @@
 	namespace Dez\Core;
 
     use Dez\Error\Exception,
-        Dez\Utils,
+        Dez\Helper\File,
         Dez\Core\Router\Wrapper;
 
 	class Router extends Object {
@@ -14,17 +14,19 @@
             $routes		    = [],
             $cacheDirectory	= __DIR__,
             $cacheFile      = null,
-            $resultStack    = [ 'forceRun' => [], 'lastRoute' => [] ];
+            $wrappedRoute   = null;
 		
 		protected function init( $routesXml = 'routes.xml', $cacheDirectory = __DIR__, $debug = false ) {
 
-			if( Utils\File::fileExists( $routesXml ) ){
+            $file = File::instance();
+
+			if( $file->isExistsFile( $routesXml ) ){
 
 				$this->cacheDirectory	    = $cacheDirectory;
 				$cacheFile			        = $cacheDirectory . DIRECTORY_SEPARATOR . basename( $routesXml ) . '.php';
                 $this->cacheFile            = $cacheFile;
 
-				if( Utils\File::fileExists( $this->cacheFile ) && $debug == false ){
+				if( $file->isExistsFile( $this->cacheFile ) && $debug == false ){
 					$this->routes       = include $cacheFile;
 				} else {
 					$xml			= simplexml_load_file( $routesXml );
@@ -112,18 +114,11 @@
 				}
 			}
 
-            if( 0 >= ( count( $this->resultStack['forceRun'] ) + count( $this->resultStack['lastRoute'] ) ) ) {
+            if( ! $this->wrappedRoute ) {
                 $this->_handleResult( ( $partsSize > 0 ? $this->_page404() : $this->_indexPage() ) );
             }
 
-            $resultStack        = $this->resultStack;
-
-            $this->resultStack  = [ 'forceRun' => [], 'lastRoute' => [] ];
-
-            $resultStack        = array_merge( $resultStack['forceRun'], [ $resultStack['lastRoute'] ] );
-            $resultStack        = array_filter( $resultStack, 'count' );
-
-			return $resultStack;
+			return $this->wrappedRoute;
 		}
 
         private function _handleResult( array $result = [], array $matches = [] ) {
@@ -131,7 +126,6 @@
                 'controller'    => strtolower( $result['controller'] ),
                 'action'        => strtolower( $result['action'] ),
                 'method'        => isset( $result['method'] )       ? strtoupper( $result['method'] )   : 'GET',
-                'forceRun'      => isset( $result['force-run'] )    ? $result['force-run'] > 0          : false,
                 'module'        => isset( $result['module'] )       ? strtolower( $result['module'] )   : false,
                 'params'        => isset( $result['values'] )       ? $result['values']                 : [],
             ];
@@ -144,16 +138,7 @@
                 }
             }
 
-            $this->_collectResult( $prepareResult );
-        }
-
-        private function _collectResult( array $prepareResult = [] ) {
-            $wrapRoute = Wrapper::instance( $prepareResult );
-            if( $wrapRoute->forceRun ) {
-                $this->resultStack['forceRun'][]    = $wrapRoute;
-            } else {
-                $this->resultStack['lastRoute']     = $wrapRoute;
-            }
+            $this->wrappedRoute = Wrapper::instance( $prepareResult );
         }
 		
 		private function _cache( $cache_file ) {

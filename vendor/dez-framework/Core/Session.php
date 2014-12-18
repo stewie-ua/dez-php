@@ -11,9 +11,7 @@
 
         protected function init() {
             session_name( \Dez::cfg()->path( 'base.session_name' ) );
-            if( ! session_id() ){
-                session_start();
-            }
+            session_id() || session_start();
             static::$data = & $_SESSION;
         }
 

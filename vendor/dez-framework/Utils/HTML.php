@@ -70,4 +70,11 @@
             ] );
         }
 
+        static public function script( $href = null ) {
+            return static::openTag( 'script', [
+                'src'   => $href,
+                'type'  => 'application/javascript'
+            ] ) . static::closeTag( 'script' );
+        }
+
     }

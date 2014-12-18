@@ -12,7 +12,6 @@
         }
 
         public function loginPageAction() {
-            dump( $this->getView() );
             return $this->render( 'auth/login', [] );
         }
 

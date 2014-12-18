@@ -1,25 +1,14 @@
 <?php
 
-    use Dez\Core;
-
-    use Dez\Core\Message,
+    use Dez\Controller\Controller,
         Dez\Error\Error as ErrorMessage,
         Dez\Utils,
-        Dez\Helper\Debug;
+        Dez\Web\Asset;
 
-    class EntryController extends Core\Controller {
-
-        public function __construct() {
-            parent::__construct();
-            $this->response->setLayout( 'admin' );
-        }
+    class EntryController extends Controller {
 
         public function beforeExecute() {
-            $templateDirectory = realpath( __DIR__ . DS . '..' . DS . 'view' );
-            $this->getView()
-                ->setDirectory( $templateDirectory )->setTemplateExt( 'php' );
-            $this->getResponse()
-                ->setDirectory( $templateDirectory )->setTemplateExt( 'php' );
+
         }
 
         public function afterExecute() {
@@ -27,13 +16,11 @@
         }
 
         public function indexAction() {
-
-            return $this->render( 'auth/login', [] );
-
             $auth = \Dez::app()->auth;
             if( ! $auth->access( AUTH_ADMIN ) ) {
                 ErrorMessage::warning( 'Авторизируйтесь' );
             }
+            return $this->render( 'auth/login', [] );
         }
 
     }

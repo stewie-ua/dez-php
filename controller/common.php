@@ -1,26 +1,23 @@
 <?php
 
-    use \Dez\Core,
-        \Dez\Common\Validator,
-        \Dez\Error\Error,
-        \Dez\Utils;
+    use Dez\Core,
+        Dez\Common\Validator,
+        Dez\Utils,
+        Dez\Controller\Controller,
+        Dez\Response\Response;
 
-    class CommonController extends Core\Controller {
+    class CommonController extends Controller {
 
         public function uploadImageAction() {
             $model = $this->getModel( 'file' );
-
-            $this->response->setType( 'json' );
-            $this->response->setHeader( 'Content-type', 'application/json' );
-
+            Response::instance()->setFormat( Response::RESPONSE_JSON );
             try {
                 $file = $model->uploadImage();
                 $response = [ 'filelink' => $file ];
             } catch ( \Exception $e ) {
                 $response = [ 'error' => $e->getMessage() ];
             }
-
-            return json_encode( $response, JSON_PRETTY_PRINT );
+            return $response;
         }
         
         public function leftmenuAction() {

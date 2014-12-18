@@ -1,37 +1,34 @@
 <?php
 
-    use \Dez\Core,
-        \Dez\Core\App;
+    use Dez\Core,
+        Dez\Core\App,
+        Dez\Error\Exception\RuntimeError;
 
 	class DezCore {
 
 		static public
 			$startTime = 0;
-		
-		static private
-			$_app       = null,
-			$_conf      = null;
 
         static protected
-            $aliases   = [];
+            $aliases   = [],
+            $app       = null,
+            $conf      = null;
 
         /**
          * @return App|null
+         * @throws \Exception
         */
 
 		static public function app(){			
-			if( ! is_object( self::$_app ) && ! ( self::$_app instanceOf Core\App ) ){
-				throw new \Exception( \Dez::t( 'Create application' ) );
-				return false;
-			}			
-			return self::$_app;			
+			if( ! is_object( self::$app ) && ! ( self::$app instanceOf Core\App ) )
+                throw new RuntimeError( 'App not created' );
+			return self::$app;
 		}
 		
 		static public function newWebApplication( Core\Config $config ){
 			self::$startTime = getMicroTime();
-			if( empty( self::$_app ) ){
-				self::$_app = new App\Web( $config );
-			}
+			if( empty( self::$app ) )
+                static::$app = new App\Web( $config );
 		}
 
 		static public function newCliApplication( Core\Config $config, $args = array() ) {
@@ -39,16 +36,12 @@
 		}
 
 		static public function createConfig( $config_file ){
-			self::$_conf = new Core\Config( $config_file );
-			return self::$_conf;
+			self::$conf = new Core\Config( $config_file );
+			return self::$conf;
 		}
 		
 		static public function cfg( $key = null ){
-            if( empty( $key ) ) {
-                return self::$_conf;
-            } else {
-                return self::$_conf->get( $key );
-            }
+            return ! $key ? static::$conf : static::$conf->get( $key );
 		}
 
         static public function setAlias( $alias, $replacement = null ) {
@@ -66,7 +59,7 @@
 		}
 
 		static public function env(){
-			return self::$_app->environment;
+			return self::$app->environment;
 		}
 
 		static public function poweredBy(){

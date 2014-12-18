@@ -2,6 +2,8 @@
 
     namespace Dez\Core;
 
+    use Dez\View\View;
+
     class Message {
 
         use SingletonTrait;
@@ -38,7 +40,8 @@
         public function render() {
             $stack                  = static::$stack;
             static::$stack          = static::$emptyStack;
-            return ( new View( __DIR__ . '/Message/message-template', 'php' ) )
+            return ( new View )
+                ->setPath( __DIR__ . '/Message/message-template' )
                 ->render( 'template', [ 'stack' => $stack ] );
         }
 

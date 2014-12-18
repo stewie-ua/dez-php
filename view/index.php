@@ -5,11 +5,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?=$title?></title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>    <link rel="stylesheet" href="<?=$base_url?>media/css/main.css"/>
-    <script src="<?=$base_url?>media/js/jquery-2.1.1.min.js"></script>
-    <script src="<?=$base_url?>media/js/dom.js"></script>
-    <base href="<?=\Dez\Core\URI::base()?>"/>
+    <title>test</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
     <?= Web\Asset::render(); ?>
 </head>
 <body>
@@ -46,8 +43,7 @@
         </div>
 
         <div class="content fixed-height">
-            <?=$error_block?>
-            <?=$message_block?>
+
             <?=( isset( $content ) ? $content : null )?>
         </div>
         <div class="clr"></div>

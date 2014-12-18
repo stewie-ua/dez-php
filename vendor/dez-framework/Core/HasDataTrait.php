@@ -5,7 +5,7 @@
     trait HasDataTrait {
 
         public function & get( $key = null, $default = null ) {
-            $data   = & $this->getData();
+            $data = & $this->getData();
             if( $this->has( $key ) ) $value = & $data[$key];
             else $value = $default;
             return $value;
