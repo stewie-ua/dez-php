@@ -58,6 +58,9 @@
         else return console.error('Each: invalid arguments');
     }
 
+    /**
+     * Add constructor to namespace
+     */
     var DOM = root.DOM = function( selector ) {
         return new DOMElements(selector);
     };
@@ -79,6 +82,9 @@
         }, false);
     };
 
+    /** Events cache */
+    DOM.events = [ ];
+
     /**
      * DOM elements collection
      * @param {string|Element|HTMLCollection} selector
@@ -87,11 +93,9 @@
     function DOMElements( selector ) {
         if (isElement(selector)) { this.push(selector); return; }
 
-        try {
-            var elements = isElementsList(selector) ? selector : document.querySelectorAll(selector),
-                i = 0, l = elements.length;
-            for (; i < l; i++) this.push(elements[i]);
-        } catch (e) { }
+        var elements = isElementsList(selector) ? selector : document.querySelectorAll(selector),
+            i = 0, l = elements.length;
+        for (; i < l; i++) this.push(elements[i]);
     }
 
     DOMElements.prototype = Object.create(Array.prototype, {
@@ -104,7 +108,7 @@
      * Base methods
      */
     DOM.extend({
-        each: function(callback) {
+        each: function( callback ) {
             this.forEach(function(item, index) {
                 callback.call(item, item, index);
             });
@@ -112,13 +116,13 @@
             return this;
         },
 
-        text: function(text) {
+        text: function( text ) {
             return text ? this.each(function() {
                 this.innerText = text;
             }) : this[0].innerText;
         },
 
-        html: function(html) {
+        html: function( html ) {
             return html ? this.each(function(item) {
                 item.innerHTML = html;
             }) : this[0].innerHTML;
@@ -129,7 +133,7 @@
             return this;
         },
 
-        parents: function(selector) {
+        parents: function( selector ) {
             var elem = this[0];
             this.splice(0);
 
@@ -146,7 +150,7 @@
             return this;
         },
 
-        find: function(selector) {
+        find: function( selector ) {
             var matches = [ ];
 
             this.each(function() {
@@ -161,42 +165,42 @@
             return this;
         },
 
-        eq: function(index) {
+        eq: function( index ) {
             this.splice(0, this.length, this[index]);
             return this;
         },
 
-        append: function(html) {
+        append: function( html ) {
             return this.each(function() {
                 this.insertAdjacentHTML('beforeend', html);
             });
         },
 
-        after: function(html) {
+        after: function( html ) {
             return this.each(function() {
                 this.insertAdjacentHTML('afterend', html);
             });
         },
 
-        prepend: function(html) {
+        prepend: function( html ) {
             return this.each(function() {
                 this.insertAdjacentHTML('afterbegin', html);
             });
         },
 
-        before: function(html) {
+        before: function( html ) {
             return this.each(function() {
                 this.insertAdjacentHTML('beforebegin', html);
             });
         },
 
-        attr: function(key, value) {
+        attr: function( key, value ) {
             return value ? this.each(function() {
                 this.setAttribute(key, value);
             }) : this[0].getAttribute(key);
         },
 
-        data: function(key, value) {
+        data: function( key, value ) {
             return value || isObject(key) ? this.each(function(item) {
                 isObject(key) && each(key, function(name, val) {
                     item.dataset[name] = val;
@@ -218,23 +222,23 @@
      * Methods for elements classes
      */
     DOM.extend({
-        hasClass: function(name) {
+        hasClass: function( name ) {
             return this[0].classList.contains(name);
         },
 
-        addClass: function(name) {
+        addClass: function( name ) {
             return this.each(function() {
                 this.classList.add(name);
             });
         },
 
-        removeClass: function(name) {
+        removeClass: function( name ) {
             return this.each(function() {
                 this.classList.remove(name);
             });
         },
 
-        toggleClass: function(name) {
+        toggleClass: function( name ) {
             return this.each(function() {
                 this.classList.toggle(name);
             });
@@ -257,13 +261,13 @@
             });
         },
 
-        css: function(name, value) {
+        css: function( name, value ) {
             return this.each(function() {
                 if (isObject(name)) {
                     each(name, function(key, val) {
                         this.style[key] = val;
                     }.bind(this));
-                } else{
+                } else {
                     this.style[name] = value;
                 }
             });
@@ -293,24 +297,56 @@
      * Events methods
      */
     DOM.extend({
-        on: function() {
+        on: function( name, selector, callback ) {
+            var namespace = null;
+            isFunction(selector) && (callback = selector) && (selector = null);
+            (~name.indexOf('.')) && (name = name.split('.')) && (namespace = name[1]) && (name = name[0]);
 
+            if (selector) {
+                var delegateCallback = function(e) {
+                    if (e.target === this) return;
+                    if (e.target.matches(selector)) {
+                        return callback.call(e.target, e);
+                    }
+
+                    for (var i = 0, l = e.path.length; i < l; i++) {
+                        if (e.path[i].parentNode === this) break;
+                        if (e.path[i].matches(selector)) {
+                            callback.call(e.path[i], e); break;
+                        }
+                    }
+                }
+            }
+
+            return this.each(function() {
+                this.addEventListener(name, delegateCallback || callback, false);
+                DOM.events.push({
+                    name: name,
+                    namespace: namespace,
+                    node: this,
+                    handler: delegateCallback || callback
+                });
+            });
         },
 
-        off: function() {
+        off: function( name ) {
+            var namespace = null;
+            (~name.indexOf('.')) && (name = name.split('.')) && (namespace = name[1]) && (name = name[0]);
 
+            return this.each(function() {
+                DOM.events.forEach(function(item, index) {
+                    if (item.name === name && item.namespace === namespace && item.node === this) {
+                        this.removeEventListener(name, item.handler);
+                        DOM.events.splice(index, 1);
+                    }
+                }.bind(this));
+            });
         },
 
-        trigger: function() {
-
-        },
-
-        click: function() {
-
-        },
-
-        focus: function() {
-
+        trigger: function( eventName, detail ) {
+            return this.each(function() {
+                this.dispatchEvent( new CustomEvent(eventName, { detail: detail }) );
+            });
         }
     });
 
