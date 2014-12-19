@@ -24,7 +24,7 @@
 		public function __construct( Core\Config $config ){
             parent::__construct();
 
-            date_default_timezone_set( $config->path( 'base.time_zone' ) );
+            date_default_timezone_set( $config->path( 'main.time_zone' ) );
 			$this->attach( 'config', $config );
 
             try {
@@ -36,6 +36,9 @@
 
 		public function run() {
             try{
+                $this->response->setHeader( 'X-Content-By', \Dez::poweredBy() );
+                $this->response->addHeader( 'X-Content-By', DEZ_CODENAME );
+                $this->response->setHeader( 'X-Author',     DEZ_AUTHOR );
                 $content = $this->action->execute();
                 if( $this->response->getFormat() == Response::RESPONSE_HTML ) {
                     $this->layout->setContent( $content )
@@ -63,9 +66,6 @@
             $this->initView();
             $this->initLayout();
             $this->initResponse();
-            // @TODO Вспомнил что надо хэдеров дописать ? и решил блять их дописать сука здесь ?
-			$this->response->setHeader( 'X-Content-By', \Dez::poweredBy() );
-			$this->response->setHeader( 'X-Author', DEZ_AUTHOR );
 		}
 
         protected function initSession() {
@@ -119,7 +119,7 @@
             // @TODO Хуйня, но ладно, ебись оно конем, работает - не трогай
             $config 	    = \Dez::cfg();
             $cacheDir 		= APP_PATH . DS . 'cache' . DS . 'system';
-            $xmlRoutes 		= APP_PATH . DS . 'conf' . DS . $config->path( 'base.router_config' );
+            $xmlRoutes 		= APP_PATH . DS . 'conf' . DS . $config->path( 'main.router_config' );
             $router         = Core\Router::instance(  $xmlRoutes, $cacheDir, $config->path( 'debug.enable' ) );
             $this->attach( 'router', $router );
         }

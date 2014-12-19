@@ -3,12 +3,16 @@
     use Dez\Controller\Controller,
         Dez\Error\Error as ErrorMessage,
         Dez\Utils,
-        Dez\Web\Asset;
+        Dez\Web\Asset,
+        Dez\Web\Layout;
 
     class EntryController extends Controller {
 
         public function beforeExecute() {
-
+            Layout::instance()
+                ->addKeyword( 'dez-admin, admin-panel, php framework, dez-framework' )
+                ->setTitle( 'DezAdmin' )
+                ->css( '@css/dez-admin.css' );
         }
 
         public function afterExecute() {

@@ -5,9 +5,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <title><?= $layout->getTitle(); ?></title>
+    <?= $layout->getKeyword(); ?>
+    <?= $layout->getDescription(); ?>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
-    <?= Web\Asset::render(); ?>
+    <?= $layout->get( 'head' ); ?>
 </head>
 <body>
 
@@ -43,8 +45,7 @@
         </div>
 
         <div class="content fixed-height">
-
-            <?=( isset( $content ) ? $content : null )?>
+            <?= $layout->get( 'content' ); ?>
         </div>
         <div class="clr"></div>
 

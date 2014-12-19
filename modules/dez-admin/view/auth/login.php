@@ -1,7 +1,6 @@
 <?php
     use Dez\Core\UrlBuilder as UB,
-        Dez\Core\Url,
-        Dez\Core\Session;
+        Dez\Core\Url;
 ?>
 <h1>Вход в админ-панель</h1>
 <div class="auth-login form">

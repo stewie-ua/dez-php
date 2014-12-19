@@ -77,4 +77,18 @@
             ] ) . static::closeTag( 'script' );
         }
 
+        static public function description( $descr = null ) {
+            return static::onceTag( 'meta', [
+                'name'      => 'description',
+                'content'   => $descr
+            ] );
+        }
+
+        static public function keyword( $keyword = null ) {
+            return static::onceTag( 'meta', [
+                'name'      => 'keyword',
+                'content'   => $keyword
+            ] );
+        }
+
     }
