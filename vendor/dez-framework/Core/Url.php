@@ -47,8 +47,8 @@
                     : null;
 
             $this->components['path']               = isset( $components['path'] )
-                    ? $this->isLocalHost()
-                        ? ltrim( $components['path'], Server::scriptDirectory() )
+                    ? $this->isLocalHost() && strpos( $components['path'], Server::scriptDirectory() ) === 0
+                        ? substr( $components['path'], strlen( Server::scriptDirectory() ) )
                         : $components['path']
                     : null;
 

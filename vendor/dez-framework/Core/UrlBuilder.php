@@ -69,9 +69,7 @@
                 ! $this->path ?: $cache->write( $this->path );
             }
 
-            return ! empty( $this->path )
-                ? join( '/',  $this->path )
-                : null;
+            return ! empty( $this->path ) ? join( '/',  $this->path ) : null;
         }
 
         static public function c( $placeholder = null, array $params = [], $method = null ) {

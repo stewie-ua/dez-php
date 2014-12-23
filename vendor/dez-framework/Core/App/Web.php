@@ -12,6 +12,7 @@
         Dez\Utils,
         Dez\Helper,
 
+        Dez\Core\Auth,
         Dez\View\View,
         Dez\Web\Layout,
         Dez\Response\Response;
@@ -28,11 +29,29 @@
 			$this->attach( 'config', $config );
 
             try {
-                $this->init();
+                $this->preInit();
             } catch ( \Exception $e ) {
                 ErrorMessage::fatal( Utils\HTML::tag( 'b', get_class( $e ) ) .': '. $e->getMessage() );
             }
 		}
+
+        public function preInit() {
+            $this->initSession();
+            $this->initError();
+            $this->initRequest();
+            $this->initRouter();
+            $this->initAction();
+            $this->initDatabase();
+            $this->initView();
+            $this->initLayout();
+            $this->initResponse();
+            return $this;
+        }
+
+        public function init(){
+            $this->initAuth();
+            return $this;
+        }
 
 		public function run() {
             try{
@@ -44,7 +63,6 @@
                     $this->layout->setContent( $content )
                         ->set( 'errorMessages',     ErrorMessage::instance()->render() )
                         ->set( 'infoMessages',      SystemMessage::instance()->render() )
-                        // @TODO Эту ебалу описывать надо явно не тут...
                         ->js( '@js/dom.js' )->js( '@js/jquery-2.1.1.min.js' )->css( '@css/main.css' );
                     $this->response->setBody( $this->layout->output() );
                 } else {
@@ -56,23 +74,11 @@
             }
 		}
 
-		private function init(){
-            $this->initSession();
-            $this->initError();
-            $this->initRequest();
-            $this->initRouter();
-            $this->initAction();
-            $this->initDatabase();
-            $this->initView();
-            $this->initLayout();
-            $this->initResponse();
-		}
-
         protected function initSession() {
             $this->attach( 'session', Core\Session::instance() );
         }
 
-		private function initDatabase() {
+        protected function initDatabase() {
             Loader::addIncludeDirs( DEZ_PATH . DS . 'Db' );
 			ORM::init( APP_PATH . DS . 'conf' . DS . 'app.ini', 'dev' );
             $this->attach( 'db', ORM::connect() );
@@ -82,6 +88,10 @@
                 } );
             }
 		}
+
+        protected function initAuth() {
+            $this->attach( 'auth', new Auth() );
+        }
 
 		protected function initError() {
             // @TODO Срала, мазала, мисыла... вот что я думаю об этом методе
@@ -141,12 +151,7 @@
         }
 
         public function redirect( $url = null ){
-            // @TODO Просто пиздец... Сделай сука нормально! Ебаный ты в рот. Ваня.
-            $uri = Core\URI::getInstance( $url );
-            $url = $uri->buildURL( 'scheme', 'host', 'path', 'query' );
-            header( 'HTTP/1.1 302 Moved Temporarily' );
-            header( 'Location: ' . $url );
-            die;
+            $this->response->setCode( 302 )->setHeader( 'Location', Url::instance( $url )->getFull() )->send(); die;
         }
 
 	}

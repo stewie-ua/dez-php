@@ -1,47 +1,59 @@
 <?php
-    use Dez\Core\Url;
+use Dez\Core\Url, Dez\Web;
 ?>
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>DezAdmin [ <?=$title?> ]</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>    <link rel="stylesheet" href="<?=$base_url?>media/css/main.css"/>
-    <script src="<?=$base_url?>media/js/jquery-2.1.1.min.js"></script>
-    <script src="<?=$base_url?>media/js/dom.js"></script>
-    <base href="<?=Url::base()?>"/>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>start<?= $layout->getTitle(); ?></title>
+        <?= $layout->getKeyword(); ?>
+        <?= $layout->getDescription(); ?>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+        <?= $layout->get( 'head' ); ?>
+    </head>
+    <body>
 
-<header>
+    <header>
 
-    <div class="logo">dez-admin</div>
+        <div class="logo">DevSite</div>
 
-    <ul class="menu">
-        <li><a href="<?=url( 'admin/auth' )?>">Авторизация</a></li>
-        <li><a href="<?=url( 'admin/about_system' )?>">О системе</a></li>
-    </ul>
+        <ul class="menu">
+            <li><a href="<?=adminUrl( 'index:index' )?>">Главная</a></li>
+        </ul>
 
-</header>
+        <ul class="auth-block">
+            <?if( ! Dez::app()->auth->isLogged() ):?>
+                <li><a href="<?=url( 'auth/login', [ 'return_url' => Url::current() ] )?>">Login</a></li>
+                <li><a href="<?=url( 'auth/registration' )?>">Registration</a></li>
+            <?else:?>
+                <li><a href="<?=url( 'profile' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
+                <li><a href="<?=url( 'auth/logout' )?>">Logout</a></li>
+            <?endif;?>
+        </ul>
 
-<div class="box">
+    </header>
 
-    <div class="left-block">
-        <?=( isset( $left ) ? $left : null )?>
+    <div class="box">
+
+        <div class="left-block">
+<!--            --><?//= callModule( 'common/leftmenu' ) ?>
+            <?=( isset( $left ) ? $left : null )?>
+        </div>
+
+        <div class="content fixed-height">
+            <?= $layout->get( 'errorMessages' ); ?>
+            <?= $layout->get( 'infoMessages' ); ?>
+            <?= $layout->get( 'content' ); ?>
+        </div>
+        <div class="clr"></div>
+
     </div>
 
-    <div class="content fixed-height">
-        <?=$error_block?>
-        <?=$message_block?>
-        <?=( isset( $content ) ? $content : null )?>
-    </div>
-    <div class="clr"></div>
+    <footer>
 
-</div>
+    </footer>
 
-<footer>
+    <?php print empty( $debug_block ) ? null : $debug_block ?>
 
-</footer>
-
-</body>
+    </body>
 </html>
