@@ -15,8 +15,8 @@
             $conf      = null;
 
         /**
-         * @return App|null
          * @throws \Exception
+         * @return \Dez\Core\App
         */
 
 		static public function app(){			

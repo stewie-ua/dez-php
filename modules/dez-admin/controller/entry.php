@@ -9,10 +9,7 @@
     class EntryController extends Controller {
 
         public function beforeExecute() {
-            Layout::instance()
-                ->addKeyword( 'dez-admin, admin-panel, php framework, dez-framework' )
-                ->setTitle( 'DezAdmin' )
-                ->css( '@css/dez-admin.css' );
+
         }
 
         public function afterExecute() {

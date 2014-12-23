@@ -79,7 +79,14 @@
 
             $controller             = $this->getControllerInstance( $this->wrapperRoute->controllerName, $this->wrapperRoute->moduleName );
             return $this->executeAction( $controller, $this->wrapperRoute->actionName, $this->wrapperRoute->params );
+        }
 
+        /**
+         * @return \Dez\Core\Router\Wrapper|null
+        */
+
+        public function getWrapperRoute() {
+            return $this->wrapperRoute;
         }
 
     }
