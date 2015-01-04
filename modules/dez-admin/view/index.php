@@ -15,23 +15,23 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
 
     <header>
 
-        <div class="logo">DevSite</div>
+        <div class="logo">dezAdmin</div>
 
         <ul class="menu">
-            <li><a href="<?=url( UrlBuilder::c( 'index:login' ) )?>">Главная</a></li>
-            <li><a href="<?=url( 'tools' )?>">Инструменты</a></li>
-            <li><a href="<?=url( 'posts' )?>">Статьи</a></li>
-            <li><a href="<?=url( 'feedback' )?>">Обратная связь</a></li>
-            <li><a href="<?=url( 'about' )?>">Обо мне</a></li>
+            <li><a href="<?=adminUrl( 'system:dashboard' )?>">Главная</a></li>
+            <li><a href="<?=adminUrl( 'users:index' )?>">Пользователи</a></li>
+            <li><a href="<?=adminUrl( 'tableGenerator:create' )?>">Генератор таблиц</a></li>
+            <li><a href="<?=adminUrl( 'fileManager:index' )?>">Файловый менеджер</a></li>
+            <li><a href="<?=adminUrl( 'systemTools:index' )?>">Инструменты</a></li>
         </ul>
 
         <ul class="auth-block">
             <?if( ! Dez::app()->auth->isLogged() ):?>
-                <li><a href="<?=url( 'auth/login', [ 'return_url' => Url::current() ] )?>">Login</a></li>
-                <li><a href="<?=url( 'auth/registration' )?>">Registration</a></li>
+                <li><a href="<?=adminUrl( 'index:login' )?>">Войти</a></li>
+                <li><a href="<?=adminUrl( 'index:registration' )?>">Регистрация</a></li>
             <?else:?>
-                <li><a href="<?=url( 'profile' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
-                <li><a href="<?=url( 'auth/logout' )?>">Logout</a></li>
+                <li><a href="<?=adminUrl( 'account:index' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
+                <li><a href="<?=adminUrl( 'index:logout' )?>">Выйти</a></li>
             <?endif;?>
         </ul>
 
@@ -40,13 +40,15 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
     <div class="box">
 
         <div class="left-block">
-            <?= callModule( 'common/leftmenu' ) ?>
             <?=( isset( $left ) ? $left : null )?>
         </div>
 
         <div class="content fixed-height">
+            <?= $layout->get( 'errorMessages' ); ?>
+            <?= $layout->get( 'infoMessages' ); ?>
             <?= $layout->get( 'content' ); ?>
         </div>
+
         <div class="clr"></div>
 
     </div>
@@ -54,8 +56,6 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
     <footer>
 
     </footer>
-
-    <?php print empty( $debug_block ) ? null : $debug_block ?>
 
     </body>
 </html>

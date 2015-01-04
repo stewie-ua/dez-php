@@ -42,6 +42,14 @@
             return null;
         }
 
+        static public function checkbox( $name = null, $value = null, $isChecked = false, array $attrs = [] ) {
+            $attrs['type']      = 'checkbox';
+            $attrs['name']      = $name;
+            $attrs['value']     = $value;
+            if( $isChecked ) { $attrs['checked'] = 'checked'; }
+            return static::onceTag( 'input', $attrs );
+        }
+
         static protected function option( $text = null, array $attrs = [] ) {
             return '<option'. static::buildAttrs( $attrs ) .'>'. static::entities( $text ) .'</option>';
         }

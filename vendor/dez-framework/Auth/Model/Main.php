@@ -1,8 +1,8 @@
 <?php
 
-	namespace Dez\Core\Auth;
+	namespace Dez\Auth\Model;
 
-    use \Dez\ORM\Query;
+    use Dez\ORM\Query;
 	
 	class Main extends \Dez\Core\Model {
 

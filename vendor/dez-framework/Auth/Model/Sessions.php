@@ -1,6 +1,6 @@
 <?php
 
-	namespace Dez\Core\Auth;
+    namespace Dez\Auth\Model;
 
     use \Dez\ORM\Query;
 

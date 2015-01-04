@@ -44,6 +44,7 @@
                 }
 
                 $controllerFile = $controllerDirectory . DS . $name . '.php';
+
                 if( ! file_exists( $controllerFile ) ) {
                     throw new Exception\RuntimeError( 'Controller file not found ['. Utils\HTML::tag( 'b', $controllerFile ) .']' );
                 }

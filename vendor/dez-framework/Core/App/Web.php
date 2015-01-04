@@ -12,10 +12,11 @@
         Dez\Utils,
         Dez\Helper,
 
-        Dez\Core\Auth,
+        Dez\Auth\Auth,
         Dez\View\View,
         Dez\Web\Layout,
-        Dez\Response\Response;
+        Dez\Response\Response,
+        Dez\Dispatcher\Dispatcher;
 
 	class Web extends Core\App {
 
@@ -36,6 +37,8 @@
 		}
 
         public function preInit() {
+            $this->initDispatcher();
+            $this->dispatcher->dispatch( 'beforePreInit', [ $this ] );
             $this->initSession();
             $this->initError();
             $this->initRequest();
@@ -49,30 +52,40 @@
         }
 
         public function init(){
+            $this->dispatcher->dispatch( 'beforeInit',  [ $this ] );
             $this->initAuth();
+            $this->dispatcher->dispatch( 'afterInit',   [ $this ] );
             return $this;
         }
 
 		public function run() {
+            $this->dispatcher->dispatch( 'beforeRun', [ $this ] );
             try{
-                $this->response->setHeader( 'X-Content-By', \Dez::poweredBy() );
-                $this->response->addHeader( 'X-Content-By', DEZ_CODENAME );
-                $this->response->setHeader( 'X-Author',     DEZ_AUTHOR );
+                $this->response->setHeader( 'Dez-Powered',          \Dez::poweredBy() );
+                $this->response->addHeader( 'Dez-Powered',          DEZ_CODENAME );
+                $this->response->setHeader( 'Dez-Framework-Author', DEZ_AUTHOR );
                 $content = $this->action->execute();
+                $this->dispatcher->dispatch( 'afterExecute', [ $this ] );
                 if( $this->response->getFormat() == Response::RESPONSE_HTML ) {
                     $this->layout->setContent( $content )
                         ->set( 'errorMessages',     ErrorMessage::instance()->render() )
-                        ->set( 'infoMessages',      SystemMessage::instance()->render() )
-                        ->js( '@js/dom.js' )->js( '@js/jquery-2.1.1.min.js' )->css( '@css/main.css' );
+                        ->set( 'infoMessages',      SystemMessage::instance()->render() );
+                    $this->dispatcher->dispatch( 'beforeRender', [ $this ] );
                     $this->response->setBody( $this->layout->output() );
                 } else {
                     $this->response->setBody( $content );
                 }
+                $this->dispatcher->dispatch( 'beforeSend', [ $this ] );
                 $this->response->send();
+                $this->dispatcher->dispatch( 'afterSend', [ $this ] );
             }catch( \Exception $e ){
                 ErrorMessage::fatal( $e->getMessage() );
             }
 		}
+
+        protected function initDispatcher() {
+            $this->attach( 'dispatcher', Dispatcher::instance()->loadHooks() );
+        }
 
         protected function initSession() {
             $this->attach( 'session', Core\Session::instance() );

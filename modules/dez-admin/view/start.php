@@ -5,29 +5,32 @@ use Dez\Core\Url, Dez\Web;
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>start<?= $layout->getTitle(); ?></title>
+        <title><?= $layout->getTitle(); ?></title>
         <?= $layout->getKeyword(); ?>
         <?= $layout->getDescription(); ?>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
         <?= $layout->get( 'head' ); ?>
     </head>
-    <body>
+    <body id="web-page">
+
+
 
     <header>
 
-        <div class="logo">DevSite</div>
+        <div class="logo">DezAdmin</div>
 
         <ul class="menu">
-            <li><a href="<?=adminUrl( 'index:index' )?>">Главная</a></li>
+            <li><a href="<?=adminUrl( 'index:home' )?>">Главная</a></li>
         </ul>
 
         <ul class="auth-block">
             <?if( ! Dez::app()->auth->isLogged() ):?>
-                <li><a href="<?=url( 'auth/login', [ 'return_url' => Url::current() ] )?>">Login</a></li>
-                <li><a href="<?=url( 'auth/registration' )?>">Registration</a></li>
+                <li><a href="<?=adminUrl( 'index:login' )?>">Войти</a></li>
+                <li><a href="<?=adminUrl( 'index:registration' )?>">Регистрация</a></li>
             <?else:?>
-                <li><a href="<?=url( 'profile' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
-                <li><a href="<?=url( 'auth/logout' )?>">Logout</a></li>
+                <li><a href="<?=adminUrl( 'system:dashboard' )?>">В панель</a></li>
+                <li><a href="<?=adminUrl( 'account:index' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
+                <li><a href="<?=adminUrl( 'index:logout' )?>">Выйти</a></li>
             <?endif;?>
         </ul>
 
@@ -36,7 +39,6 @@ use Dez\Core\Url, Dez\Web;
     <div class="box">
 
         <div class="left-block">
-<!--            --><?//= callModule( 'common/leftmenu' ) ?>
             <?=( isset( $left ) ? $left : null )?>
         </div>
 
@@ -52,8 +54,6 @@ use Dez\Core\Url, Dez\Web;
     <footer>
 
     </footer>
-
-    <?php print empty( $debug_block ) ? null : $debug_block ?>
 
     </body>
 </html>

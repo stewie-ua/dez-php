@@ -1,6 +1,6 @@
 <?php
-    use Sy\Utils\HTML,
-        Sy\Core\UrlBuilder as Url;
+    use Dez\Utils\HTML,
+        Dez\Core\UrlBuilder as Url;
 ?>
 <h1>Пользователи</h1>
 <table class="main">
@@ -19,17 +19,17 @@
             <td class="center"><?=$user->registerDate()?></td>
             <td class="center">
                 <?=HTML::a(
-                    url( 'users/'. $user->id() .'/edit' ),
+                    adminUrl( 'users:profile', [ 'id' => $user->id() ] ),
                     'Изменить',
                     [ 'class' => 'a-button' ]
                 )?>
                 <?=HTML::a(
-                    url( 'users/'. $user->id() .'/block' ),
+                    adminUrl( 'users:update', [ 'id' => $user->id(), 'do' => 'block' ] ),
                     'Блокировать',
                     [ 'class' => 'a-button' ]
                 )?>
                 <?=HTML::a(
-                    url( 'users/'. $user->id() .'/delete', [] ),
+                    adminUrl( 'users:update', [ 'id' => $user->id(), 'do' => 'delete' ] ),
                     'Удалить',
                     [
                         'class'     => 'a-button a-button-hover-red',

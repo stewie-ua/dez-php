@@ -17,6 +17,9 @@
             $view           = null,
             $request        = null;
 
+        static protected
+            $models         = [];
+
         public function __construct() {
             $reflection         = ( new \ReflectionClass( $this->getClassName() ) );
             $this->relativePath = realpath( dirname( $reflection->getFileName() ) . '/..' );
@@ -34,6 +37,23 @@
             $action         = \Dez::app()->action;
             $controller     = $action->getControllerInstance( $controllerName, $moduleName );
             return $action->executeAction( $controller, $actionName, $params );
+        }
+
+        public function model( $name = null ) {
+            $hash = md5( $name );
+            if( ! isset( static::$models[$hash] ) ) {
+                $modelFile = $this->relativePath . "/model/{$name}.php";
+                if( ! file_exists( $modelFile ) ) {
+                    throw new RuntimeError( "Model file not found '{$modelFile}'" );
+                }
+                include_once $modelFile;
+                $modelClassName = ucfirst( $name ) .'Model';
+                if( ! class_exists( $modelClassName ) ) {
+                    throw new RuntimeError( "Model class not found '{$modelClassName}'" );
+                }
+                static::$models[$hash] = new $modelClassName();
+            }
+            return static::$models[$hash];
         }
 
         public function render( $template = null, array $data = [] ) {

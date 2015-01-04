@@ -2,7 +2,7 @@
 
     // projects constans
 
-    const   AUTH_ADMIN              = 1000,
+    const   AUTH_ADMIN              = 100,
             // Custom constants
             // Users
             AUTH_USERS_DELETE       = 20,

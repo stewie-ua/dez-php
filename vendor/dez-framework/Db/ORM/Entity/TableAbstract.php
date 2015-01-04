@@ -64,6 +64,10 @@
             return static::$tableName;
         }
 
+        /**
+         * @return static
+         */
+
         static public function instance() {
             $hash = strtoupper( get_called_class() );
             if( ! isset( self::$instances[ $hash ] ) ) {
@@ -71,6 +75,12 @@
             }
             return self::$instances[ $hash ];
         }
+
+        /**
+         * @param   array                       $row
+         * @param   \Dez\ORM\Entity\Table       $table
+         * @return  \Dez\ORM\Entity\Row         $row
+         */
 
         static protected function rowInstance( array $row = [], Table $table = null ) {
             $rowClassName = isset( static::$rowClass ) && class_exists( static::$rowClass )

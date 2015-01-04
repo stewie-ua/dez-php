@@ -1,22 +1,25 @@
 <?php
 
-	namespace Dez\Core;
+	namespace Dez\Auth;
 
-    use Dez\Core;
+    use Dez\Auth\Model;
 
-	class Auth{
+	class Auth {
 
 		static private
+            $_access        = null,
             $_storage       = array(),
             $_authModel     = null,
             $_sessionModel  = null;
 		
 		public function __construct(){
 
-            self::$_authModel       = new Core\Auth\Main();
-            self::$_sessionModel    = new Core\Auth\Sessions();
+            static::$_access            = Access::instance();
 
-            self::$_sessionModel->deleteOldSessions();
+            static::$_authModel         = new Model\Main();
+            static::$_sessionModel      = new Model\Sessions();
+
+            static::$_sessionModel->deleteOldSessions();
 
             $uni_key = \Dez::app()->request->cookie( 'uni_key', false );
 
@@ -106,30 +109,12 @@
             self::$_sessionModel->updateOnline( $this->get( 'id' ), self::getUniKey() );
         }
 
-        public function accessToString( array $access = array() ) {
-            if( empty( $access ) ) {
-                return 0;
-            }
-            $max            = max( $access );
-            $accessGroups   = array_fill( 0, floor( $max / 32 ) + 1, 0 );
-            foreach( $access as $a ) {
-                $rowNum         = floor( $a / 32 );
-                $a              = $a - ( 32 * $rowNum );
-                $accessGroups[$rowNum]
-                    |= ( 1 << $a );
-            }
-            return join( '.', $accessGroups );
+        public function access( $level = -1 ) {
+            return static::$_access->access( $level, $this->get( 'level_access' ) );
         }
 
-        public function access( $level = -1 ) {
-            if( 0 >= $level ) {
-                return false;
-            }
-            $access     = $this->get( 'level_access' );
-            $line       = (int) floor( $level / 32 );
-            $level      = $level - ( 32 * $line );
-            $access     = array_map( 'intval', explode( '.', $access ) );
-            return (bool) isset( $access[$line] ) ? $access[$line] & ( 1 << $level ) : false;
+        public function accessToString( array $access = [] ) {
+            return static::$_access->accessToString( $access );
         }
 
 		public function add( array $auth_data ){

@@ -12,7 +12,7 @@
             $controller     = null,
             $action         = null,
             $params         = [],
-            $method         = null,
+            $method         = 'get',
 
             $path           = [];
 
@@ -77,6 +77,7 @@
         }
 
         protected function _findPath( array $routes = [], array $parent = [], $i = 0 ) {
+
             foreach( $routes as $route ) {
                 $route['parent'] = & $parent;
                 if (
