@@ -350,4 +350,14 @@
         }
     });
 
+    root.ajax = function( options ) {
+        return new Promise(function(resolve, reject) {
+            var request = new XMLHttpRequest();
+            request.open(options.method || 'POST', options.url, options.async || true);
+            request.onload = function() {
+
+            };
+        });
+    }
+
 }.call(window.app || (window.app = Object.create(null))));
