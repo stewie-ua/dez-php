@@ -3,7 +3,7 @@
     namespace Dez\ORM\Common;
 
     use Dez\Core\SingletonTrait,
-        \Dez\ORM\Exception\Error as ORMException;
+        Dez\ORM\Exception\Error as ORMException;
 
     class Event {
 

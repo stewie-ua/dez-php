@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title><?=( isset( $title ) ? $title : null )?></title>
+        <title>layout.php <?=( isset( $title ) ? $title : null )?></title>
     </head>
     <body>
         <?=( isset( $error_block ) ? $error_block : null )?>

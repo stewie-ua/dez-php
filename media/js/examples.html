@@ -33,17 +33,12 @@
         </div>
     </div>
     <script>
-        app.DOM.ready(function($) {
-            //var html = '';
-            //for (var i = 0, c = 5000; i < c; i++) html += '<div class="tests elem-'+ i +'">Element '+ i + '</div>';
-
-            //console.profile('on');
-            //$('body').append(html);
-
-            /*$('.tests').on('click', function() {
-                console.log($(this).text());
-            });*/
-            //console.profileEnd('on');
+        app.ajax({
+            url: 'https://api.vk.com/method/users.get?user_id=66748'
+        }).then(function(data) {
+            console.dir(data);
+        }).then(function(e) {
+            console.log(e);
         });
     </script>
 </body>

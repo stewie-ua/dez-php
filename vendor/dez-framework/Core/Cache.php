@@ -2,7 +2,7 @@
 	
 	namespace Dez\Core;
 	
-	use \Dez\Utils\FSO as fs;
+	use Dez\Helper\File;
 	
 	class Cache{
 		
@@ -13,7 +13,7 @@
 			$_fso 			= null;
 		
 		public function __construct( $cacheKey, $lifeTime = -1 ){
-			$this->_fso = new fs;
+			$this->_fso = File::instance();
 			// Prepare key
 			$cacheKey 	= $this->_prepareKey( $cacheKey );
 			// Setting

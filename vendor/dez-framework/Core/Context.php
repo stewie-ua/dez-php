@@ -7,12 +7,28 @@
         use SingletonTrait;
 
         protected
-            $controller = null;
+            $child      = null,
+            $parent     = null,
+            $context    = null;
 
-        public function getController() {
-            return $this->controller;
+        public function setParentContext( static $context ) {
+            $this->parent   = $context;
         }
 
-        protected function init() {}
+        public function setChildContext( static $context ) {
+            $this->child    = $context;
+        }
+
+        public function getParent() {
+            return $this->parent;
+        }
+
+        public function getChild() {
+            return $this->child;
+        }
+
+        protected function init() {
+
+        }
 
     }

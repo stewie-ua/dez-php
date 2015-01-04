@@ -16,7 +16,14 @@
             parent::__construct( Dez\ORM::connect() );
         }
 
-        public function __call( $name, $args = array() ) {
+        /**
+         * @param string $name
+         * @param array $args
+         * @throws ORMException
+         * @return $this
+        */
+
+        public function __call( $name, array $args = [] ) {
 
             $pattern = '/^('. join( '|', self::$filterTypes ) .')/us';
 
@@ -111,6 +118,11 @@
             return static::rowInstance( $row, $this );
         }
 
+        /**
+         * @return \Dez\ORM\Entity\Row[] $rows
+         * @throws ORMException
+         */
+
         public function find() {
             $stmt = $this->getConnection()->query( $this->getQueryBuilder()->query() );
             if( ! $stmt ) {
@@ -120,6 +132,11 @@
             }
             return $this;
         }
+
+        /**
+         * @return \Dez\ORM\Entity\Row $row
+         * @throws ORMException
+         */
 
         public function findOne() {
             $stmt = $this->getConnection()->query( $this->getQueryBuilder()->query() );
@@ -132,12 +149,22 @@
             return static::rowInstance( $row, $this );
         }
 
+        /**
+         * @return \Dez\ORM\Entity\Row[] $rows
+         */
+
         static public function findAll() {
             $instance = static::instance();
             $instance->getQueryBuilder()->select()->table( $instance->getTableName() );
             $instance->setStmt( $instance->getConnection()->query( $instance->getQueryBuilder()->query() ) );
             return $instance;
         }
+
+        /**
+         * @param array     $data
+         * @param boolean   $insertIgnore
+         * @return \Dez\ORM\Entity\Row $row
+         */
 
         static public function insert( array $data = array(), $insertIgnore = false ) {
             $row = static::row();

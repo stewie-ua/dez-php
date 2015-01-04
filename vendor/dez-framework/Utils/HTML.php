@@ -42,6 +42,14 @@
             return null;
         }
 
+        static public function checkbox( $name = null, $value = null, $isChecked = false, array $attrs = [] ) {
+            $attrs['type']      = 'checkbox';
+            $attrs['name']      = $name;
+            $attrs['value']     = $value;
+            if( $isChecked ) { $attrs['checked'] = 'checked'; }
+            return static::onceTag( 'input', $attrs );
+        }
+
         static protected function option( $text = null, array $attrs = [] ) {
             return '<option'. static::buildAttrs( $attrs ) .'>'. static::entities( $text ) .'</option>';
         }
@@ -67,6 +75,27 @@
                 'rel'   => 'stylesheet',
                 'type'  => 'text/css',
                 'media' => $media,
+            ] );
+        }
+
+        static public function script( $href = null ) {
+            return static::openTag( 'script', [
+                'src'   => $href,
+                'type'  => 'application/javascript'
+            ] ) . static::closeTag( 'script' );
+        }
+
+        static public function description( $descr = null ) {
+            return static::onceTag( 'meta', [
+                'name'      => 'description',
+                'content'   => $descr
+            ] );
+        }
+
+        static public function keyword( $keyword = null ) {
+            return static::onceTag( 'meta', [
+                'name'      => 'keyword',
+                'content'   => $keyword
             ] );
         }
 

@@ -12,7 +12,7 @@
             $controller     = null,
             $action         = null,
             $params         = [],
-            $method         = null,
+            $method         = 'get',
 
             $path           = [];
 
@@ -69,9 +69,7 @@
                 ! $this->path ?: $cache->write( $this->path );
             }
 
-            return ! empty( $this->path )
-                ? join( '/',  $this->path )
-                : null;
+            return ! empty( $this->path ) ? join( '/',  $this->path ) : null;
         }
 
         static public function c( $placeholder = null, array $params = [], $method = null ) {
@@ -79,6 +77,7 @@
         }
 
         protected function _findPath( array $routes = [], array $parent = [], $i = 0 ) {
+
             foreach( $routes as $route ) {
                 $route['parent'] = & $parent;
                 if (

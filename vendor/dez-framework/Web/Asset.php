@@ -3,32 +3,34 @@
     namespace Dez\Web;
 
     use Dez\Core\Object,
-        Dez\Core\SingletonTrait;
+        Dez\Core\SingletonTrait,
+        Dez\Web\Asset\AssetTrait;
 
     class Asset extends Object {
 
-        use AssetTrait, SingletonTrait;
+        use SingletonTrait, AssetTrait;
 
         protected function init() {}
 
-        public function addJs( $js ) {
+        public function addJS( $js ) {
             static::$stack['js'][] = $js;
         }
 
-        public function addCss( $css ) {
+        public function addCSS( $css ) {
             static::$stack['css'][] = $css;
         }
 
         static public function js( $js ) {
-            static::instance()->addJs( $js );
+            static::instance()->addJS( $js );
         }
 
         static public function css( $css ) {
-            static::instance()->addCss( $css );
+            static::instance()->addCSS( $css );
         }
 
         static public function render() {
-            return static::instance()->renderCss();
+            return static::instance()->renderCss()
+                . static::instance()->renderJs();
         }
 
     }

@@ -4,6 +4,7 @@
 
     use \Dez\Error\ErrorHandler,
         \Dez\Core;
+    use Dez\View\View;
 
     class System extends ErrorHandler {
 
@@ -49,10 +50,9 @@
         }
 
         public function render(){
-            $view   = new Core\View( __DIR__ . DS . '..' , 'php' );
-            $output = $view->render( 'error-tmpl', array(
-                'stack' => self::$stack
-            ) );
+            $view   = clone View::instance();
+            $view->setPath( __DIR__ .'/..' );
+            $output = $view->render( 'error-tmpl', [ 'stack' => self::$stack ] );
             static::$stack = static::$emptyStack;
             return $output;
         }

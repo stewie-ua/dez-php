@@ -10,7 +10,7 @@
 
     class Row extends RowIterator {
 
-        private
+        protected
             $connection     = null,
             $table          = null,
             $row            = array(),

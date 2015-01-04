@@ -354,10 +354,20 @@
         return new Promise(function(resolve, reject) {
             var request = new XMLHttpRequest();
             request.open(options.method || 'POST', options.url, options.async || true);
-            request.onload = function() {
-
-            };
+            request.addEventListener('load', resolve, false);
+            request.addEventListener('progress', options.progress || null, false);
+            request.addEventListener('error', reject);
+            request.addEventListener('abort', reject);
+            request.send(options.data || null);
         });
-    }
+    };
+
+    root.post = function( url ) {
+        return root.ajax({ url: url });
+    };
+
+    root.get = function( url ) {
+        return root.ajax({ method: 'GET', url: url });
+    };
 
 }.call(window.app || (window.app = Object.create(null))));

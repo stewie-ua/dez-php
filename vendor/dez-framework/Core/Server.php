@@ -23,7 +23,7 @@
             $this->queryString      = parse_url( $request->server( 'request_uri' ), PHP_URL_QUERY );
             $this->requestUri       = parse_url( $request->server( 'request_uri' ), PHP_URL_PATH );
             $this->scriptDirectory  = dirname( $request->server( 'script_name', '' ) );
-            $this->realPath         = str_replace( $this->scriptDirectory, '', $this->requestUri );
+            $this->realPath         = substr( $this->requestUri, strlen( $this->scriptDirectory ) );
         }
 
         public function getSchema() {

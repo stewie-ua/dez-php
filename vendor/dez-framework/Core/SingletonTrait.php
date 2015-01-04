@@ -7,6 +7,10 @@
         protected static
             $instances = [];
 
+        /**
+         * @return static
+        */
+
         final static public function instance() {
             $args   = func_get_args();
             $hash   = md5( get_called_class() . json_encode( $args ) . count( $args, true ) );

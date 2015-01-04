@@ -2,7 +2,9 @@
 	
 	namespace Dez\Core;
 	
-	class Response {
+	use Dez\View\View;
+
+    class Response {
 
         use SingletonTrait, HasDataTrait;
 		
@@ -17,7 +19,7 @@
 		
 		protected function init(){
 			$this->setTitleSeparator( \Dez::cfg()->path( 'base.titleSeparator' ) );
-            $this->view     = new View( APP_PATH . DS . 'view' );
+            $this->view     = View::instance();
 		}
 
 

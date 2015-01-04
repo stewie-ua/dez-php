@@ -1,16 +1,18 @@
 <?php
 
-    use \Dez\Core,
-        \Dez\Common\Validator,
-        \Dez\Error\Error,
-        \Dez\Utils,
-        \Dez\Web;
+    use Dez\Controller\Controller,
+        Dez\Core,
+        Dez\Common\Validator,
+        Dez\Error\Error,
+        Dez\Utils,
+        Dez\Web;
 
-    class IndexController extends Core\Controller {
+    class IndexController extends Controller {
 
         public function __construct() {
             parent::__construct();
             $this->response->setLayout( 'index' );
+            dump($this);
         }
 
         public function pageUnderConstructionAction() {
@@ -18,13 +20,7 @@
         }
 
         public function page404Action(){
-
-            Web\Asset::css( '@cache/media/css/head.css' );
-            Web\Asset::css( '@media/css/style.css' );
-            Web\Asset::css( '@css/footer.css' );
-            Web\Asset::css( '@js/js-folder.css' );
-
-            return sprintf( '<h2>Sorry, this page %s not found...</h2>', url() );
+            return sprintf( '<h2>Sorry, this page "%s" not found...</h2>', url() );
         }
 
         public function loginPageAction() {

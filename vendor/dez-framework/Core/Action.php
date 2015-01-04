@@ -3,7 +3,8 @@
     namespace Dez\Core;
 
     use Dez\Error\Exception,
-        Dez\Utils;
+        Dez\Utils,
+        Dez\Controller\Controller;
 
     class Action extends Object {
 
@@ -43,6 +44,7 @@
                 }
 
                 $controllerFile = $controllerDirectory . DS . $name . '.php';
+
                 if( ! file_exists( $controllerFile ) ) {
                     throw new Exception\RuntimeError( 'Controller file not found ['. Utils\HTML::tag( 'b', $controllerFile ) .']' );
                 }
@@ -63,7 +65,6 @@
         public function executeAction( Controller $controllerInstance, $action = null, array $methodArgs = [] ) {
             $actionName         = $action .'Action';
             if( $controllerInstance->hasMethod( $actionName ) ) {
-                $controllerInstance->setContext( $this->wrapperRoute );
                 $controllerInstance->beforeExecute();
                 $content    = call_user_func_array( array( $controllerInstance, $actionName ), $methodArgs );
                 $controllerInstance->afterExecute();
@@ -74,19 +75,19 @@
         }
 
         public function execute() {
-            $route          = $this->request->get( 'r', 'index/index' );
-            $wrapperRoutes  = $this->router->getResult( $route, $this->request->getMethod() );
-            $output         = [];
+            $route                  = $this->request->get( 'r', 'index/index' );
+            $this->wrapperRoute     = $this->router->getResult( $route, $this->request->getMethod() );
 
-            if( count( $wrapperRoutes ) > 0 ) {
-                foreach( $wrapperRoutes as $wrapperRoute ) {
-                    $this->wrapperRoute     = $wrapperRoute;
-                    $controller             = $this->getControllerInstance( $wrapperRoute->controllerName, $wrapperRoute->moduleName );
-                    $output[]               = $this->executeAction( $controller, $wrapperRoute->actionName, $wrapperRoute->params );
-                }
-            }
+            $controller             = $this->getControllerInstance( $this->wrapperRoute->controllerName, $this->wrapperRoute->moduleName );
+            return $this->executeAction( $controller, $this->wrapperRoute->actionName, $this->wrapperRoute->params );
+        }
 
-            return join( '<!-- Multi run -->', $output );
+        /**
+         * @return \Dez\Core\Router\Wrapper|null
+        */
+
+        public function getWrapperRoute() {
+            return $this->wrapperRoute;
         }
 
     }

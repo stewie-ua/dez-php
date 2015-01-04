@@ -13,12 +13,6 @@
     \Dez\Autoloader::addIncludeDirs( APP_PATH . DS . 'tables' );
     \Dez\Autoloader::addIncludeDirs( APP_PATH . DS . 'helper' );
 
-	$app = dez::app();
-
-    try {
-        $app->attach( 'auth', new \Dez\Core\Auth() );
-    } catch( \Exception $e ) {
-        \Dez\Error\Error::critical( $e->getMessage() );
-    }
+	$app = dez::app()->init();
 
     print $app->run();
