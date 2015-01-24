@@ -151,18 +151,19 @@
         },
 
         find: function( selector ) {
-            var matches = [ ];
+            var matches = [ ],
+                self    = Object.create(DOMElements.prototype);
 
             this.each(function() {
                 matches = matches.concat( toArray(this.querySelectorAll(selector)) );
             });
 
-            this.splice(0);
+
             matches.forEach(function(item) {
                 this.push(item);
-            }.bind(this));
+            }.bind(self));
 
-            return this;
+            return self;
         },
 
         eq: function( index ) {
@@ -354,16 +355,19 @@
         return new Promise(function(resolve, reject) {
             var request = new XMLHttpRequest();
             request.open(options.method || 'POST', options.url, options.async || true);
-            request.addEventListener('load', resolve, false);
+            request.responseType = options.type || '';
+            request.addEventListener('load', function(response) {
+                resolve(response.target.response, response);
+            }, false);
             request.addEventListener('progress', options.progress || null, false);
             request.addEventListener('error', reject);
             request.addEventListener('abort', reject);
-            request.send(options.data || null);
+            request.send(options.data || null)
         });
     };
 
-    root.post = function( url ) {
-        return root.ajax({ url: url });
+    root.post = function( url, data ) {
+        return root.ajax({ url: url, data: data });
     };
 
     root.get = function( url ) {

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<style>
+
+
+    .dez-tabs-box > .dez-tab-content:first-child,
+    .dez-tabs-box > .dez-tab-content:target {
+        display: block;
+    }
+
+    .dez-tab-content:first-child,
+    .dez-tab-content {
+        display: none;
+    }
+
+
+
+
+    .tab-folder > .tab-content:target ~ .tab-content:first-child,
+    .tab-folder > .tab-content {
+        display: none;
+    }
+    .tab-folder > :last-child,
+    .tab-folder > .tab-content:target {
+        display: block;
+    }
+
+</style>
+
+<ul class="dez-tabs">
+    <li>
+        <a href="#dez-tab-1">Tab 1</a>
+    </li>
+    <li>
+        <a href="#dez-tab-2">Tab 2</a>
+    </li>
+    <li>
+        <a href="#dez-tab-3">Tab 3</a>
+    </li>
+</ul>
+
+<div class="dez-tabs-box">
+    <div class="dez-tab-content" id="dez-tab-1">Content 1</div>
+    <div class="dez-tab-content" id="dez-tab-2">Content 2</div>
+    <div class="dez-tab-content" id="dez-tab-3">Content 3</div>
+</div>
+
+</body>
+</html>

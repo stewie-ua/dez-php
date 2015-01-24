@@ -15,6 +15,10 @@
         protected
             $relativePath   = null,
             $view           = null,
+
+            /**
+             * @var \Dez\Core\Request
+            */
             $request        = null;
 
         static protected
@@ -33,11 +37,18 @@
 
         public function afterExecute() {}
 
-        public function forward( $controllerName, $actionName, array $params = [], $moduleName = false ) {
+        public function forward( $controller, $actionName, array $params = [], $moduleName = false ) {
             $action         = \Dez::app()->action;
-            $controller     = $action->getControllerInstance( $controllerName, $moduleName );
+            if( is_string( $controller ) && ! ( $controller instanceof static ) ) {
+                $controller     = $action->getControllerInstance( $controller, $moduleName );
+            }
             return $action->executeAction( $controller, $actionName, $params );
         }
+
+        /**
+         * @param string $name
+         * @throws RuntimeError
+        */
 
         public function model( $name = null ) {
             $hash = md5( $name );

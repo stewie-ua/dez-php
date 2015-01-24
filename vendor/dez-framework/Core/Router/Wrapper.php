@@ -2,8 +2,8 @@
 
     namespace Dez\Core\Router;
 
-    use Dez\Core\Object;
-    use Dez\Core\SingletonTrait;
+    use Dez\Core\Object,
+        Dez\Core\SingletonTrait;
 
     class Wrapper extends Object {
 

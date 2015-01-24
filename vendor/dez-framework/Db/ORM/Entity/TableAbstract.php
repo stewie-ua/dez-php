@@ -6,12 +6,13 @@
         Dez\ORM\Connection,
         Dez\ORM\Query,
         Dez\ORM\Common,
-        Dez\ORM\Exception\Error as ORMException;
+        Dez\ORM\Exception\Error as ORMException,
+        Dez\ORM\Collection\RowsCollection;
 
-    abstract class TableAbstract extends TableIterator {
+    abstract class TableAbstract {
 
         static private
-            $instances = array();
+            $instances      = [];
 
         private
             $connection     = null,
@@ -31,9 +32,17 @@
             $this->columns      = $this->connection->getSchema()->getColumns( $this->getTableName() );
         }
 
+        /**
+         * @return \Dez\ORM\Connection\DBO $db
+         */
+
         public function getConnection() {
             return $this->connection;
         }
+
+        /**
+         * @return \Dez\ORM\Connection\Stmt $stmt
+         */
 
         public function getStmt() {
             return $this->stmt;
@@ -44,6 +53,24 @@
             return $this;
         }
 
+        /**
+         * @return \Dez\ORM\Entity\Row[] $rows
+        */
+
+        protected function getCollection() {
+            $items          = [];
+            while( $row = $this->getStmt()->loadArray() )
+                $items[]    = $this->rowInstance( $row );
+            $collection     = new RowsCollection( $items );
+            $collection->setTable( $this );
+            $collection->setType( $this->rowClass() );
+            return $collection;
+        }
+
+        /**
+         * @return \Dez\ORM\Common\Pagi $pagi
+        */
+
         public function getPagi() {
             return $this->pagi;
         }
@@ -51,6 +78,10 @@
         protected function setPagi( Common\Pagi $pagi ) {
             $this->pagi = $pagi;
         }
+
+        /**
+         * @return \Dez\ORM\Query\Builder $builder
+         */
 
         public function getQueryBuilder() {
             return $this->builder;
@@ -76,17 +107,20 @@
             return self::$instances[ $hash ];
         }
 
+        public function rowClass() {
+            return isset( static::$rowClass ) && class_exists( static::$rowClass )
+                ? static::$rowClass
+                : __NAMESPACE__ .'\Row';
+        }
+
         /**
          * @param   array                       $row
-         * @param   \Dez\ORM\Entity\Table       $table
          * @return  \Dez\ORM\Entity\Row         $row
          */
 
-        static protected function rowInstance( array $row = [], Table $table = null ) {
-            $rowClassName = isset( static::$rowClass ) && class_exists( static::$rowClass )
-                ? static::$rowClass
-                : __NAMESPACE__ .'\Row';
-            return new $rowClassName( $row, $table );
+        public function rowInstance( array $row = [] ) {
+            $rowClassName = $this->rowClass();
+            return new $rowClassName( $row, $this );
         }
 
     }

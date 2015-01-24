@@ -1,0 +1,8 @@
+.dez-checkbox-list {
+    list-style: none;
+    margin: 0px; padding: 0px;
+}
+
+.dez-checkbox-list li {
+    margin-left: 20px;
+}

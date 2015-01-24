@@ -2,11 +2,14 @@
 
     namespace Dez;
 
-    use \Dez\ORM\Autoloader,
-        \Dez\ORM\Common\Config,
-        \Dez\ORM\Exception\Error as ORMException,
+    use Dez\ORM\Autoloader,
+        Dez\ORM\Common\Config,
+        Dez\ORM\Exception\Error as ORMException,
 
-        \Dez\ORM\Connection;
+        Dez\ORM\Connection,
+
+        Dez\ORM\Entity\Table,
+        Dez\ORM\Wrapper;
 
     class ORM {
 

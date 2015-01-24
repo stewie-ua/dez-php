@@ -2,19 +2,18 @@
 
 	namespace Dez\Auth;
 
-    use Dez\Auth\Model;
+    use Dez\Auth\Model,
+        Dez\Auth\ACL\ACL;
 
 	class Auth {
 
 		static private
-            $_access        = null,
-            $_storage       = array(),
+
+            $_storage       = [],
             $_authModel     = null,
             $_sessionModel  = null;
 		
 		public function __construct(){
-
-            static::$_access            = Access::instance();
 
             static::$_authModel         = new Model\Main();
             static::$_sessionModel      = new Model\Sessions();
@@ -110,11 +109,11 @@
         }
 
         public function access( $level = -1 ) {
-            return static::$_access->access( $level, $this->get( 'level_access' ) );
+            return true;
         }
 
-        public function accessToString( array $access = [] ) {
-            return static::$_access->accessToString( $access );
+        public function has( $permission = null ) {
+            return ACL::hasUserPermission( $this->id(), $permission );
         }
 
 		public function add( array $auth_data ){

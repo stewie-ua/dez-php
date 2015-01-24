@@ -122,11 +122,18 @@
 		}
 
         private function _handleResult( array $result = [], array $matches = [] ) {
+
+            static $module;
+
+            if( $module == null ) {
+                $module = isset( $result['module'] ) ? strtolower( $result['module'] ) : false;
+            }
+
             $prepareResult = [
                 'controller'    => strtolower( $result['controller'] ),
                 'action'        => strtolower( $result['action'] ),
                 'method'        => isset( $result['method'] )       ? strtoupper( $result['method'] )   : 'GET',
-                'module'        => isset( $result['module'] )       ? strtolower( $result['module'] )   : false,
+                'module'        => $module,
                 'params'        => isset( $result['values'] )       ? $result['values']                 : [],
             ];
 

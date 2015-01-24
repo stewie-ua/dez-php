@@ -59,6 +59,12 @@
             return $this;
         }
 
+        /**
+         * @param string $query
+         * @return \Dez\ORM\Connection\Stmt $stmt
+         * @throws ORMException
+         */
+
         public function query( $query = null ) {
             try {
                 Common\Event::instance()->dispatch( 'query', $query );

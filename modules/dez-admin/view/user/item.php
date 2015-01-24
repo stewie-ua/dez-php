@@ -29,14 +29,9 @@
             <td><?= $user->registerDate() ?></td>
         </tr>
         <tr>
-            <td>Права</td>
+            <td>Роль</td>
             <td>
-                <?php foreach( $accessList as $access ): ?>
-                    <div>
-                        <?= HTML::checkbox( 'access[]', $access->id(), $authAccess->access( $access->id(), $user->getLevelAccess() ) ) ?>
-                        <?= $access->getTitle() ?>
-                    </div>
-                <?php endforeach; ?>
+                <?= HTML::select( $roles, 'user[acl_role_id]', $user->getAclRoleId() ) ?>
             </td>
         </tr>
 

@@ -9,15 +9,20 @@
 
     $moduleName     = Dez::app()->action->getWrapperRoute()->getModuleName();
 
-    Dez::setAlias( '@dezAdminCss',      "@media/{$moduleName}/css" );
-    Dez::setAlias( '@dezAdminJs',       "@media/{$moduleName}/js" );
+    Dez::setAlias( '@dezMedia',         "@web/modules/{$moduleName}/media" );
+
+    Dez::setAlias( '@dezAdminCss',      "@dezMedia/css" );
+    Dez::setAlias( '@dezAdminJs',       "@dezMedia/js" );
     Dez::setAlias( '@dezAdminModule',   "@modules/{$moduleName}" );
 
     Dez::setAlias( '@dezAdminModels',   "@dezAdminModule/model" );
 
     Dez::app()->layout
         ->setPath( \Dez::getAlias( '@dezAdminModule/view' ) )
-        ->setTitle( 'dezAdmin' );
+        ->setTitle( 'dezAdmin' )
+        ->css( '@dezAdminCss/dez-admin.css' )
+        ->js( '@dezAdminJs/dez-admin.js' )
+        ->js( '@dezAdminJs/dom.tabs.js' );
 
     function adminUrl( $page = 'index:index', array $queryParams = [], $method = 'get' ) {
         $params = explode( ':', $page );

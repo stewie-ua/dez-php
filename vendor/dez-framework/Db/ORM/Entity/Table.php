@@ -2,25 +2,25 @@
 
     namespace Dez\ORM\Entity;
 
-    use \Dez,
-        \Dez\ORM\Common,
-        \Dez\ORM\Query,
-        \Dez\ORM\Exception\Error as ORMException;
+    use Dez,
+        Dez\ORM\Common,
+        Dez\ORM\Query,
+        Dez\ORM\Exception\Error as ORMException;
 
     class Table extends TableAbstract {
 
         static private
-            $filterTypes = array( 'filterBy', 'groupBy', 'orderBy', 'limit', 'getTable' );
+            $filterTypes = [ 'filterBy', 'groupBy', 'orderBy', 'limit', 'getTable' ];
 
         public function __construct() {
             parent::__construct( Dez\ORM::connect() );
         }
 
         /**
-         * @param string $name
-         * @param array $args
-         * @throws ORMException
-         * @return $this
+         * @param   string          $name
+         * @param   array           $args
+         * @throws  ORMException
+         * @return  $this
         */
 
         public function __call( $name, array $args = [] ) {
@@ -81,7 +81,7 @@
                 }
 
             } else {
-                throw new ORMException( 'Wrong filter request' );
+                throw new ORMException( 'Calling undefined method '. get_called_class() .'::'. $name .'()' );
             }
 
             return $this;
@@ -103,23 +103,8 @@
             return $this->getConnection()->getSchema()->getTablePK( $this->getTableName() );
         }
 
-        public function numRows() {
-            return ! $this->getStmt() ? 0 : $this->getStmt()->numRows();
-        }
-
-        public function findPk( $pk = 0 ) {
-            $query = $this->getQueryBuilder()
-                ->select()
-                ->table( $this->getTableName() )
-                ->where( array( $this->pk(), $pk ) )
-                ->limit( 1 )
-                ->query();
-            $row = $this->getConnection()->query( $query )->loadArray() ?: [];
-            return static::rowInstance( $row, $this );
-        }
-
         /**
-         * @return \Dez\ORM\Entity\Row[] $rows
+         * @return \Dez\ORM\Collection\RowsCollection $collection
          * @throws ORMException
          */
 
@@ -130,7 +115,7 @@
             } else {
                 $this->setStmt( $stmt );
             }
-            return $this;
+            return $this->getCollection();
         }
 
         /**
@@ -154,10 +139,27 @@
          */
 
         static public function findAll() {
-            $instance = static::instance();
+            $instance   = static::instance();
             $instance->getQueryBuilder()->select()->table( $instance->getTableName() );
             $instance->setStmt( $instance->getConnection()->query( $instance->getQueryBuilder()->query() ) );
-            return $instance;
+            return $instance->getCollection();
+        }
+
+        /**
+         * @param int $pk
+         * @return \Dez\ORM\Entity\Row $row
+         */
+
+        static public function findPk( $pk = 0 ) {
+            $instance   = static::instance();
+            $query = $instance->getQueryBuilder()
+                ->select()
+                ->table( $instance->getTableName() )
+                ->where( array( $instance->pk(), $pk ) )
+                ->limit( 1 )
+                ->query();
+            $row = $instance->getConnection()->query( $query )->loadArray() ?: [];
+            return static::row( $row );
         }
 
         /**
@@ -172,8 +174,8 @@
             return $row;
         }
 
-        static public function row() {
-            return static::rowInstance( [], new static( ) );
+        static public function row( $row = [] ) {
+            return static::instance()->rowInstance( $row );
         }
 
     }

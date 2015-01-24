@@ -1,0 +1,11 @@
+{
+    "name":     "dezAdmin",
+    "version":  "1.0",
+    "icon":     "media/images/icon.png",
+    "permissions": {
+        "USER_LIST":    "Список пользователей",
+        "USER_DELETE":  "Удаление пользователей",
+        "USER_EDIT":    "Редактирование пользователей",
+        "USER_ADD":     "Добавление пользователей"
+    }
+}

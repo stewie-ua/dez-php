@@ -3,7 +3,7 @@ p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, img, ins, kbd, q, s, samp,
 small, strike, sub, sup, tt, var, center,
-dl, dt, dd, ol, ul, li,
+dl, dt, dd, ol,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
@@ -25,9 +25,7 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 1;
 }
-ol, ul {
-    list-style: none;
-}
+
 blockquote, q {
     quotes: none;
 }
@@ -98,7 +96,8 @@ h2 a:hover { text-decoration: underline; }
 .sy-errors.sy-errors-critical { background: #FFC7B9; }
 .sy-errors.sy-errors-warning { background: #FFCF9A; }
 .sy-errors.sy-errors-notify { background: #F5FF80; }
-.sy-errors li, .sy-message-box li { line-height: 20px; }
+.sy-errors ul, .sy-message-box ul { list-style: none; margin: 0; padding: 0 }
+.sy-errors li, .sy-message-box li { line-height: 20px }
 
 .sy-message-box.sy-message-success { background: #B7ECB7; }
 .sy-message-box.sy-message-info { background: #B6CBE5; }
@@ -138,9 +137,15 @@ header {
     z-index: 2000;
 }
 
+header ul {
+    list-style: none;
+}
+
 header ul,
 header ul li {
     display: inline-block;
+    margin: 0;
+    padding: 0;
 }
 
 header ul li a{
@@ -265,6 +270,14 @@ div.left-block {
     position: fixed;
 }
 
+div.left-block ul { list-style: none }
+
+div.left-block ul,
+div.left-block ul li{
+    margin: 0;
+    padding: 0;
+}
+
 div.left-block ul li a {
     display: block;
     color: #33434E;
@@ -337,8 +350,16 @@ a.a-button-hover-red:hover {
     color: #fff;
 }
 
-.center {
+.center, .text-center {
     text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
 }
 
 /* Posts */
@@ -553,3 +574,58 @@ a.go-links {
 }
 
 /* End. Codes */
+
+/* Tabs */
+
+.dez-tabs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: -1px;
+    z-index: 2;
+    position: relative;
+}
+
+.dez-tabs li {
+    display: inline-block;
+}
+
+.dez-tabs li:hover a {
+    color: #000;
+    background: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.dez-tabs li a.dez-tab-active {
+    color: #000;
+    background: #fff;
+    border-top: 0px;
+    border-bottom: 1px solid #fff;
+    box-shadow: 0px -2px 0 #4C5E7C;
+}
+
+.dez-tabs li a {
+    background: #f7f7f7;
+    border: 1px solid rgb(231, 231, 231);
+}
+
+.dez-tabs li a {
+    text-decoration: none;
+    color: #696969;
+    display: block;
+    padding: 10px 20px;
+}
+
+.dez-tabs-box .dez-tab-content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.dez-tabs-box {
+    position: relative;
+    background: #fff;
+    z-index: 1;
+    border: 1px solid rgb(231, 231, 231);
+}
+
+/* End Tabs */

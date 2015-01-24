@@ -64,9 +64,7 @@
                 if( ! $auth->isLogged() ) {
                     ErrorMessage::warning( 'Авторизируйтесь' );
                     $this->redirect( adminUrl( 'index:login' ) ); die;
-                } else if( ! $auth->access(
-                    \DB\Access::instance()->filterByAlias( 'admin' )->findOne()->id()
-                ) ) {
+                } else if( ! $auth->has( 'DEZ_ADMIN_PANEL' ) ) {
                     $auth->logout();
                     ErrorMessage::warning( 'Не достаточно прав' );
                     $this->redirect( adminUrl( 'index:login' ) );

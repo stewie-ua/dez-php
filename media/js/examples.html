@@ -33,12 +33,8 @@
         </div>
     </div>
     <script>
-        app.ajax({
-            url: 'https://api.vk.com/method/users.get?user_id=66748'
-        }).then(function(data) {
+        app.post('http://localhost:63342/syfrm-rc/media/js/examples.html').then(function(data) {
             console.dir(data);
-        }).then(function(e) {
-            console.log(e);
         });
     </script>
 </body>

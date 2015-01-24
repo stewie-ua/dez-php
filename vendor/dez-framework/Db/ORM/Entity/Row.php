@@ -13,12 +13,12 @@
         protected
             $connection     = null,
             $table          = null,
-            $row            = array(),
+            $row            = [],
             $pk             = 'id',
             $id             = 0,
             $builder        = null;
 
-        public function __construct( array & $row = array(), Table $table ) {
+        public function __construct( array & $row = [], Table $table ) {
             $this->table        = $table;
             $this->row          = & $row;
             $this->pk           = $this->table->pk();
@@ -29,7 +29,7 @@
         }
 
         public function __destruct() {
-
+            $this->onDestroy();
         }
 
         public function __call( $name, $args ) {
@@ -101,8 +101,10 @@
         }
 
         public function save( $insertIgnore = false ) {
+            $saveResult = null;
             if( $this->id() > 0 ) {
-                return $this->connection->execute(
+                $this->beforeUpdate();
+                $saveResult =  $this->connection->execute(
                     $this->builder
                         ->update()
                         ->table( $this->table->getTableName() )
@@ -111,19 +113,24 @@
                         ->limit( 1 )
                         ->query()
                 )->affectedRows();
+                $this->afterUpdate();
             } else {
+                $this->beforeSave();
                 $this->builder->insert();
                 if( $insertIgnore === true ){
                     $this->builder->ignore();
                 }
                 $query = $this->builder->table( $this->table->getTableName() )->bind( $this->toArray() )->query();
-                return $this->id = $this->connection->execute( $query  )->lastInsertId();
+                $saveResult = $this->id = $this->connection->execute( $query  )->lastInsertId();
+                $this->afterSave();
             }
+            return $saveResult;
         }
 
         public function delete() {
+            $this->beforeDelete(); $deleteResult = 0;
             if ( $this->id() > 0 ) {
-                return $this->connection->execute(
+                $deleteResult = $this->connection->execute(
                     $this->builder
                         ->delete()
                         ->table( $this->table->getTableName() )
@@ -131,8 +138,23 @@
                         ->limit( 1 )
                         ->query()
                 )->affectedRows();
+                $this->afterDelete();
             }
-            return 0;
+            return $deleteResult;
         }
+
+        protected function beforeSave() {}
+
+        protected function beforeUpdate() {}
+
+        protected function beforeDelete() {}
+
+        protected function afterSave() {}
+
+        protected function afterUpdate() {}
+
+        protected function afterDelete() {}
+
+        protected function onDestroy() {}
 
     }

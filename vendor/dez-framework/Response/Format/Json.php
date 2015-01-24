@@ -6,7 +6,7 @@
 
         public function process() {
             $this->response->setHeader( 'Content-type', 'application/json' );
-            $this->response->setBody( json_encode( $this->response->getBody() ) );
+            $this->response->setBody( json_encode( $this->response->getBody(), true ) );
         }
 
     }

@@ -20,6 +20,7 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
         <ul class="menu">
             <li><a href="<?=adminUrl( 'system:dashboard' )?>">Главная</a></li>
             <li><a href="<?=adminUrl( 'users:index' )?>">Пользователи</a></li>
+            <li><a href="<?=adminUrl( 'modules:index' )?>">Модули</a></li>
             <li><a href="<?=adminUrl( 'tableGenerator:create' )?>">Генератор таблиц</a></li>
             <li><a href="<?=adminUrl( 'fileManager:index' )?>">Файловый менеджер</a></li>
             <li><a href="<?=adminUrl( 'systemTools:index' )?>">Инструменты</a></li>
@@ -40,7 +41,7 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
     <div class="box">
 
         <div class="left-block">
-            <?=( isset( $left ) ? $left : null )?>
+            <?= $layout->get( 'left' ); ?>
         </div>
 
         <div class="content fixed-height">

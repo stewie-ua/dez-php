@@ -35,7 +35,7 @@
                 include $file;
             } catch ( \Exception $e ) {
                 ob_end_clean();
-                ErrorMessage::fatal( $e->getMessage() );
+                ErrorMessage::warning( $e->getMessage() );
             }
             $output = ob_get_contents(); ob_clean();
             return $output;

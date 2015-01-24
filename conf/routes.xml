@@ -3,7 +3,7 @@
 
 	<routes>
 
-        <route match="admin" controller="index" action="home" module="dez-admin" >
+        <route match="хуй" controller="index" action="home" module="dez-admin" >
             <route
                     match="{controllerName|str}-{actionName|str}.html"
                     controller="index"
@@ -17,6 +17,14 @@
                     module="dez-admin"
                     method="post" />
         </route>
+
+        <!-- Dev Tasker API -->
+        <route match="api" controller="index" action="index" module="dev-tasker">
+            <route match="user" controller="index" action="index" >
+                <route match="{method|str}" controller="user" action="methodRun" />
+            </route>
+        </route>
+        <!-- Dev Tasker API END -->
 
         <route match="index_page" controller="index" action="index" method="get"></route>
 

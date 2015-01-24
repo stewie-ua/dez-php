@@ -2,7 +2,7 @@
 
 	namespace Dez\Core;
 
-	class Model {
+	class Model extends Object {
 
         protected
             $db         = null,
