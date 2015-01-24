@@ -5,7 +5,7 @@
             app.ajax({
                 method: scope('#request_method')[0].value,
                 url:    scope('#request_url')[0].value,
-                type: 'json'
+                type: 'json'`
             }).then(function(response) {
                 console.log(response)
                 //scope('#request_emulate_response').html(response);
