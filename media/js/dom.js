@@ -58,6 +58,20 @@
         else return console.error('Each: invalid arguments');
     }
 
+    function createElements(elements) {
+        var object = Object.create(DOMElements.prototype);
+        if (!elements) return object;
+
+        if (isElement(elements)) {
+            object.push(elements);
+        }
+        else elements.forEach(function(item) {
+            this.push(item);
+        }.bind(object));
+
+        return object;
+    }
+
     /**
      * Add constructor to namespace
      */
@@ -128,47 +142,45 @@
             }) : this[0].innerHTML;
         },
 
+        val: function( value ) {
+            return value ? this.each(function(item) {
+                item.value = value;
+            }) : this[0].value
+        },
+
         parent: function() {
-            this.splice(0, this.length, this[0].parentNode);
-            return this;
+            return createElements(this[0].parentNode);
         },
 
         parents: function( selector ) {
-            var elem = this[0];
-            this.splice(0);
+            var elem = this[0],
+                parents = createElements();
 
             while((elem = elem.parentNode)) {
                 if (elem.nodeType === 1) {
                     if (selector) {
-                        if (elem.matches(selector)) { this.push(elem); break; }
+                        if (elem.matches(selector)) { parents.push(elem); break; }
                     } else {
-                        this.push(elem);
+                        parents.push(elem);
                     }
                 }
             }
 
-            return this;
+            return parents;
         },
 
         find: function( selector ) {
-            var matches = [ ],
-                self    = Object.create(DOMElements.prototype);
+            var matches = [ ];
 
             this.each(function() {
                 matches = matches.concat( toArray(this.querySelectorAll(selector)) );
             });
 
-
-            matches.forEach(function(item) {
-                this.push(item);
-            }.bind(self));
-
-            return self;
+            return createElements(matches);
         },
 
         eq: function( index ) {
-            this.splice(0, this.length, this[index]);
-            return this;
+            return isElement(this[index]) ? createElements(this[index]) : null;
         },
 
         append: function( html ) {
@@ -284,13 +296,13 @@
         },
 
         first: function() {
-            this.splice(0, this.length, this[0]);
-            return this;
+            if (!isElement(this[0])) return null;
+            return createElements(this[0]);
         },
 
         last: function() {
-            this.splice(0, this.length, this.slice(-1)[0]);
-            return this;
+            if (!isElement(this[this.length - 1])) return null;
+            return createElements(this[this.length - 1]);
         }
     });
 
