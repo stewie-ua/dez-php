@@ -30,11 +30,15 @@
         <div class="child">
             <h1>DOM JS</h1>
             <span>Examples</span>
+            <input name="test" type="text">
         </div>
     </div>
     <script>
-        app.post('http://localhost:63342/syfrm-rc/media/js/examples.html').then(function(data) {
+        /*app.post('examples.html').then(function(data) {
             console.dir(data);
+        });*/
+        app.DOM.ready(function($) {
+            console.dir($('input').val('test').parents());
         });
     </script>
 </body>
