@@ -8,12 +8,8 @@
             return true;
         }
 
-        public function runAction( $controller, $action ) {
-            return [$controller, $action];
-        }
-
         public function notFoundAction() {
-            return [ 'BAD REQUEST', func_get_args() ];
+            return [ 'BAD REQUEST' ];
         }
 
     }

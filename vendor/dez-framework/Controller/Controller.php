@@ -39,9 +39,7 @@
 
         public function forward( $controller, $actionName, array $params = [], $moduleName = false ) {
             $action         = \Dez::app()->action;
-            if( is_string( $controller ) && ! ( $controller instanceof static ) ) {
-                $controller     = $action->getControllerInstance( $controller, $moduleName );
-            }
+            if( is_string( $controller ) ) $controller = $action->getControllerInstance( $controller, $moduleName );
             return $action->executeAction( $controller, $actionName, $params );
         }
 

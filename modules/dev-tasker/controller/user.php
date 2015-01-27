@@ -1,18 +1,12 @@
 <?php
 
-    use Dez\Controller\Controller;
+    use Tasker\Mvc\ApiController,
+        Tasker\Api\Response as ApiResponse;
 
-    class UserController extends Controller {
+    class UserController extends ApiController {
 
-        protected
-            $requestMethod = 'NONE';
-
-        public function beforeExecute() {
-            $this->requestMethod    = strtoupper( $this->request->method );
-        }
-
-        public function methodRunAction( $methodName = null ) {
-            return [ $methodName, $this->requestMethod, $this->request ];
+        public function itemGETAction( $id ) {
+            return ApiResponse::success( [ 'test', $id ] );
         }
 
     }

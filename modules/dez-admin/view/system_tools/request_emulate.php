@@ -1,17 +1,13 @@
 <script>
-    app.DOM.ready(function( scope ){
-
-        scope('#send_request').on('click', function(){
+    app.DOM.ready(function( domJS ){
+        domJS('#send_request').on('click', function(){
             app.ajax({
-                method: scope('#request_method')[0].value,
-                url:    scope('#request_url')[0].value,
-                type: 'json'`
+                method:     domJS('#request_method').val(),
+                url:        domJS('#request_url').val()
             }).then(function(response) {
-                console.log(response)
-                //scope('#request_emulate_response').html(response);
+                domJS('#request_emulate_response').html(response);
             });
         });
-
     });
 </script>
 <table class="main">

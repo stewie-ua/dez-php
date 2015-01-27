@@ -115,6 +115,7 @@
 			}
 
             if( ! $this->wrappedRoute ) {
+
                 $this->_handleResult( ( $partsSize > 0 ? $this->_page404() : $this->_indexPage() ) );
             }
 

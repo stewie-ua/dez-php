@@ -2,6 +2,8 @@
 
     namespace Dez\Core;
 
+    use Dez\Cookie\Cookie;
+
 	class Session extends Object {
 		
         use SingletonTrait, HasDataTrait;
@@ -25,14 +27,14 @@
         public function initCsrfToken() {
             if( ! $this->csrfToken ) {
                 $token = $this->generateCsrfToken();
-                $this->set( 'csrfToken', $token );
-                setcookie( 'csrfToken', $token );
+                $this->set( 'csrf_token', $token );
+                Cookie::set( 'csrf_token', $token, time() + ( 3600 * 15 ), '/' );
             }
             return $this->csrfToken;
         }
 
         public function getCsrfToken() {
-            return $this->get( 'csrfToken', false );
+            return $this->get( 'csrf_token', false );
         }
 
         public function generateCsrfToken() {

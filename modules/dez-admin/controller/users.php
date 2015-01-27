@@ -14,9 +14,7 @@
     class UsersController extends Controller {
 
         public function beforeExecute() {
-            Layout::instance()->set( 'left', $this->render(
-                'user/inner/left', []
-            ) );
+            Layout::instance()->set( 'left', $this->render( 'user/inner/left', [] ) );
         }
 
         public function indexAction() {
@@ -58,6 +56,17 @@
             }
 
             $this->redirect( url() );
+        }
+
+        public function sessionsAction() {
+            return $this->render( 'user/session_list', [
+                'sessions'     => \DB\UserSession::instance()->orderByUserId( 'ASC' )->find()
+            ] );
+        }
+
+        public function closeSessionAction() {
+            \DB\UserSession::findPk( $this->request->get( 'id', 0 ) )->delete();
+            $this->redirect( adminUrl( 'users:sessions' ) );
         }
 
         public function rolesAction() {

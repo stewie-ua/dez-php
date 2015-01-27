@@ -9,4 +9,6 @@
 
     use Dez\Response\Response;
 
-    Response::instance()->setFormat( Response::RESPONSE_JSON );
+    Dez\Autoloader::addIncludeDirs( __DIR__ . '/core' );
+
+    Response::instance()->setFormat( Response::RESPONSE_API_JSON );

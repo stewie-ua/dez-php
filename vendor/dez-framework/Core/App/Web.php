@@ -16,9 +16,10 @@
         Dez\View\View,
         Dez\Web\Layout,
         Dez\Response\Response,
-        Dez\Dispatcher\Dispatcher;
+        Dez\Dispatcher\Dispatcher,
+        Dez\Cookie\Cookie;
 
-	class Web extends Core\App {
+    class Web extends Core\App {
 
 		public
 			$environment = 'web';
@@ -88,6 +89,7 @@
         }
 
         protected function initSession() {
+            $this->attach( 'cookie', Cookie::instance() );
             $this->attach( 'session', Core\Session::instance() );
         }
 

@@ -3,7 +3,7 @@
 
 	<routes>
 
-        <route match="хуй" controller="index" action="home" module="dez-admin" >
+        <route match="cpanel" controller="index" action="home" module="dez-admin" >
             <route
                     match="{controllerName|str}-{actionName|str}.html"
                     controller="index"
@@ -19,79 +19,18 @@
         </route>
 
         <!-- Dev Tasker API -->
-        <route match="api" controller="index" action="index" module="dev-tasker">
-            <route match="user" controller="index" action="index" >
-                <route match="{method|str}" controller="user" action="methodRun" />
+        <route match="api" controller="index" action="notFound" module="dev-tasker">
+            <route match="v1.0" controller="index" action="notFound">
+
+                <route match="auth" controller="auth" action="process" />
+
+                <route match="users" controller="user" action="list" >
+                    <route match="{id|num}" controller="user" action="item" />
+                </route>
+
             </route>
         </route>
         <!-- Dev Tasker API END -->
-
-        <route match="index_page" controller="index" action="index" method="get"></route>
-
-        <route match="common" controller="common" action="badRequest">
-            <route match="uploadImage" controller="common" action="uploadImage" />
-            <route match="leftmenu" controller="common" action="leftmenu" />
-        </route>
-
-        <route match="auth" controller="index" action="page404">
-
-            <route match="login" controller="index" action="loginPage" />
-            <route match="login" controller="index" action="loginDo" method="post" />
-
-            <route match="logout" controller="index" action="logout" />
-
-            <route match="registration" controller="index" action="registration" />
-            <route match="registration" controller="index" action="registrationProcess" method="POST" />
-
-        </route>
-
-        <route match="users" controller="user" action="list">
-
-        </route>
-
-        <route match="posts" controller="post" action="list">
-
-            <route match="add" controller="post" action="add" />
-            <route match="add" controller="post" action="addPost" method="POST" />
-
-            <route match="item" controller="post" action="back">
-                <route match="{id|num}" controller="post" action="item" />
-            </route>
-
-            <route match="page" controller="post" action="list">
-                <route match="{id|num}" controller="post" action="list" />
-            </route>
-            <route match="tag" controller="post" action="list">
-                <route match="{tag_name}" controller="post" action="listByTags" />
-            </route>
-
-        </route>
-
-        <route match="tools" controller="tool" action="list">
-            <route match="add" controller="tool" action="add" />
-            <route match="item" controller="tool" action="back">
-                <route match="{id|num}" controller="tool" action="loadTool" />
-            </route>
-        </route>
-
-        <route match="code-share" controller="code" action="list">
-            <route match="add" controller="code" action="add" />
-        </route>
-
-        <route match="x-crypt" controller="crypt" action="index" />
-
-        <route match="short-link" controller="link" action="index">
-            <route match="itemId{id|num}" controller="link" action="item" />
-        </route>
-
-        <route match="k" controller="index" action="page404">
-            <route match="{source_id|str}" controller="code" action="item" />
-        </route>
-
-        <!-- Redirect link -->
-        <route match="go" controller="index" action="page404">
-            <route match="{link_id|str}" controller="link" action="goto" />
-        </route>
 
 	</routes>
 	

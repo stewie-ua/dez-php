@@ -63,7 +63,7 @@
 				)
 			);
 
-            if( \Dez::cfg()->path( 'base/errors/hide_die_message' ) != 1 ) {
+            if( \Dez::cfg()->path( 'main.errors.hide_die_message' ) != 1 ) {
                 $handler->addHandler(
                     Handlers\DataBase::instance( ErrorHandler::DB )
                 );

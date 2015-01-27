@@ -31,7 +31,14 @@
             $this->request   = $request; return $this;
         }
 
-        public function getControllerInstance( $name = null, $moduleName = false ) {
+        /**
+         * @param   string $name
+         * @param   string $moduleName
+         * @throws  Exception\RuntimeError
+         * @return  \Dez\Controller\Controller $controller
+        */
+
+        public function getControllerInstance( $name = null, $moduleName = null ) {
             $hash = md5( $name . $moduleName );
 
             if( ! isset( static::$controllerInstances[$hash] ) ) {
@@ -57,6 +64,7 @@
                 }
 
                 static::$controllerInstances[$hash] = new $controllerClassName();
+                static::$controllerInstances[$hash]->beforeExecute();
             }
 
             return static::$controllerInstances[$hash];
@@ -65,7 +73,6 @@
         public function executeAction( Controller $controllerInstance, $action = null, array $methodArgs = [] ) {
             $actionName         = $action .'Action';
             if( $controllerInstance->hasMethod( $actionName ) ) {
-                $controllerInstance->beforeExecute();
                 $content    = call_user_func_array( array( $controllerInstance, $actionName ), $methodArgs );
                 $controllerInstance->afterExecute();
                 return $content;
@@ -75,7 +82,7 @@
         }
 
         public function execute() {
-            $route                  = $this->request->get( 'r', 'index/index' );
+            $route                  = $this->request->get( 'r', null );
             $this->wrapperRoute     = $this->router->getResult( $route, $this->request->getMethod() );
 
             $controller             = $this->getControllerInstance( $this->wrapperRoute->controllerName, $this->wrapperRoute->moduleName );
