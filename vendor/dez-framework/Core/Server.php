@@ -17,7 +17,7 @@
 
         protected function init() {
             $request                = Request::instance();
-            $this->schema           = $request->server( 'request_scheme', 'http' ) . '://';
+            $this->schema           = $request->server( 'request_scheme', 'http' );
             $this->host             = $request->http( 'host', $request->server( 'server_addr', '127.0.0.1' ) );
             $this->port             = $request->server( 'server_port', 80 );
             $this->queryString      = parse_url( $request->server( 'request_uri' ), PHP_URL_QUERY );

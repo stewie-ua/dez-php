@@ -36,7 +36,7 @@
                 $auth = self::$_authModel->getAuthById( $session['user_id'] );
                 if( $auth != false ) {
                     static::$_session->set( 'auth', json_encode( $auth ) );
-                    self::$_storage = $auth;
+                    static::$_storage = $auth;
                     $this->updateOnline( $uniqueKey );
                 } else {
                     throw new \Exception( 'AuthID: '. $session['user_id'] .' dont exists' );

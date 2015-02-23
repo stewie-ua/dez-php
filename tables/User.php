@@ -13,6 +13,11 @@
         static protected
             $tableName  = 'system_auth',
             $rowClass   = '\DB\RowUser';
+
+        public function sessions() {
+            return $this->hasMany( '\DB\UserSession' );
+        }
+
     }
 
     class RowUser extends ORMRow {

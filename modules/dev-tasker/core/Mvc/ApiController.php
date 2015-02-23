@@ -23,14 +23,14 @@
         }
 
         public function runAction() {
-            $params = func_get_args();
-            $method = array_shift( $params );
-            $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
-            if( $wrappedRouter->getControllerName() != 'auth' && $this->request->get( 'token' ) == $this->auth->get( 'id' ) ) {
-
-            }
+            $params     = func_get_args();
+            $methodName = array_shift( $params );
+//            $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
+//            if( $wrappedRouter->getControllerName() != 'auth' && $this->request->get( 'token' ) == $this->auth->get( 'id' ) ) {
+//
+//            }
             try {
-                return $this->forward( $this, $method, $params );
+                return $this->forward( $this, $methodName, $params );
             } catch ( \Exception $e ) {
                 \Dez\Response\Response::instance()->setCode( 404 );
                 return ApiResponse::error( 'BAD REQUEST ('. $e->getMessage() .')', 101 );

@@ -22,7 +22,7 @@
             $pagi           = null;
 
         protected function __construct( Connection\DBO $connection ) {
-            if( ! isset( static::$tableName ) || ! static::$tableName ) {
+            if( ! $this->hasTableName() ) {
                 throw new ORMException( 'Not defined table name for: '. get_called_class() );
             }
 
@@ -89,6 +89,18 @@
 
         public function setQueryBuilder( Query\Builder $builder ) {
             $this->builder = $builder;
+        }
+
+        public function hasRelations() {
+            return isset( static::$relations );
+        }
+
+        public function getRelations() {
+            return $this->hasRelations() ? static::$relations : false;
+        }
+
+        public function hasTableName() {
+            return isset( static::$tableName );
         }
 
         public function getTableName() {

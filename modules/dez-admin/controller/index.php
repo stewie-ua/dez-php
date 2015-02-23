@@ -60,7 +60,7 @@
 
                 Layout::instance()->setName( 'index' );
                 $auth = \Dez::app()->auth;
-
+                //dump($auth->has('aaa'));
                 if( ! $auth->isLogged() ) {
                     ErrorMessage::warning( 'Авторизируйтесь' );
                     $this->redirect( adminUrl( 'index:login' ) ); die;

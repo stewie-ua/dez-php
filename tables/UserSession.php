@@ -11,8 +11,8 @@
 
     class UserSession extends ORMTable {
         static protected
-            $tableName  = 'system_sessions',
-            $rowClass   = '\DB\RowUserSession';
+            $tableName      = 'system_sessions',
+            $rowClass       = '\DB\RowUserSession';
     }
 
     class RowUserSession extends ORMRow {

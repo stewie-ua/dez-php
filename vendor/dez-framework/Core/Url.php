@@ -24,7 +24,7 @@
 
             $this->components['schema']             = ( isset( $components['scheme'] )
                 ? $components['scheme']
-                : 'http' ) .'://';
+                : Server::schema() ) .'://';
 
             $this->components['user']               = isset( $components['user'] )
                 ? $components['user']

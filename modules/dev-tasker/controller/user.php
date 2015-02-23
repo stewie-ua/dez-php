@@ -6,6 +6,11 @@
     class UserController extends ApiController {
 
         public function itemGETAction( $id ) {
+
+            $users = \DB\User::findAll();
+            dump($users);
+            $users;
+
             return ApiResponse::success( [ 'test', $id ] );
         }
 

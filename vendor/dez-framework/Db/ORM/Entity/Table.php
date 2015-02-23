@@ -5,12 +5,13 @@
     use Dez,
         Dez\ORM\Common,
         Dez\ORM\Query,
+        Dez\ORM\Association\Association,
         Dez\ORM\Exception\Error as ORMException;
 
     class Table extends TableAbstract {
 
         static private
-            $filterTypes = [ 'filterBy', 'groupBy', 'orderBy', 'limit', 'getTable' ];
+            $filterTypes = [ 'filterBy', 'groupBy', 'orderBy', 'limit', 'use' ];
 
         public function __construct() {
             parent::__construct( Dez\ORM::connect() );
@@ -52,7 +53,7 @@
                         } else if ( $args[0] ) {
                             $columnName = Common\Utils::php2sql( $args[0] );
                             $this->getQueryBuilder()->groupAlias( $columnName );
-                        }  else {
+                        } else {
                             throw new ORMException( 'Wrong groupBy request' );
                         }
                         break;
@@ -62,19 +63,23 @@
                         if( isset( $target[1] ) ) {
                             $columnName = Common\Utils::php2sql( $target[1] );
                             $this->getQueryBuilder()->order( array( $columnName, $args[0] ) );
-                        }else {
+                        } else {
                             throw new ORMException( 'Wrong orderBy request' );
+                        }
+                        break;
+                    }
+
+                    case 'use': {
+                        if( isset( $target[1] ) ) {
+                            return Association::instance( $name, $this );
+                        } else {
+                            throw new ORMException( 'Wrong use request' );
                         }
                         break;
                     }
 
                     case 'limit': {
                         $this->getQueryBuilder()->limit( $args[0], $args[1] );
-                        break;
-                    }
-
-                    case 'getTable': {
-                        throw new ORMException( __METHOD__ .' commig soon...' );
                         break;
                     }
 
