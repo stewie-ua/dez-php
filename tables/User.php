@@ -14,13 +14,13 @@
             $tableName  = 'system_auth',
             $rowClass   = '\DB\RowUser';
 
-        public function sessions() {
-            return $this->hasMany( '\DB\UserSession' );
-        }
-
     }
 
     class RowUser extends ORMRow {
+
+        public function sessions() {
+            return $this->table->hasMany( '\DB\UserSession', $this );
+        }
 
         public function registerDate() {
             return ( new \DateTime( $this->getAddedAt() ) )->format( 'd.m.Y H:i:s' );

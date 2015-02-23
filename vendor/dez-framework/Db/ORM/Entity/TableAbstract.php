@@ -91,14 +91,6 @@
             $this->builder = $builder;
         }
 
-        public function hasRelations() {
-            return isset( static::$relations );
-        }
-
-        public function getRelations() {
-            return $this->hasRelations() ? static::$relations : false;
-        }
-
         public function hasTableName() {
             return isset( static::$tableName );
         }

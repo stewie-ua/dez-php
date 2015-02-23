@@ -11,7 +11,7 @@
     class Table extends TableAbstract {
 
         static private
-            $filterTypes = [ 'filterBy', 'groupBy', 'orderBy', 'limit', 'use' ];
+            $filterTypes = [ 'filterBy', 'groupBy', 'orderBy', 'limit' ];
 
         public function __construct() {
             parent::__construct( Dez\ORM::connect() );
@@ -65,15 +65,6 @@
                             $this->getQueryBuilder()->order( array( $columnName, $args[0] ) );
                         } else {
                             throw new ORMException( 'Wrong orderBy request' );
-                        }
-                        break;
-                    }
-
-                    case 'use': {
-                        if( isset( $target[1] ) ) {
-                            return Association::instance( $name, $this );
-                        } else {
-                            throw new ORMException( 'Wrong use request' );
                         }
                         break;
                     }
@@ -160,7 +151,7 @@
             $query = $instance->getQueryBuilder()
                 ->select()
                 ->table( $instance->getTableName() )
-                ->where( array( $instance->pk(), $pk ) )
+                ->where( [ $instance->pk(), $pk ] )
                 ->limit( 1 )
                 ->query();
             $row = $instance->getConnection()->query( $query )->loadArray() ?: [];
@@ -181,6 +172,12 @@
 
         static public function row( $row = [] ) {
             return static::instance()->rowInstance( $row );
+        }
+
+        static public function with( $name ) {
+            $instance = static::instance();
+            $instance->setWith( $name );
+            return $instance;
         }
 
     }

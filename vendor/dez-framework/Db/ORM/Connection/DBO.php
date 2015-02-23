@@ -37,6 +37,10 @@
             $this->initSchema();
         }
 
+        /**
+         * @return \Dez\ORM\Connection\Schema $schema
+        */
+
         public function getSchema() {
             return $this->schema;
         }
