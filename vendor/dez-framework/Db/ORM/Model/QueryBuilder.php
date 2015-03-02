@@ -106,11 +106,19 @@
          */
 
         public function find() {
-            $query          = $this->getNativeBuilder()->select()->query();
-            $stmt           = $this->getNativeBuilder()->getConnection()->query( $query );
-            $collection     = $this->getModel()->createCollection( $stmt );
+            $stmt   = $this->getModel()->getConnection()->query( $this->getNativeBuilder()->select()->query() );
+            return $this->getModel()->createCollection( $stmt );
+        }
 
-            dump( $collection->getIDs() );
+        /**
+         * @return Table $model
+         */
+
+        public function findOne( $id = 0 ) {
+            $builder    = $this->getNativeBuilder();
+            $builder->where( [ $this->getModel()->pk(), $id ] );
+            $stmt       = $this->getModel()->getConnection()->query( $builder->select()->query() );
+            return $stmt->loadIntoObject( $this->getModel()->getClassName() );
         }
 
         /**

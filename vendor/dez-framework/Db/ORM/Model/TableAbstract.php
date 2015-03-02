@@ -18,8 +18,7 @@
         protected
             $connection     = null,
             $data           = [],
-            $pk             = null,
-            $id             = 0;
+            $pk             = null;
 
         /**
          * @return static
@@ -49,6 +48,7 @@
 
         /**
          * @return mixed
+         * @param string $name
          */
 
         public function __get( $name = null ) {
@@ -57,6 +57,8 @@
 
         /**
          * @return static
+         * @param string $name
+         * @param string $value
          */
 
         public function __set( $name = null, $value = null ) {
@@ -65,6 +67,8 @@
 
         /**
          * @return mixed
+         * @param string $name
+         * @param mixed $default
          */
 
         public function get( $name, $default = null ) {
@@ -90,6 +94,7 @@
 
         /**
          * @return static
+         * @param DbConnection $connection
          */
 
         public function setConnection( DbConnection $connection ) {
@@ -107,6 +112,7 @@
 
         /**
          * @return ModelCollection $collection
+         * @param Stmt $stmt
         */
 
         public function createCollection( Stmt $stmt ) {

@@ -117,8 +117,13 @@
 
         public function clear() { $this->items = []; }
 
+        /**
+         * @return static
+        */
+
         public function sort( callable $callback ) {
-            return usort( $this->items, $callback );
+            usort( $this->items, $callback );
+            return $this;
         }
 
         public function toArray() {

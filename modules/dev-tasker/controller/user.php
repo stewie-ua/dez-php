@@ -9,7 +9,9 @@
 
 //            $users = \DB\UserModel::query();
 
-            dump( \DB\UserModel::all() );
+            dump( \DB\UserModel::one(3)->all() );
+
+//            \DB\UserModel::all();
 
 //            $users = \DB\User::findAll();
 ////            dump($users);
