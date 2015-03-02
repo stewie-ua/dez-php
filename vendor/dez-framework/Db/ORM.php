@@ -6,10 +6,7 @@
         Dez\ORM\Common\Config,
         Dez\ORM\Exception\Error as ORMException,
 
-        Dez\ORM\Connection,
-
-        Dez\ORM\Entity\Table,
-        Dez\ORM\Wrapper;
+        Dez\ORM\Connection;
 
     class ORM {
 
@@ -33,6 +30,10 @@
         static public function setConnectionName( $connectionName = null ) {
             self::$connectionName = $connectionName;
         }
+
+        /**
+         * @return Connection\DBO $connection
+        */
 
         static public function connect() {
             $hash   = md5( self::$connectionName );

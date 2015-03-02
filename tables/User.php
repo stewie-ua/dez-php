@@ -2,8 +2,8 @@
 
     namespace DB;
 
-    use \Dez\ORM\Entity\Table   as ORMTable,
-        \Dez\ORM\Entity\Row     as ORMRow;
+    use Dez\ORM\Entity\Table   as ORMTable,
+        Dez\ORM\Entity\Row     as ORMRow;;
 
     /**
      * @method ORMTable orderById( string $orderMode )

@@ -16,7 +16,7 @@
 
         public function attach( $name = null, $callback = null ) {
             if( ! $name || ! $callback )
-                throw new ORMException( __METHOD__ .' [ bad attach call function ]' );
+                throw new ORMException( __METHOD__ .' [ bad attach callback function ]' );
 
             if( ! isset( $this->callbacks[$name] ) || ! is_array( $this->callbacks[$name] ) )
                 $this->callbacks[$name] = [];

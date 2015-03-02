@@ -7,11 +7,15 @@
 
         public function itemGETAction( $id ) {
 
-            $users = \DB\User::findAll();
-            dump($users);
-            $users;
+//            $users = \DB\UserModel::query();
 
-            return ApiResponse::success( [ 'test', $id ] );
+            dump( \DB\UserModel::all() );
+
+//            $users = \DB\User::findAll();
+////            dump($users);
+//            $users;
+
+            return ApiResponse::success( [ 'test' => $id ] );
         }
 
     }

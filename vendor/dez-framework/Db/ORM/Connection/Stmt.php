@@ -65,7 +65,7 @@
             return $this->_fetch( \PDO::FETCH_COLUMN );
         }
 
-        public function loadIntoObject( $target ) {
+        public function loadIntoObject( $target = '\stdClass' ) {
             if( is_string( $target ) && class_exists( $target ) ) {
                 $object = new $target();
             } else if( is_object( $target ) ) {
