@@ -26,4 +26,20 @@
             return $dictionary;
         }
 
+        public function save() {
+            $this->each( function( $item ) { $item->save(); } );
+        }
+
+        public function toArray() {
+            $items = $this->items;
+            foreach( $items as & $item ) {
+                $item = $item->toArray();
+            }
+            return $items;
+        }
+
+        public function toJSON() {
+            return json_encode( $this->toArray() );
+        }
+
     }

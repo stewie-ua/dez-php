@@ -85,6 +85,16 @@
         }
 
         /**
+         * @return static
+         */
+
+        public function bind( array $data = [] ) {
+            foreach( $data as $key => $value )
+                $this->$key     = $value;
+            return $this;
+        }
+
+        /**
          * @return string $tableName
          */
 
@@ -122,6 +132,14 @@
                 $collection->add( $model );
             }
             return $collection;
+        }
+
+        /**
+         * @return boolean
+        */
+
+        public function exists() {
+            return ( $this->id() > 0 );
         }
 
         /**

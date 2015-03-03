@@ -3,6 +3,7 @@
     namespace Dez\ORM\Model;
 
     use Dez\ORM\Collection\ModelCollection;
+    use Dez\ORM\Query\Builder as BaseQueryBuilder;
 
     class Table extends TableAbstract {
 
@@ -27,11 +28,12 @@
         }
 
         static public function insert( array $data = [] ) {
-
+            return static::instance()->bind( $data )->save();
         }
 
         public function save() {
-
+            $query = QueryBuilder::instance( $this );
+            return $this->exists() ? $query->update() : $query->insert();
         }
 
         public function delete() {
@@ -44,6 +46,18 @@
 
         public function pk() {
             return $this->pk;
+        }
+
+        public function toArray() {
+            return (array) $this->data;
+        }
+
+        public function toObject() {
+            return (object) $this->data;
+        }
+
+        public function toJSON() {
+            return json_encode( $this->toArray() );
         }
 
     }

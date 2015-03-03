@@ -122,6 +122,24 @@
         }
 
         /**
+         * @return int|boolean
+        */
+
+        public function insert() {
+            $query  = $this->getNativeBuilder()->bind( $this->getModel()->toArray() )->insert()->query();
+            dump($query);
+            $stmt   = $this->getModel()->getConnection()->query(  );
+        }
+
+        /**
+         * @return int|boolean
+         */
+
+        public function update() {
+
+        }
+
+        /**
          * @return string $name
         */
 
