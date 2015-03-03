@@ -6,7 +6,7 @@
 
     class OutOfRangeException extends \Exception {}
 
-    class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
+    abstract class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
 
         protected
             $items      = [],
@@ -28,11 +28,6 @@
             if( count( $items ) > 0 ) foreach( $items as $item ) {
                 $this->add( $item );
             }
-        }
-
-        public function add( $item ) {
-            $this->validateItem( $item );
-            $this->items[]  = $item;
         }
 
         public function at( $index = 0 ) {
@@ -122,8 +117,13 @@
 
         public function clear() { $this->items = []; }
 
+        /**
+         * @return static
+        */
+
         public function sort( callable $callback ) {
-            return usort( $this->items, $callback );
+            usort( $this->items, $callback );
+            return $this;
         }
 
         public function toArray() {
@@ -177,5 +177,7 @@
         public function getIterator() {
             return new \ArrayIterator( $this->items );
         }
+
+        abstract public function add( $item );
 
     }
