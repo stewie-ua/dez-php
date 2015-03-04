@@ -10,21 +10,31 @@
 
 //            dump( \DB\UserModel::one(17)->getEmail() );
 
-//            $user = \DB\UserModel::one(42);
+            $user = \DB\UserModel::one(42);
+
+            dump( $user );
 
 //            dump( $user, $user->exists() );
+//die('ok');
 
-            $user = new \DB\UserModel();
+            $users = \DB\UserModel::all();
 
 
-            $user->bind([
-                'email'     => 'mail-'. rand( 1, 10000 ) .'@mail.com',
-                'password'  => md5( rand( 1, 10000 ) ),
-            ]);
+                foreach( $users as $user ) {
+
+                    var_dump( $user->id() );
+
+                } die;
+
+
+//            $user->bind([
+//                'email'     => 'mail-'. rand( 1, 10000 ) .'@mail.com',
+//                'password'  => md5( rand( 1, 10000 ) ),
+//            ]);
 
 //            dump( $user->id(), $user->save(), $user->exists(), $user->id() );
 
-            dump( $user->toArray(), $user->exists(), $user->save(), $user->toArray(), $user->id(), $user->exists() );
+//            dump( $user );
 
 
 //            dump(  );

@@ -9,4 +9,8 @@
         static protected
             $table  = 'system_auth';
 
+        public function sessions() {
+            return $this->hasOne( '\DB\SessionModel' );
+        }
+
     }

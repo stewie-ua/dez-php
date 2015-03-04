@@ -9,23 +9,25 @@
     class DBO extends \PDO implements Connection\DBOInterface {
 
         protected
-            $config             = null,
-            $schema             = null,
             $connectionName     = null,
             $affectedRows       = 0;
 
+        static protected
+            $config             = null,
+            $schema             = null;
+
         public function __construct( $name ) {
             $this->connectionName   = $name;
-            $this->config           = Common\Config::getInstance()->get( 'connect_'. $name );
+            static::$config         = Common\Config::getInstance()->get( 'connect_'. $name );
 
-            if ( is_null( $this->config ) ) {
+            if ( is_null( static::$config ) ) {
                 throw new ORMException( 'Invalid ORM config ('. $name .')' );
             }
 
             try {
-                @ parent::__construct( $this->config->dsn, $this->config->user, $this->config->password, array(
+                @ parent::__construct( static::$config->dsn, static::$config->user, static::$config->password, [
                     parent::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-                ) );
+                ] );
             } catch ( \Exception $e ) {
                 throw new ORMException( $e->getMessage() );
             }
@@ -42,10 +44,10 @@
         */
 
         public function getSchema() {
-            return $this->schema;
+            return static::$schema;
         }
 
-        public function prepareQuery( $query = null, array $params = array() ) {
+        public function prepareQuery( $query = null, array $params = [] ) {
             $stmt = parent::prepare( $query );
             if( count( $params ) > 0 ) {
                 $stmt->bindParams( $params );
@@ -104,7 +106,7 @@
         private function initSchema() {
             $schemaFile     = Common\Config::getInstance()->get( 'schema_file', null );
             try {
-                $this->schema   = new Schema( $schemaFile );
+                static::$schema   = new Schema( $schemaFile );
             } catch( ORMException $e ) {
                 throw $e;
             }

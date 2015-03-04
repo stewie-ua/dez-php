@@ -2,6 +2,7 @@
 
     namespace Dez\ORM\Model;
 
+    use Dez\Error\Exception\InvalidArgs;
     use Dez\ORM;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\Utils;
@@ -170,6 +171,14 @@
 
         protected function getSQLName( $phpName = null ) {
             return ! $phpName ? null : Utils::php2sql( $phpName );
+        }
+
+        protected function hasOne( $modelName = null ) {die(__LINE__);
+            if( $modelName != null && class_exists( $modelName ) ) {
+                $modelQuery = $modelName::query();
+                dump($modelQuery);
+            }
+            throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }
 
         /**

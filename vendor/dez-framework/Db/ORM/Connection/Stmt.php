@@ -75,7 +75,7 @@
             }
 
             $row = $this->loadObject();
-            if( ! $row ) return $object;
+            if( ! $row ) return null;
 
             foreach( $row as $key => $value ) {
                 $object->$key = $value;
