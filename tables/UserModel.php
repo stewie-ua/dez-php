@@ -10,7 +10,7 @@
             $table  = 'system_auth';
 
         public function sessions() {
-            return $this->hasOne( '\DB\SessionModel' );
+            return $this->hasOne( '\DB\SessionModel', 'user_id' );
         }
 
     }

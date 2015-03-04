@@ -32,7 +32,7 @@
 
                 switch( $methodName ) {
                     case 'where': {
-                        $this->getNativeBuilder()->where( [ $columnName, $args[0] ] );
+                        $this->where( $columnName, $args[0] );
                         break;
                     }
                     case 'group': {
@@ -55,6 +55,14 @@
                 parent::__call( $name, $args );
             }
 
+        }
+
+        /**
+         * @return void
+         */
+
+        public function where( $columnName = null, $columnValue = null ) {
+            $this->getNativeBuilder()->where( [ $columnName, $columnValue ] );
         }
 
         /**
@@ -108,6 +116,16 @@
         public function find() {
             $stmt   = $this->getModel()->getConnection()->query( $this->getNativeBuilder()->select()->query() );
             return $this->getModel()->createCollection( $stmt );
+        }
+
+        /**
+         * @return Table $model
+         */
+
+        public function first() {
+            $query  = $this->getNativeBuilder()->select()->limit( 1 )->query();
+            $stmt   = $this->getModel()->getConnection()->query( $query );
+            $this->getModel()->bind( $stmt->loadArray() ?: [] );
         }
 
         /**

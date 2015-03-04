@@ -17,7 +17,9 @@
             $connection     = null,
             $data           = [],
             $pk             = null,
-            $id             = 0;
+            $id             = 0,
+
+            $collection     = null;
 
         /**
          * @throws ORMException
@@ -144,9 +146,28 @@
             $collection = new ModelCollection();
             $collection->setType( $this->getClassName() );
             while( $model = $stmt->loadIntoObject( $this->getClassName() ) ) {
+                $model->setCollection( $collection );
                 $collection->add( $model );
             }
             return $collection;
+        }
+
+        /**
+         * @param ModelCollection $collection
+         * @return static
+         */
+
+        public function setCollection( ModelCollection $collection ) {
+            $this->collection   = $collection;
+            return $this;
+        }
+
+        /**
+         * @return ModelCollection $collection
+        */
+
+        public function getCollection() {
+            return $this->collection;
         }
 
         /**
@@ -173,11 +194,13 @@
             return ! $phpName ? null : Utils::php2sql( $phpName );
         }
 
-        protected function hasOne( $modelName = null ) {
+        protected function hasOne( $modelName = null, $foreignKey = 'id' ) {
             if( $modelName != null && class_exists( $modelName ) ) {
                 $modelQuery = $modelName::query();
+                $modelQuery->where( $foreignKey, $this->id() );
+                $model      = $modelQuery->first();
                 dump($modelQuery);
-                return 'asd';
+                return;
             }
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }

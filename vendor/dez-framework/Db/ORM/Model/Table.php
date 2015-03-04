@@ -12,7 +12,7 @@
         */
 
         static public function query() {
-            return QueryBuilder::instance( new static );
+            return new QueryBuilder( new static );
         }
 
         /**
