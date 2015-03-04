@@ -4,21 +4,37 @@
 
     use Dez\ORM;
     use Dez\ORM\Common\Object;
-    use Dez\ORM\Common\SingletonTrait;
     use Dez\ORM\Common\Utils;
     use Dez\ORM\Connection\DBO as DbConnection;
     use Dez\ORM\Connection\Stmt;
     use Dez\ORM\Exception\Error as ORMException;
     use Dez\ORM\Collection\ModelCollection;
 
-    class TableAbstract extends Object {
-
-        use SingletonTrait;
+    abstract class TableAbstract extends Object {
 
         protected
             $connection     = null,
             $data           = [],
-            $pk             = null;
+            $pk             = null,
+            $id             = 0;
+
+        /**
+         * @throws ORMException
+         */
+
+        public function __construct() {
+            if( ! $this->hasTable() ) {
+                throw new ORMException( 'Not defined table name for: '. $this->getTableName() );
+            }
+
+            $this->setConnection( ORM::connect() );
+            $this->pk   = $this->getConnection()->getSchema()->getTablePK( $this->getTableName() );
+            $this->id   = $this->get( $this->pk, 0 );
+
+            if( $this->id() > 0 ) {
+                unset( $this->data[$this->pk] );
+            }
+        }
 
         /**
          * @return static
@@ -143,19 +159,6 @@
         }
 
         /**
-         * @return null
-         * @throws ORMException
-         */
-
-        protected function init() {
-            if( ! $this->hasTable() ) {
-                throw new ORMException( 'Not defined table name for: '. $this->getTableName() );
-            }
-            $this->setConnection( ORM::connect() );
-            $this->pk   = $this->getConnection()->getSchema()->getTablePK( $this->getTableName() );
-        }
-
-        /**
          * @return boolean
         */
 
@@ -170,5 +173,11 @@
         protected function getSQLName( $phpName = null ) {
             return ! $phpName ? null : Utils::php2sql( $phpName );
         }
+
+        /**
+         * @return int $id
+        */
+
+        abstract public function id();
 
     }

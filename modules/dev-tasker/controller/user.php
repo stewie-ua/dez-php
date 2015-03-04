@@ -12,18 +12,18 @@
 
 //            dump( \DB\UserModel::one(17)->getEmail() );
 
+//            $user = \DB\UserModel::one(42);
+
             $user = new \DB\UserModel();
 
             $user->bind([
                 'email'     => 'mail@mail.com',
-                'password'  => '123qwe',
+                'password'  => md5( rand( 1, 10000 ) ),
             ]);
 
-            $user->setName( 'Коля' );
 
-            $user->updated_at = '2014-03-03 00:00:01';
 
-            dump( $user->save()  );
+            dump( $user->toArray(), $user->exists(), $user->save(), $user->toArray(), $user->id(), $user->exists() );
 
 
 //            dump(  );

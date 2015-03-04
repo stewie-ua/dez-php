@@ -23,17 +23,27 @@
             return static::query()->find();
         }
 
+        /**
+         * @return static
+        */
+
         static public function one( $id = 0 ) {
             return static::query()->findOne( $id );
         }
 
+        /**
+         * @return static
+         */
+
         static public function insert( array $data = [] ) {
-            return static::instance()->bind( $data )->save();
+            $model  = static::instance();
+            $model->bind( $data )->save();
+            return $model;
         }
 
         public function save() {
             $query = QueryBuilder::instance( $this );
-            return $this->exists() ? $query->update() : $query->insert();
+            return $this->exists() ? $query->update() : $this->id = $query->insert();
         }
 
         public function delete() {
@@ -41,7 +51,7 @@
         }
 
         public function id() {
-            return $this->get( $this->pk, 0 );
+            return $this->id;
         }
 
         public function pk() {

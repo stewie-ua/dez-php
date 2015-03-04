@@ -118,7 +118,8 @@
             $builder    = $this->getNativeBuilder();
             $builder->where( [ $this->getModel()->pk(), $id ] );
             $stmt       = $this->getModel()->getConnection()->query( $builder->select()->query() );
-            return $stmt->loadIntoObject( $this->getModel()->getClassName() );
+            $modelClass = $this->getModel()->getClassName();
+            return $stmt->loadIntoObject( $modelClass::instance() );
         }
 
         /**
@@ -127,8 +128,7 @@
 
         public function insert() {
             $query  = $this->getNativeBuilder()->bind( $this->getModel()->toArray() )->insert()->query();
-            dump($query);
-            $stmt   = $this->getModel()->getConnection()->query(  );
+            return $this->getModel()->getConnection()->execute( $query )->lastInsertId();
         }
 
         /**
@@ -136,7 +136,10 @@
          */
 
         public function update() {
-
+            $model      = $this->getModel();
+            $builder    = $this->getNativeBuilder()->bind( $model->toArray() );
+            $builder->update()->where( [ $model->pk(), $model->id() ] )->limit( 1 );
+            return $model->getConnection()->execute( $builder->query() )->affectedRows();
         }
 
         /**
