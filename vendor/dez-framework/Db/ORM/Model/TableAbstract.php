@@ -26,14 +26,8 @@
             if( ! $this->hasTable() ) {
                 throw new ORMException( 'Not defined table name for: '. $this->getTableName() );
             }
-
             $this->setConnection( ORM::connect() );
             $this->pk   = $this->getConnection()->getSchema()->getTablePK( $this->getTableName() );
-            $this->id   = $this->get( $this->pk, 0 );
-
-            if( $this->id() > 0 ) {
-                unset( $this->data[$this->pk] );
-            }
         }
 
         /**
@@ -96,7 +90,11 @@
          */
 
         public function set( $name = null, $value = null ) {
-            $this->data[$name] = $value;
+            if( $this->pk == $name ) {
+                $this->id           = $value;
+            } else {
+                $this->data[$name]  = $value;
+            }
             return $this;
         }
 
@@ -108,10 +106,6 @@
             foreach( $data as $key => $value )
                 $this->$key     = $value;
             return $this;
-        }
-
-        public function setId( $value = 0 ) {
-            if( 0 > $this->id() ) $this->id = (int) $value;
         }
 
         /**

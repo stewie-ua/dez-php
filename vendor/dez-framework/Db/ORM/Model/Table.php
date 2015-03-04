@@ -12,7 +12,7 @@
         */
 
         static public function query() {
-            return QueryBuilder::instance( static::instance() );
+            return QueryBuilder::instance( new static );
         }
 
         /**
@@ -32,22 +32,23 @@
         }
 
         /**
+         * @param array $data
          * @return static
          */
 
         static public function insert( array $data = [] ) {
-            $model  = static::instance();
+            $model  = new static();
             $model->bind( $data )->save();
             return $model;
         }
 
         public function save() {
-            $query = QueryBuilder::instance( $this );
+            $query = new QueryBuilder( $this );
             return $this->exists() ? $query->update() : $this->id = $query->insert();
         }
 
         public function delete() {
-
+            $query = QueryBuilder::instance( $this );
         }
 
         public function id() {

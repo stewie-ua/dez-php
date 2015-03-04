@@ -63,8 +63,8 @@
 
         protected function init( $model ) {
             $this->setModel( $model );
-            $this->setNativeBuilder( new Builder( $this->getModel()->getConnection() ) );
-            $this->getNativeBuilder()->table( $this->getModel()->getTableName() );
+            $this->setNativeBuilder( new Builder( $model->getConnection() ) );
+            $this->getNativeBuilder()->table( $model->getTableName() );
         }
 
         /**
@@ -118,8 +118,7 @@
             $builder    = $this->getNativeBuilder();
             $builder->where( [ $this->getModel()->pk(), $id ] );
             $stmt       = $this->getModel()->getConnection()->query( $builder->select()->query() );
-            $modelClass = $this->getModel()->getClassName();
-            return $stmt->loadIntoObject( $modelClass::instance() );
+            return $stmt->loadIntoObject( $this->getModel()->getClassName() );
         }
 
         /**
