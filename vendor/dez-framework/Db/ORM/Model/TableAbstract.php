@@ -110,6 +110,10 @@
             return $this;
         }
 
+        public function setId( $value = 0 ) {
+            if( 0 > $this->id() ) $this->id = (int) $value;
+        }
+
         /**
          * @return string $tableName
          */

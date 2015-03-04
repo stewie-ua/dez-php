@@ -6,7 +6,7 @@
     class UserController extends ApiController {
 
         public function itemGETAction( $id ) {
-            
+
 
 //            dump( \DB\UserModel::one(17)->getEmail() );
 
