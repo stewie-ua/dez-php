@@ -115,7 +115,9 @@
          */
 
         public function find() {
-            $stmt   = $this->getModel()->getConnection()->query( $this->getNativeBuilder()->select()->query() );
+            $q = $this->getNativeBuilder()->select()->query();
+            var_dump( $q );
+            $stmt   = $this->getModel()->getConnection()->query( $q );
             return $this->getModel()->createCollection( $stmt );
         }
 

@@ -4,6 +4,17 @@
 
     class ModelCollection extends Collection {
 
+        protected
+            $keyName = 'id';
+
+        public function setKeyName( $keyName = null ) {
+            $this->keyName  = $keyName;
+        }
+
+        public function getKeyName() {
+            return $this->keyName;
+        }
+
         public function add( $item ) {
             $this->validateItem( $item );
             $this->items[]  = $item;
@@ -21,7 +32,7 @@
         public function getDictionary() {
             $dictionary = [];
             foreach( $this->items as $item ) {
-                $dictionary[ $item->id() ] = $item;
+                $dictionary[ $this->getKeyName() ] = $item;
             }
             return $dictionary;
         }
