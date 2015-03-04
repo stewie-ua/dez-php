@@ -118,7 +118,7 @@
             $builder    = $this->getNativeBuilder();
             $builder->where( [ $this->getModel()->pk(), $id ] );
             $stmt       = $this->getModel()->getConnection()->query( $builder->select()->query() );
-            return $stmt->loadIntoObject( $this->getModel()->getClassName() );
+            return $this->getModel()->bind( $stmt->loadArray() ?: [] );
         }
 
         /**

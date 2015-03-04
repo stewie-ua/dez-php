@@ -10,9 +10,9 @@
 
 //            dump( \DB\UserModel::one(17)->getEmail() );
 
-            $user = \DB\UserModel::one(42);
-
-            dump( $user );
+//            $user = \DB\UserModel::one(101);
+//
+//            dump( $user );
 
 //            dump( $user, $user->exists() );
 //die('ok');
@@ -22,7 +22,7 @@
 
                 foreach( $users as $user ) {
 
-                    var_dump( $user->id() );
+                    dump( $user->sessions() );
 
                 } die;
 

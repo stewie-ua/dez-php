@@ -13,7 +13,15 @@
 
         final static public function instance() {
             $args   = func_get_args();
-            $hash   = md5( get_called_class() . json_encode( $args ) . count( $args, true ) );
+
+            $names = [];
+            if( isset( $args[0] ) && is_object( $args[0] ) ) {
+                foreach( $args as $object ) {
+                    $names[]    = get_class( $object );
+                } unset( $object );
+            }
+
+            $hash   = md5( get_called_class() . json_encode( [ $args, $names ] ) . count( $args, true ) );
 
             if( ! isset( static::$instances[$hash] ) ) {
                 static::$instances[$hash] = ( new \ReflectionClass( get_called_class() ) )

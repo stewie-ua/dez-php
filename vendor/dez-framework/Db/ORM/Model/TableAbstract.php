@@ -173,10 +173,11 @@
             return ! $phpName ? null : Utils::php2sql( $phpName );
         }
 
-        protected function hasOne( $modelName = null ) {die(__LINE__);
+        protected function hasOne( $modelName = null ) {
             if( $modelName != null && class_exists( $modelName ) ) {
                 $modelQuery = $modelName::query();
                 dump($modelQuery);
+                return 'asd';
             }
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }
