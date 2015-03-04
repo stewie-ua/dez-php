@@ -63,6 +63,7 @@
 
         public function where( $columnName = null, $columnValue = null ) {
             $this->getNativeBuilder()->where( [ $columnName, $columnValue ] );
+            return $this;
         }
 
         /**
@@ -125,7 +126,7 @@
         public function first() {
             $query  = $this->getNativeBuilder()->select()->limit( 1 )->query();
             $stmt   = $this->getModel()->getConnection()->query( $query );
-            $this->getModel()->bind( $stmt->loadArray() ?: [] );
+            return $this->getModel()->bind( $stmt->loadArray() ?: [] );
         }
 
         /**

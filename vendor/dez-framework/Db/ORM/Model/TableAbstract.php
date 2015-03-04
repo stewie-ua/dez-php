@@ -195,12 +195,9 @@
         }
 
         protected function hasOne( $modelName = null, $foreignKey = 'id' ) {
+            $targetIds = ! $this->getCollection() ? $this->id() : $this->getCollection()->getIDs();
             if( $modelName != null && class_exists( $modelName ) ) {
-                $modelQuery = $modelName::query();
-                $modelQuery->where( $foreignKey, $this->id() );
-                $model      = $modelQuery->first();
-                dump($modelQuery);
-                return;
+                return $modelName::query()->where( $foreignKey, $targetIds )->first();
             }
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }

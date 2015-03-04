@@ -7,24 +7,29 @@
 
         public function itemGETAction( $id ) {
 
+            $event = \Dez\ORM\Common\Event::instance();
 
-//            dump( \DB\UserModel::one(17)->getEmail() );
+            $q = [];
 
-//            $user = \DB\UserModel::one(101);
-//
-//            dump( $user );
+            $event->attach( 'query', function ( $sql ) use ( & $q ) {
+                $q[]    = $sql;
+            } );
 
-//            dump( $user, $user->exists() );
-//die('ok');
-
-            $users = \DB\UserModel::all();
+//            \DB\UserModel::one(17)->sessions();
 
 
-                foreach( $users as $user ) {
+            foreach( \DB\UserModel::all() as $user ) {
+                $user->sessions();
+                print $user->id() . "\n";
+            }
 
-                    dump( $user->sessions() );
 
-                } die;
+            dump( implode( "\n\n\n", $q ), 'sql dump' );
+
+//            $user17 = \DB\UserModel::one(17);
+
+//            dump( $user17->sessions()->getUserAgent() );
+
 
 
 //            $user->bind([
