@@ -19,7 +19,7 @@
 
 
             foreach( \DB\UserModel::all() as $user ) {
-                dump( $user->getCollection()->getIDs() );
+                dump( $user->getCollection()->getIDs(), 'ids' );
                 $user->sessions();
                 print $user->id() . "\n";
             }
