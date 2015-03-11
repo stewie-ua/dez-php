@@ -11,6 +11,10 @@
     use Dez\ORM\Exception\Error as ORMException;
     use Dez\ORM\Collection\ModelCollection;
 
+    /**
+     * @Injectable(lazy=true)
+     */
+
     abstract class TableAbstract extends Object {
 
         protected
