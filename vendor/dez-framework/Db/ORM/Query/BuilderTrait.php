@@ -29,4 +29,8 @@
             return ! empty( $string ) ? '`'. $string .'`' : null;
         }
 
+        protected function _escapeData( $string = null  ) {
+            return ! empty( $string ) ? '\''. $string .'\'' : null;
+        }
+
     }

@@ -21,10 +21,10 @@
                 } unset( $object );
             }
 
-            $hash   = md5( get_called_class() . json_encode( [ $args, $names ] ) . count( $args, true ) );
+            $hash   = md5( static::class . json_encode( [ $args, $names ] ) . count( $args, true ) );
 
             if( ! isset( static::$instances[$hash] ) ) {
-                static::$instances[$hash] = ( new \ReflectionClass( get_called_class() ) )
+                static::$instances[$hash] = ( new \ReflectionClass( static::class ) )
                     ->newInstanceArgs( $args );
             }
 

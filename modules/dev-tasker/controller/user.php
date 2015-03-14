@@ -18,10 +18,13 @@
 //            \DB\UserModel::one(17)->sessions();
 
 
+            $sessions = [];
+
             foreach( \DB\UserModel::all() as $user ) {
-                $user->sessions();
+                $sessions[] = $user->sessions();
                 print $user->id() . "\n";
             }
+//            dump( $sessions );
 
 
             dump( 'sql dump', implode( "\n\n\n", $q ) );

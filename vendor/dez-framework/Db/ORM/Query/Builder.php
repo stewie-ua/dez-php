@@ -144,11 +144,9 @@
                         ? $expression[2]
                         : self::$cmpTypes[0];
                     if( is_array( $expression[1] ) && count( $expression[1] ) > 0 ) {
-                        for( $i = 0, $c = count( $expression[1] ); $i < $c; $i++ ) {
-                            $this->where( array( $expression[0], $expression[1][$i], $cmpType ) );
-                        }
+                        $this->where[]  = $this->_buildWhereIn( $expression[1] );
                     } else {
-                        $this->where[] = array( $expression[0], $expression[1], $cmpType );
+                        $this->where[]  = array( $expression[0], $expression[1], $cmpType );
                     }
                 }
             }
@@ -374,6 +372,14 @@
                 return ! empty( $stack ) ? "\n" . 'WHERE '. join( "\nAND\x20", $stack ) : null;
             }
             return null;
+        }
+
+        private function _buildWhereIn( array $data = [] ) {
+            $output = [];
+            foreach( $data as $value ) {
+                $output[]   = is_numeric( $value ) ? (int) $value : $this->_escapeData( $value );
+            }
+            return 'IN('. implode( ', ', $output ) .')';
         }
 
         private function _buildGroupByExpression() {
