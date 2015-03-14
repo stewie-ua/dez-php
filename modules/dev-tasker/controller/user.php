@@ -19,13 +19,12 @@
 
 
             foreach( \DB\UserModel::all() as $user ) {
-                dump( $user->getCollection()->getIDs(), 'ids' );
                 $user->sessions();
                 print $user->id() . "\n";
             }
 
 
-            dump( implode( "\n\n\n", $q ), 'sql dump' );
+            dump( 'sql dump', implode( "\n\n\n", $q ) );
 
 //            $user17 = \DB\UserModel::one(17);
 

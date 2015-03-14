@@ -32,7 +32,7 @@
         public function getDictionary() {
             $dictionary = [];
             foreach( $this->items as $item ) {
-                $dictionary[ $item->id ] = $item;
+                $dictionary[ $this->getKeyName() == 'id' ? $item->id() : $item->get( $this->getKeyName() ) ] = $item;
             }
             return $dictionary;
         }

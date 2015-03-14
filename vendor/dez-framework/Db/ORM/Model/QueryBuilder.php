@@ -116,7 +116,6 @@
 
         public function find() {
             $q = $this->getNativeBuilder()->select()->query();
-            var_dump( $q );
             $stmt   = $this->getModel()->getConnection()->query( $q );
             return $this->getModel()->createCollection( $stmt );
         }
