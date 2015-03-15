@@ -14,17 +14,18 @@
             $model          = null,
             $related        = null,
             $foreignKey     = 'id',
+            $ids            = [ 0 ],
 
             $collection     = null;
 
         /**
-         * @param   TableModel $model
+         * @param   array $ids
          * @param   TableModel $related
          * @param   string $foreignKey
          */
 
-        protected function init( $model, $related, $foreignKey ) {
-            $this->model        = $model;
+        protected function init( array $ids = [], $related, $foreignKey ) {
+            $this->ids          = $ids;
             $this->related      = $related;
             $this->foreignKey   = $foreignKey;
             $this->makeRelation();
@@ -32,10 +33,14 @@
 
         abstract protected function makeRelation();
 
+        public function setModel( TableModel $model ) {
+            $this->model    = $model;
+            return $this;
+        }
+
         public function get() {
             return $this->collection->findAll( function( $item ) {
-                $id     = $this->foreignKey == $item->pk() ? $item->id() : $item->get( $this->foreignKey ) ;
-                return $this->model->id() == $id;
+                return $this->model->id() == $item->get( $this->foreignKey );
             } );
         }
 

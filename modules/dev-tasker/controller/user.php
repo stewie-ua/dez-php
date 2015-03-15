@@ -18,22 +18,22 @@
 //            \DB\UserModel::one(17)->sessions();
 
 
-            $sessions = [];
-
-            foreach( \DB\UserModel::all() as $user ) {
-                print $user->id() . "\n --- \n";
-
-                var_dump( $user->sessions() );
-
-//                var_dump( $user->session()->exists() );
-//                print $user->session()->getUserId() . "\n";
-                print "\n----\n";
-            }
+//            $sessions = [];
+//
+//            foreach( \DB\UserModel::all() as $user ) {
+//                print $user->id() . "\n --- \n";
+//
+//                foreach( $user->sessions() as $session ) {
+//                    print $session->getUniKey();
+//                }
+//
+//                print "\n----\n";
+//            }
 //            die;
 //            dump( $sessions );
 
 
-            dump( 'sql dump', implode( "\n\n\n", $q ) );
+//            dump( 'sql dump', implode( "\n\n\n", $q ) );
 
 //            $user17 = \DB\UserModel::one(17);
 
@@ -59,7 +59,15 @@
 ////            dump($users);
 //            $users;
 
-            return ApiResponse::success( [ 'test' => \DB\UserModel::all()->toArray() ] );
+            $users = \DB\UserModel::all();
+
+            $sessions = [];
+
+            foreach( $users as $user ) {
+                $sessions[$user->id()]  = $user->sessions()->toArray();
+            }
+
+            return ApiResponse::success( [ 'users' => $users->toArray(), 'users_sessions' => $sessions, 'sql_queries' => $q ] );
         }
 
     }

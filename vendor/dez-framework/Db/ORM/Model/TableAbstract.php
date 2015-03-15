@@ -11,6 +11,8 @@
     use Dez\ORM\Exception\Error as ORMException;
     use Dez\ORM\Collection\ModelCollection;
 
+    use Dez\ORM\Relation\HasMany as RelationHasMany;
+
     /**
      * @Injectable(lazy=true)
      */
@@ -212,12 +214,11 @@
          * @throws  InvalidArgs
         */
 
-        protected function hasMany( $modelName = null, $foreignKey = 'id' ) {
-            if( $modelName != null && class_exists( $modelName ) ) {
-                $relation   = ORM\Relation\HasMany::instance( $this, $modelName, $foreignKey )->get();
-                var_dump( $relation );
+        protected function hasMany( $related = null, $foreignKey = 'id' ) {
+            if( $related != null && class_exists( $related ) ) {
+                return RelationHasMany::instance( $this->getCollection()->getIDs(), $related, $foreignKey )->setModel( $this )->get();
             }
-            throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
+            throw new InvalidArgs( 'Related model not found ['. $related .']' );
         }
 
         /**
