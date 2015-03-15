@@ -64,7 +64,7 @@
             $sessions = [];
 
             foreach( $users as $user ) {
-                $sessions[$user->id()]  = $user->sessions()->toArray();
+                $sessions[$user->id()]  = $user->session()->toArray();
             }
 
             return ApiResponse::success( [ 'users' => $users->toArray(), 'users_sessions' => $sessions, 'sql_queries' => $q ] );

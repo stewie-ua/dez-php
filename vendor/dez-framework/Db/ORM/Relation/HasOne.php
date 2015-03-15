@@ -2,8 +2,11 @@
 
     namespace Dez\ORM\Relation;
 
-    class HasOne {
+    class HasOne extends Relation {
 
-        protected function init() {}
+        protected function makeRelation() {
+            $related            = $this->related;
+            $this->collection   = $related::query()->where( $this->foreignKey, $this->ids )->find();
+        }
 
     }

@@ -12,6 +12,7 @@
     use Dez\ORM\Collection\ModelCollection;
 
     use Dez\ORM\Relation\HasMany as RelationHasMany;
+    use Dez\ORM\Relation\HasOne as RelationHasOne;
 
     /**
      * @Injectable(lazy=true)
@@ -200,11 +201,12 @@
             return ! $phpName ? null : Utils::php2sql( $phpName );
         }
 
-        protected function hasOne( $modelName = null, $foreignKey = 'id' ) {
-            if( $modelName != null && class_exists( $modelName ) ) {
-                return $modelName::query()->where( $foreignKey, $this->id() )->first();
+        protected function hasOne( $related = null, $foreignKey = 'id' ) {
+            if( $related != null && class_exists( $related ) ) {
+                $collection  = RelationHasOne::instance( $this->getCollection()->getIDs(), $related, $foreignKey )->setModel( $this )->get();
+                return $collection->count() > 0 ? $collection[0] : new static;
             }
-            throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
+            throw new InvalidArgs( 'Related model not found ['. $related .']' );
         }
 
         /**
