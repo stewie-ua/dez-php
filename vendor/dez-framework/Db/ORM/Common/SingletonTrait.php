@@ -15,10 +15,10 @@
             $args   = func_get_args();
 
             $names = [];
-            if( isset( $args[0] ) && is_object( $args[0] ) ) {
-                foreach( $args as $object ) {
-                    $names[]    = get_class( $object );
-                } unset( $object );
+            if( isset( $args[0] ) ) {
+                foreach( $args as $arg ) {
+                    $names[]    = ! is_object( $arg ) ?: get_class( $arg );
+                } unset( $arg );
             }
 
             $hash   = md5( static::class . json_encode( [ $args, $names ] ) . count( $args, true ) );

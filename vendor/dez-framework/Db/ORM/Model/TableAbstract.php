@@ -215,7 +215,7 @@
         protected function hasMany( $modelName = null, $foreignKey = 'id' ) {
             if( $modelName != null && class_exists( $modelName ) ) {
                 $relation   = ORM\Relation\HasMany::instance( $this, $modelName, $foreignKey )->get();
-                dump( $relation );
+                var_dump( $relation );
             }
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }
