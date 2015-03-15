@@ -72,9 +72,9 @@
 
 
 
-            $user = \DB\UserModel::one(17);
+            $users = \DB\UserModel::all();
 
-            dump( $user->toArray() );
+            dump( $users->getByID(17)->sessions()->at(0)->getTokenKey() );
 
 
             $users = \DB\UserModel::all();
