@@ -145,6 +145,7 @@
                         : self::$cmpTypes[0];
                     if( is_array( $expression[1] ) && count( $expression[1] ) > 0 ) {
                         $this->where[]  = $this->_buildWhereIn( $expression[1] );
+                        dump( $this->where );
                     } else {
                         $this->where[]  = array( $expression[0], $expression[1], $cmpType );
                     }
