@@ -214,12 +214,8 @@
 
         protected function hasMany( $modelName = null, $foreignKey = 'id' ) {
             if( $modelName != null && class_exists( $modelName ) ) {
-                $ids            = ! $this->getCollection() ? [ $this->id() ] : $this->getCollection()->getIDs();
-                $collection     = $modelName::query()->where( $foreignKey, $ids )->find();
-                return $collection->findAll( function( $item ) use ( $foreignKey ) {
-                    $id     = $foreignKey == $this->pk() ? $this->id() : $this->get( $foreignKey ) ;
-                    return $item->get( $foreignKey ) == $id;
-                } );
+                $relation   = ORM\Relation\HasMany::instance( $this, $modelName, $foreignKey )->get();
+                dump( $relation );
             }
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }

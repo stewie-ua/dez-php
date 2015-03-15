@@ -58,7 +58,7 @@
         }
 
         /**
-         * @return void
+         * @return static
          */
 
         public function where( $columnName = null, $columnValue = null ) {
