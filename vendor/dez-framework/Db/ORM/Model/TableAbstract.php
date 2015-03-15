@@ -208,7 +208,7 @@
         }
 
         /**
-         * @param   static $modelName
+         * @param   string $related
          * @param   string $foreignKey
          * @return  ModelCollection $collection
          * @throws  InvalidArgs
