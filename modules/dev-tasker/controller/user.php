@@ -21,10 +21,14 @@
             $sessions = [];
 
             foreach( \DB\UserModel::all() as $user ) {
-                $sessions[] = $user->sessions();
-                print $user->id() . "\n";
+                print $user->id() . "\n --- \n";
+                foreach( $user->sessions() as $session ) {
+                    print join( ', ', $session->getCollection()->getIDs() ) . "\n";
+                }
+                print "\n----\n";
             }
-//            dump( $sessions );
+            die;
+            dump( $sessions );
 
 
             dump( 'sql dump', implode( "\n\n\n", $q ) );

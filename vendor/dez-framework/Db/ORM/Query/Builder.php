@@ -144,10 +144,9 @@
                         ? $expression[2]
                         : self::$cmpTypes[0];
                     if( is_array( $expression[1] ) && count( $expression[1] ) > 0 ) {
-                        $this->where[]  = $this->_buildWhereIn( $expression[1] );
-                        dump( $this->where );
+                        $this->where[]  = [ $expression[0], $expression[1] ];
                     } else {
-                        $this->where[]  = array( $expression[0], $expression[1], $cmpType );
+                        $this->where[]  = [ $expression[0], $expression[1], $cmpType ];
                     }
                 }
             }
@@ -367,7 +366,11 @@
 
                 foreach( $this->where as $expression ) {
                     $columnLongName = $this->_prepareColumn( $expression[0] );
-                    $stack[]        = $columnLongName .' '. $expression[2] .' '. $this->escape( $expression[1] );
+                    if( ! isset( $expression[2] ) && is_array( $expression[1] ) ) {
+                        $stack[]        = $columnLongName .' '. $this->_buildWhereIn( $expression[1] );
+                    } else {
+                        $stack[]        = $columnLongName .' '. $expression[2] .' '. $this->escape( $expression[1] );
+                    }
                 }
 
                 return ! empty( $stack ) ? "\n" . 'WHERE '. join( "\nAND\x20", $stack ) : null;
