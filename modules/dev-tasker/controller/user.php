@@ -8,12 +8,12 @@
         public function itemGETAction( $id ) {
 
             $event = \Dez\ORM\Common\Event::instance();
-
-            $q = [];
-
-            $event->attach( 'query', function ( $sql ) use ( & $q ) {
-                $q[]    = $sql;
-            } );
+//
+//            $q = [];
+//
+//            $event->attach( 'query', function ( $sql ) use ( & $q ) {
+//                $q[]    = $sql;
+//            } );
 
 //            \DB\UserModel::one(17)->sessions();
 
@@ -58,6 +58,24 @@
 //            $users = \DB\User::findAll();
 ////            dump($users);
 //            $users;
+
+//            $asdasdasd = \DB\UserModel::all()->toArray();
+//
+//            dump( $asdasdasd );
+
+
+//            $q = 'select * from system_auth where id = 99';
+//
+//            $stmt = \Dez\ORM::connect()->query( $q );
+//
+//            dump( $stmt->loadArray() );
+
+
+
+            $user = \DB\UserModel::one(17);
+
+            dump( $user->toArray() );
+
 
             $users = \DB\UserModel::all();
 
