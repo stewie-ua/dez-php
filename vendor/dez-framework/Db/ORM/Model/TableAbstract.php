@@ -205,11 +205,21 @@
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }
 
+        /**
+         * @param   static $modelName
+         * @param   string $foreignKey
+         * @return  ModelCollection $collection
+         * @throws  InvalidArgs
+        */
+
         protected function hasMany( $modelName = null, $foreignKey = 'id' ) {
             if( $modelName != null && class_exists( $modelName ) ) {
                 $ids            = ! $this->getCollection() ? [ $this->id() ] : $this->getCollection()->getIDs();
                 $collection     = $modelName::query()->where( $foreignKey, $ids )->find();
-                return $collection;
+                return $collection->findAll( function( $item ) use ( $foreignKey ) {
+                    $id     = $foreignKey == $this->pk() ? $this->id() : $this->get( $foreignKey ) ;
+                    return $item->get( $foreignKey ) == $id;
+                } );
             }
             throw new InvalidArgs( 'Related model not found ['. $modelName .']' );
         }

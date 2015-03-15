@@ -22,13 +22,15 @@
 
             foreach( \DB\UserModel::all() as $user ) {
                 print $user->id() . "\n --- \n";
-                foreach( $user->sessions() as $session ) {
-                    print join( ', ', $session->getCollection()->getIDs() ) . "\n";
-                }
+
+                var_dump( $user->sessions() );
+
+//                var_dump( $user->session()->exists() );
+//                print $user->session()->getUserId() . "\n";
                 print "\n----\n";
             }
-            die;
-            dump( $sessions );
+//            die;
+//            dump( $sessions );
 
 
             dump( 'sql dump', implode( "\n\n\n", $q ) );
