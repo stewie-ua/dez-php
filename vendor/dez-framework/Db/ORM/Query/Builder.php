@@ -231,7 +231,7 @@
         }
 
         public function escape( $string = null ) {
-            return ! empty( $string ) ? $this->connection->quote( $string ) : 'null';
+            return ! is_null( $string ) ? $this->connection->quote( $string ) : 'null';
         }
 
         public function query() {

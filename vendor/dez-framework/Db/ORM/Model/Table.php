@@ -48,7 +48,8 @@
         }
 
         public function delete() {
-            $query = QueryBuilder::instance( $this );
+            $query      = new QueryBuilder( $this );
+            return $this->exists() ? $query->delete() : 0;
         }
 
         public function id() {

@@ -162,6 +162,16 @@
         }
 
         /**
+         * @return int|boolean
+         */
+
+        public function delete() {
+            $model      = $this->getModel();
+            $this->getNativeBuilder()->delete()->where( [ $model->pk(), $model->id() ] )->limit( 1 );
+            return $model->getConnection()->execute( $this->getNativeBuilder()->query() )->affectedRows();
+        }
+
+        /**
          * @return string $name
         */
 
