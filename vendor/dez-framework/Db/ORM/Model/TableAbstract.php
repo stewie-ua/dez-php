@@ -201,6 +201,13 @@
             return ! $phpName ? null : Utils::php2sql( $phpName );
         }
 
+        /**
+         * @param   string $related
+         * @param   string $foreignKey
+         * @return  static $model
+         * @throws  InvalidArgs
+         */
+
         protected function hasOne( $related = null, $foreignKey = 'id' ) {
             if( $related != null && class_exists( $related ) ) {
                 $collection  = RelationHasOne::instance( $this->getCollection()->getIDs(), $related, $foreignKey )->setModel( $this )->get();

@@ -12,6 +12,7 @@
             $auth           = null;
 
         public function beforeExecute() {
+            dump($this);
             $this->auth                 = \Dez::app()->auth;
             $this->requestMethod        = strtoupper( $this->request->method );
             $wrappedRouter              = \Dez::app()->action->getWrapperRoute();

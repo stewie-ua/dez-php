@@ -105,7 +105,7 @@
 		}
 
         protected function initAuth() {
-            $this->attach( 'auth', new Auth() );
+//            $this->attach( 'auth', new Auth_v1() );
         }
 
 		protected function initError() {
