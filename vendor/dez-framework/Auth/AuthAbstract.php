@@ -2,7 +2,7 @@
 
     namespace Dez\Auth;
 
-    use Dez\Auth\Model\Auth;
+    use Dez\Auth\Model\Auth             as AuthModel;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\SingletonTrait;
 
@@ -14,14 +14,14 @@
             $auth  = null;
 
         protected function init( $data ) {
-            $this->initAuth( $data );
+            return $this->initAuth( $data );
         }
 
-        protected function setAuth( Auth $auth ) {
+        protected function setAuth( AuthModel $auth ) {
             $this->auth     = $auth;
         }
 
-        protected function getAuth() {
+        public function getAuth() {
             return $this->auth;
         }
 
