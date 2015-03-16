@@ -2,6 +2,7 @@
 
     namespace Tasker\Mvc;
 
+    use Dez\Auth\Web;
     use Dez\Controller\Controller,
         Tasker\Api\Response as ApiResponse;
 
@@ -12,7 +13,7 @@
             $auth           = null;
 
         public function beforeExecute() {
-            dump($this);
+            dump( Web::instance( 17 ) );
             $this->auth                 = \Dez::app()->auth;
             $this->requestMethod        = strtoupper( $this->request->method );
             $wrappedRouter              = \Dez::app()->action->getWrapperRoute();

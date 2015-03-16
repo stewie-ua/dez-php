@@ -2,6 +2,7 @@
 
     namespace Dez\Auth;
 
+    use Dez\Auth\Model\Auth;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\SingletonTrait;
 
@@ -10,12 +11,20 @@
         use SingletonTrait;
 
         protected
-            $user  = null;
+            $auth  = null;
 
-        protected function init() {
-            $this->user    = static::getUser();
+        protected function init( $data ) {
+            $this->initAuth( $data );
         }
 
-        abstract static protected function getUser();
+        protected function setAuth( Auth $auth ) {
+            $this->auth     = $auth;
+        }
+
+        protected function getAuth() {
+            return $this->auth;
+        }
+
+        abstract protected function initAuth( $data );
 
     }
