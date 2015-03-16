@@ -9,11 +9,11 @@
 
             $event = \Dez\ORM\Common\Event::instance();
 //
-//            $q = [];
-//
-//            $event->attach( 'query', function ( $sql ) use ( & $q ) {
-//                $q[]    = $sql;
-//            } );
+            $q = [];
+
+            $event->attach( 'query', function ( $sql ) use ( & $q ) {
+                $q[]    = $sql;
+            } );
 
 //            \DB\UserModel::one(17)->sessions();
 
@@ -71,10 +71,16 @@
 //            dump( $stmt->loadArray() );
 
 
+//            $user = \DB\UserModel::one(1117);
 
-            $users = \DB\UserModel::all();
+//            $user->set( 'acl_role_id', 3 )->save();
 
-            dump( $users->getByID(17)->sessions()->at(0)->getTokenKey() );
+//            dump( $user );
+
+
+//            $users = \DB\UserModel::all();
+
+//            dump( $users->getByID(17)->sessions()->at(0)->getTokenKey() );
 
 
             $users = \DB\UserModel::all();

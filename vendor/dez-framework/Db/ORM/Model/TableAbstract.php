@@ -204,7 +204,7 @@
         protected function hasOne( $related = null, $foreignKey = 'id' ) {
             if( $related != null && class_exists( $related ) ) {
                 $collection  = RelationHasOne::instance( $this->getCollection()->getIDs(), $related, $foreignKey )->setModel( $this )->get();
-                return $collection->count() > 0 ? $collection[0] : new static;
+                return $collection->count() > 0 ? $collection[0] : new $related;
             }
             throw new InvalidArgs( 'Related model not found ['. $related .']' );
         }
