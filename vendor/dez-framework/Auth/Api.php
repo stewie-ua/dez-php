@@ -7,15 +7,40 @@
 
     class Api extends AuthAbstract {
 
-        protected function initAuth( $data ) {
-            $tokenKey   = $data;
-            $token      = TokenModel::query()->whereTokenKey( $tokenKey )->first();
-            if( $token->exists() ) {
-                $this->setAuth( AuthModel::one( $token->getAuthId() ) );
-            } else {
-                $this->setAuth( new AuthModel() );
-            }
+        /**
+         * @return static
+         * @param string $token
+        */
+
+        public function authenticate( $token = null ) {
+            $this->setModel( AuthModel::one( $this->getTokenModel( $token )->getAuthId() ) );
             return $this;
+        }
+
+        /**
+         * @return TokenModel $tokenModel
+         * @param string $token
+         */
+
+        public function getTokenModel( $token = null ) {
+            return TokenModel::query()->whereTokenKey( $token )->first();
+        }
+
+        /**
+         * @return static
+         */
+
+        public function logout() {
+            $this->setModel( new AuthModel() );
+            return $this;
+        }
+
+        /**
+         * @return int $id
+         */
+
+        public function id() {
+            return $this->getModel()->id();
         }
 
     }

@@ -43,10 +43,6 @@
                         $this->getNativeBuilder()->order( [ $columnName, $args[0] ] );
                         break;
                     }
-                    case 'limit': {
-                        $this->getNativeBuilder()->limit( $args[0], $args[1] );
-                        break;
-                    }
                 }
 
                 return $this;
@@ -63,6 +59,15 @@
 
         public function where( $columnName = null, $columnValue = null ) {
             $this->getNativeBuilder()->where( [ $columnName, $columnValue ] );
+            return $this;
+        }
+
+        /**
+         * @return static
+         */
+
+        public function limit() {
+            $this->getNativeBuilder()->limit( $args[0], $args[1] );
             return $this;
         }
 

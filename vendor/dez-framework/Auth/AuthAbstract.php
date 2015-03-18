@@ -3,28 +3,37 @@
     namespace Dez\Auth;
 
     use Dez\Auth\Model\Auth             as AuthModel;
+    use Dez\Core\HasDataTrait;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\SingletonTrait;
 
+    class AuthIncorrect extends \Exception {}
+
     abstract class AuthAbstract extends Object implements AuthInterface {
 
-        use SingletonTrait;
+        use SingletonTrait, HasDataTrait;
 
         protected
-            $auth  = null;
+            $model  = null;
 
-        protected function init( $data ) {
-            return $this->initAuth( $data );
+        protected function init() {
+            $this->setModel( new AuthModel() );
         }
 
-        protected function setAuth( AuthModel $auth ) {
-            $this->auth     = $auth;
+        protected function setModel( AuthModel $model ) {
+            $this->model     = $model;
         }
 
-        public function getAuth() {
-            return $this->auth;
+        /**
+         * @return AuthModel $authModel
+        */
+
+        protected function getModel() {
+            return $this->model;
         }
 
-        abstract protected function initAuth( $data );
+        protected function getData() {
+            return $this->getAuth()->toArray();
+        }
 
     }
