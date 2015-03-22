@@ -7,6 +7,10 @@
     use Dez\Controller\Controller,
         Tasker\Api\Response as ApiResponse;
 
+    /**
+     * @property AuthAPI $auth
+     */
+
     class ApiController extends Controller {
 
         protected
