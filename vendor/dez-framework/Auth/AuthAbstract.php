@@ -33,7 +33,7 @@
         }
 
         protected function getData() {
-            return $this->getAuth()->toArray();
+            return $this->getModel()->toArray();
         }
 
     }
