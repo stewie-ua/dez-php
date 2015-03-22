@@ -4,8 +4,9 @@
 
     use Dez\Auth\Api        as AuthAPI;
     use Dez\Auth\Web        as AuthWeb;
-    use Dez\Controller\Controller,
-        Tasker\Api\Response as ApiResponse;
+    use Dez\Controller\Controller;
+    use Dez\Response\Response;
+    use Tasker\Api\Response as ApiResponse;
 
     /**
      * @property AuthAPI $auth
@@ -29,16 +30,21 @@
         }
 
         public function runAction() {
-            $params     = func_get_args();
-            $methodName = array_shift( $params );
-            $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
-            if( $wrappedRouter->getControllerName() != 'auth' && $this->request->get( 'token' ) == $this->auth->get( 'token_key' ) ) {
+            $params         = func_get_args();
+            $methodName     = array_shift( $params );
+            $wrappedRouter  = \Dez::app()->action->getWrapperRoute();
 
+            $this->auth->authenticate( $this->request->get( 'token' ) );
+
+            if( $wrappedRouter->getControllerName() != 'auth' && 0 >= $this->auth->id() ) {
+                Response::instance()->setCode( 500 );
+                return ApiResponse::tokenError();
             }
+
             try {
                 return $this->forward( $this, $methodName, $params );
             } catch ( \Exception $e ) {
-                \Dez\Response\Response::instance()->setCode( 404 );
+                Response::instance()->setCode( 404 );
                 return ApiResponse::error( 'BAD REQUEST ('. $e->getMessage() .')', 101 );
             }
         }

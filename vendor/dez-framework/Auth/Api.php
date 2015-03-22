@@ -27,6 +27,17 @@
         }
 
         /**
+         * @return string $token
+         */
+
+        public function getToken( $login = null, $password = null ) {
+            $auth = AuthModel::query()->whereEmail( $login )->wherePassword( $password )->first();
+            if( $auth->id() > 0 ) {
+
+            }
+        }
+
+        /**
          * @return static
          */
 
