@@ -14,9 +14,8 @@
             $auth           = null;
 
         public function beforeExecute() {
-            $a = AuthAPI::instance( 'mytoken123123' );
-            dump( $a->id() );
-            $this->auth                 = \Dez::app()->auth;
+            $this->auth                 = AuthAPI::instance();
+            dump($this->auth);
             $this->requestMethod        = strtoupper( $this->request->method );
             $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
             $params                     = $wrappedRouter->getParams();
