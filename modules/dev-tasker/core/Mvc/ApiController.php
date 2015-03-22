@@ -19,7 +19,6 @@
 
         public function beforeExecute() {
             $this->auth                 = AuthAPI::instance();
-            dump($this->auth);
             $this->requestMethod        = strtoupper( $this->request->method );
             $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
             $params                     = $wrappedRouter->getParams();
@@ -32,10 +31,10 @@
         public function runAction() {
             $params     = func_get_args();
             $methodName = array_shift( $params );
-//            $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
-//            if( $wrappedRouter->getControllerName() != 'auth' && $this->request->get( 'token' ) == $this->auth->get( 'id' ) ) {
-//
-//            }
+            $wrappedRouter              = \Dez::app()->action->getWrapperRoute();
+            if( $wrappedRouter->getControllerName() != 'auth' && $this->request->get( 'token' ) == $this->auth->get( 'token_key' ) ) {
+
+            }
             try {
                 return $this->forward( $this, $methodName, $params );
             } catch ( \Exception $e ) {

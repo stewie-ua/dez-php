@@ -3,7 +3,6 @@
     namespace Dez\Auth;
 
     use Dez\Auth\Model\Auth             as AuthModel;
-    use Dez\Core\HasDataTrait;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\SingletonTrait;
 
@@ -11,7 +10,7 @@
 
     abstract class AuthAbstract extends Object implements AuthInterface {
 
-        use SingletonTrait, HasDataTrait;
+        use SingletonTrait;
 
         protected
             $model  = null;
@@ -34,6 +33,11 @@
 
         protected function getData() {
             return $this->getModel()->toArray();
+        }
+
+        public function get( $key = null, $default = null ) {
+            $data   = $this->getData();
+            return isset( $data[$key] ) ? $data[$key] : $default;
         }
 
     }
