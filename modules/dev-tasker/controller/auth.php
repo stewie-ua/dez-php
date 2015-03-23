@@ -8,7 +8,6 @@
     class AuthController extends ApiController {
 
         public function processGETAction() {
-            dump('asdasd');
             return ApiResponse::success( [
                 'status'            => $this->auth->isLogged(),
                 'auth_id'           => (int) $this->auth->id(),
@@ -16,7 +15,6 @@
         }
 
         public function processPOSTAction() {
-            dump('123');
             $login      = $this->request->post( 'login', null );
             $password   = $this->request->post( 'password', null );
             $token      = $this->auth->getToken( $login, $password );

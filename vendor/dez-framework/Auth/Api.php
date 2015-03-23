@@ -15,7 +15,6 @@
         */
 
         public function authenticate( $token = null ) {
-            dump($this->getTokenModel( $token ));
             $this->setModel( AuthModel::one( $this->getTokenModel( $token )->getAuthId() ) );
             return $this;
         }
@@ -37,7 +36,6 @@
             $auth   = AuthModel::query()->whereEmail( $login )->wherePassword( $password )->first();
             $token  = new TokenModel();
             if( $auth->id() > 0 ) {
-                dump( $token );
                 $token
                     ->setUserId( $auth->id() )
                     ->setUserAgent( Request::instance()->server( 'user_agent' ) )
