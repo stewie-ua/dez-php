@@ -2,17 +2,22 @@
 
     use Dez\Controller\Controller,
         Dez\Response\Response,
+        Dez\Core\Request,
         Dez\Error\Error as ErrorMessage,
         Dez\Core\Message,
         Dez\Utils,
         Dez\Web\Asset,
         Dez\Web\Layout,
-        Dez\Utils\HTML;
+        Dez\Utils\HTML,
+        Dez\Auth\Web;
 
     class IndexController extends Controller {
 
         public function beforeExecute() {
             Layout::instance()->setName( 'start' );
+            $webAuth    = Web::instance();
+            $webAuth->authenticate( Request::instance()->cookie( 'uni_key', -1 ) );
+            \Dez::app()->attach( 'webAuth', $webAuth );
         }
 
         public function homeAction() {
@@ -21,9 +26,9 @@
 
         public function loginAction() {
 
-            $auth = \Dez::app()->auth;
+            $auth = \Dez::app()->webAuth;
 
-            if( $auth->isLogged() ) {
+            if( $auth->id() > 0 ) {
                 ErrorMessage::notify( 'Вы уже выторизированы. Сначала нужно '. HTML::a( adminUrl( 'index:logout' ), 'выйти' ) );
                 $this->redirect( adminUrl( 'index:home' ) );
             } else {
@@ -33,7 +38,7 @@
         }
 
         public function loginPostAction() {
-            $auth = \Dez::app()->auth;
+            $auth = \Dez::app()->webAuth;
             $data = array(
                 'email'     => $this->request->post( 'email', null ),
                 'password'  => $this->request->post( 'password', null ),
@@ -55,20 +60,21 @@
         }
 
         public function processAction ( $controller = null, $action = null, $method = null ) {
-
+dump('asd');
             if( $controller != 'index' ) {
 
                 Layout::instance()->setName( 'index' );
-                $auth = \Dez::app()->auth;
+                $auth = \Dez::app()->webAuth;
                 //dump($auth->has('aaa'));
-                if( ! $auth->isLogged() ) {
+                if( ! $auth->id() ) {
                     ErrorMessage::warning( 'Авторизируйтесь' );
                     $this->redirect( adminUrl( 'index:login' ) ); die;
-                } else if( ! $auth->has( 'DEZ_ADMIN_PANEL' ) ) {
-                    $auth->logout();
-                    ErrorMessage::warning( 'Не достаточно прав' );
-                    $this->redirect( adminUrl( 'index:login' ) );
                 }
+//                else if( ! $auth->has( 'DEZ_ADMIN_PANEL' ) ) {
+//                    $auth->logout();
+//                    ErrorMessage::warning( 'Не достаточно прав' );
+//                    $this->redirect( adminUrl( 'index:login' ) );
+//                }
 
             }
 

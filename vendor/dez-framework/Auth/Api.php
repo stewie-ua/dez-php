@@ -26,7 +26,7 @@
          */
 
         public function getTokenModel( $token = null ) {
-            TokenModel::query()->whereExpiredDate( ( new DateTime() )->mySQL(), '<=' )->delete();
+            TokenModel::query()->whereExpiredDate( ( new DateTime() )->mySQL(), '<=' )->find()->delete();
             $token = TokenModel::query()->whereTokenKey( $token )->first();
             if( $token->id() > 0 ) {
                 $token->setLastDate( ( new DateTime() )->mySQL() )->save();

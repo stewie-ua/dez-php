@@ -38,11 +38,11 @@
         }
 
         public function save() {
-            $this->each( function( $item ) { $item->save(); } );
+            $this->each( function( $i, $item ) { $item->save(); } );
         }
 
         public function delete() {
-            $this->each( function( $item ) { $item->delete(); } );
+            $this->each( function( $i, $item ) { $item->delete(); } );
         }
 
         public function toArray() {

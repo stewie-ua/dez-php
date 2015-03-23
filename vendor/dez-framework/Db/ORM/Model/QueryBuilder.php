@@ -173,7 +173,6 @@
         public function delete() {
             $model      = $this->getModel();
             $this->getNativeBuilder()->delete()->where( [ $model->pk(), $model->id() ] )->limit( 1 );
-            die($this->getNativeBuilder()->query());
             return $model->getConnection()->execute( $this->getNativeBuilder()->query() )->affectedRows();
         }
 
