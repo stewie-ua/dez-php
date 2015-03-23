@@ -4,6 +4,8 @@
 
     use Dez\Auth\Model\Auth     as AuthModel;
     use Dez\Auth\Model\Token    as TokenModel;
+    use Dez\Core\Request;
+    use Dez\Core\Server;
 
     class Api extends AuthAbstract {
 
@@ -33,7 +35,14 @@
         public function getToken( $login = null, $password = null ) {
             $auth = AuthModel::query()->whereEmail( $login )->wherePassword( $password )->first();
             if( $auth->id() > 0 ) {
-
+                $token  = new TokenModel();
+                $token
+                    ->setUserId( $auth->id() )
+                    ->setUserAgent( Request::instance()->server( 'user_agent' ) )
+                    ->setUserIp( Server::instance()->getUserIpLong() )
+                    ->setExpiredDate( ( new \DateTime( '+ 30 days' ) )->format( 'Y-m-d H:i:s' ) )
+                    ->setLastDate( ( new \DateTime( 'now' ) )->format( 'Y-m-d H:i:s' ) );
+                return $token->save()->getTokenKey();
             }
         }
 

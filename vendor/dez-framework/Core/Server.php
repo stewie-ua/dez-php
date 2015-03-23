@@ -13,7 +13,9 @@
             $requestUri         = null,
             $realPath           = null,
             $queryString        = null,
-            $scriptDirectory    = null;
+            $scriptDirectory    = null,
+            $userIp             = null,
+            $userIpLong         = null;
 
         protected function init() {
             $request                = Request::instance();
@@ -24,6 +26,8 @@
             $this->requestUri       = parse_url( $request->server( 'request_uri' ), PHP_URL_PATH );
             $this->scriptDirectory  = dirname( $request->server( 'script_name', '' ) );
             $this->realPath         = substr( $this->requestUri, strlen( $this->scriptDirectory ) );
+            $this->userIp           = getRealIP();
+            $this->userIpLong       = ip2long( $this->userIp );
         }
 
         public function getSchema() {
@@ -36,6 +40,14 @@
 
         public function getPort() {
             return $this->port;
+        }
+
+        public function getUserIp() {
+            return $this->userIp;
+        }
+
+        public function getUserIpLong() {
+            return $this->userIpLong;
         }
 
         public function getRequestUri() {
