@@ -54,6 +54,8 @@
 
         /**
          * @return string $value
+         * @param $key string
+         * @param $default mixed
          */
 
         public function get( $key = null, $default = null ) {

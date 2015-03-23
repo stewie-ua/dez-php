@@ -32,7 +32,7 @@
 
                 switch( $methodName ) {
                     case 'where': {
-                        $this->where( $columnName, $args[0] );
+                        $this->where( $columnName, $args[0], isset( $args[1] ) ? $args[1] : '=' );
                         break;
                     }
                     case 'group': {
@@ -57,8 +57,8 @@
          * @return static
          */
 
-        public function where( $columnName = null, $columnValue = null ) {
-            $this->getNativeBuilder()->where( [ $columnName, $columnValue ] );
+        public function where( $columnName = null, $columnValue = null, $cmpType = '=' ) {
+            $this->getNativeBuilder()->where( [ $columnName, $columnValue, $cmpType ] );
             return $this;
         }
 
@@ -173,6 +173,7 @@
         public function delete() {
             $model      = $this->getModel();
             $this->getNativeBuilder()->delete()->where( [ $model->pk(), $model->id() ] )->limit( 1 );
+            die($this->getNativeBuilder()->query());
             return $model->getConnection()->execute( $this->getNativeBuilder()->query() )->affectedRows();
         }
 

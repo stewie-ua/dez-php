@@ -6,6 +6,7 @@
     use Dez\Auth\Model\Token    as TokenModel;
     use Dez\Core\Request;
     use Dez\Core\Server;
+    use Dez\ORM\Common\DateTime;
 
     class Api extends AuthAbstract {
 
@@ -25,9 +26,10 @@
          */
 
         public function getTokenModel( $token = null ) {
+            TokenModel::query()->whereExpiredDate( ( new DateTime() )->mySQL(), '<=' )->delete();
             $token = TokenModel::query()->whereTokenKey( $token )->first();
             if( $token->id() > 0 ) {
-                $token->setLastDate( ( new \DateTime( 'now' ) )->format( 'Y-m-d H:i:s' ) )->save();
+                $token->setLastDate( ( new DateTime() )->mySQL() )->save();
             }
             return $token;
         }
