@@ -9,7 +9,7 @@
 
         public function processGETAction() {
             return ApiResponse::success( [
-                'status'            => $this->auth->isLogged(),
+                'status'            => $this->auth->id() > 0,
                 'auth_id'           => (int) $this->auth->id(),
             ] );
         }

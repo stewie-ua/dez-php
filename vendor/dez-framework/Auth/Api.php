@@ -25,11 +25,15 @@
          */
 
         public function getTokenModel( $token = null ) {
-            return TokenModel::query()->whereTokenKey( $token )->first();
+            $token = TokenModel::query()->whereTokenKey( $token )->first();
+            if( $token->id() > 0 ) {
+                $token->setLastDate( ( new \DateTime( 'now' ) )->format( 'Y-m-d H:i:s' ) )->save();
+            }
+            return $token;
         }
 
         /**
-         * @return string $token
+         * @return TokenModel $token
          */
 
         public function getToken( $login = null, $password = null ) {
@@ -37,12 +41,12 @@
             $token  = new TokenModel();
             if( $auth->id() > 0 ) {
                 $token
-                    ->setUserId( $auth->id() )
-                    ->setUserAgent( Request::instance()->server( 'user_agent' ) )
+                    ->setAuthId( $auth->id() )
+                    ->setUserAgent( Request::instance()->http( 'user_agent' ) )
                     ->setUserIp( Server::instance()->getUserIpLong() )
                     ->setExpiredDate( ( new \DateTime( '+ 30 days' ) )->format( 'Y-m-d H:i:s' ) )
                     ->setLastDate( ( new \DateTime( 'now' ) )->format( 'Y-m-d H:i:s' ) );
-                return $token->save();
+                $token->setTokenKey( $this->getUniKey( $token ) )->save();
             }
             return $token;
         }

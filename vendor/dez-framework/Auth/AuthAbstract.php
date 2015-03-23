@@ -5,6 +5,7 @@
     use Dez\Auth\Model\Auth             as AuthModel;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\SingletonTrait;
+    use Dez\ORM\Model\Table;
 
     class AuthIncorrect extends \Exception {}
 
@@ -19,6 +20,10 @@
             $this->setModel( new AuthModel() );
         }
 
+        /**
+         * @return static
+         */
+
         protected function setModel( AuthModel $model ) {
             $this->model     = $model;
         }
@@ -31,9 +36,25 @@
             return $this->model;
         }
 
+        /**
+         * @return array $data
+        */
+
         protected function getData() {
             return $this->getModel()->toArray();
         }
+
+        /**
+         * @return string $uni_key
+         */
+
+        protected function getUniKey( Table $model ) {
+            return md5( implode( '::', $model->toArray() ) );
+        }
+
+        /**
+         * @return string $value
+         */
 
         public function get( $key = null, $default = null ) {
             $data   = $this->getData();

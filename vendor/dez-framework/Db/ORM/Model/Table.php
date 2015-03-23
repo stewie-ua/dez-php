@@ -7,6 +7,10 @@
 
     class Table extends TableAbstract {
 
+        public function __destruct() {
+            $this->onDestroy();
+        }
+
         /**
          * @return QueryBuilder $builder
         */
@@ -43,13 +47,19 @@
         }
 
         public function save() {
-            $query = new QueryBuilder( $this );
-            return $this->exists() ? $query->update() : $this->id = $query->insert();
+            $this->beforeSave();
+            $query      = new QueryBuilder( $this );
+            $result     = $this->exists() ? $query->update() : $this->id = $query->insert();
+            $this->afterSave();
+            return $result;
         }
 
         public function delete() {
+            $this->beforeDelete();
             $query      = new QueryBuilder( $this );
-            return $this->exists() ? $query->delete() : 0;
+            $result     = $this->exists() ? $query->delete() : 0;
+            $this->afterDelete();
+            return $result;
         }
 
         public function id() {
@@ -71,5 +81,15 @@
         public function toJSON() {
             return json_encode( $this->toArray() );
         }
+
+        protected function beforeSave() {}
+
+        protected function beforeDelete() {}
+
+        protected function afterSave() {}
+
+        protected function afterDelete() {}
+
+        protected function onDestroy() {}
 
     }

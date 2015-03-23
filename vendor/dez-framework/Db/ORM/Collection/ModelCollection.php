@@ -41,6 +41,10 @@
             $this->each( function( $item ) { $item->save(); } );
         }
 
+        public function delete() {
+            $this->each( function( $item ) { $item->delete(); } );
+        }
+
         public function toArray() {
             $items = $this->items;
             foreach( $items as & $item ) {
