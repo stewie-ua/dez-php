@@ -34,7 +34,7 @@
             $methodName     = array_shift( $params );
             $wrappedRouter  = \Dez::app()->action->getWrapperRoute();
 
-            $this->auth->authenticate( $this->request->get( 'token' ) );
+            $this->auth->authenticate( $this->request->get( 'token', -1 ) );
 
             if( $wrappedRouter->getControllerName() != 'auth' && 0 >= $this->auth->id() ) {
                 Response::instance()->setCode( 500 );
