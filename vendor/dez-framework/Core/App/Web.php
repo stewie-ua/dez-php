@@ -53,9 +53,6 @@
         }
 
         public function init(){
-            $this->dispatcher->dispatch( 'beforeInit',  [ $this ] );
-            $this->initAuth();
-            $this->dispatcher->dispatch( 'afterInit',   [ $this ] );
             return $this;
         }
 
@@ -103,10 +100,6 @@
                 } );
             }
 		}
-
-        protected function initAuth() {
-//            $this->attach( 'auth', new Auth_v1() );
-        }
 
 		protected function initError() {
             // @TODO Срала, мазала, мисыла... вот что я думаю об этом методе
