@@ -61,13 +61,16 @@
 
 ```php
 
+    // массив данных
     $data   = [
         'user_name'     => 'John',
         'password'      => md5( 'user_password' )
     ];
 
+    // делаем вставку при помощи статичного метода insert
     $user   = UserModel::insert( $data );
 
+    // видим значение pk ключа
     die( var_dump( $user->id() ) );
 
 ```
@@ -76,6 +79,7 @@
 
 ```php
 
+    // создание постой модели
     $user   = new UserModel();
 
     $user
@@ -83,6 +87,7 @@
         ->setPassword( md5( 'user_password' ) )
         ->save();
 
+    // видим значение pk ключа
     die( var_dump( $user->id() ) );
 
 ```
