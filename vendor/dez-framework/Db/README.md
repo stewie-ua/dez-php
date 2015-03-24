@@ -6,6 +6,8 @@
 
 ```php
 
+    use Dez\ORM\Model\Table as TableModel;
+
     class UserModel extend TableModel {
         // установите имя таблицы базы данных
         // Обязательный параметр
