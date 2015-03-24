@@ -1,6 +1,10 @@
-## DezORM
+# DezORM
 
-### Создание модели таблицы
+## CRUD
+
+### Получение данных
+
+#### Выбор всех записей из таблицы
 
 ```php
 
@@ -28,3 +32,26 @@
     $users->save();
 
 ```
+
+#### Выбор с условиями
+
+```php
+
+    // объект составляющий запрос для результата
+    $usersQueryBuilder = UserModel::query();
+
+    // find - возвращает коллекцию моделей результата
+    // в результате был выполнен следующий запрос
+    //      SELECT `users`.*
+    //      FROM `users`
+    //      WHERE `users`.`status` = 'active'
+    //      AND `users`.`last_visit` < '2015-01-01 01:01:59'
+    //      ORDER BY `users`.`user_name` DESC
+    $users = $usersQueryBuilder
+        ->whereStatus( 'active' )
+        ->whereLastVisit( ( new \DateTime( '- 15 days' )->format( 'Y-m-d H:i:s' ) ), '<' )
+        ->orderUserName( 'DESC' )
+        ->find();
+
+```
+
