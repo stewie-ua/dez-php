@@ -55,3 +55,34 @@
 
 ```
 
+### Получение данных
+
+#### Способ 1
+
+```php
+
+    $data   = [
+        'user_name'     => 'John',
+        'password'      => md5( 'user_password' )
+    ];
+
+    $user   = UserModel::insert( $data );
+
+    die( var_dump( $user->id() ) );
+
+```
+
+#### Способ 2
+
+```php
+
+    $user   = new UserModel();
+
+    $user
+        ->setUserName( 'John' )
+        ->setPassword( md5( 'user_password' ) )
+        ->save();
+
+    die( var_dump( $user->id() ) );
+
+```
