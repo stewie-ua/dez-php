@@ -1,29 +1,26 @@
-## Dez ORM Examples
+## DezORM
 
-### Extend Table Model
-
-    use Dez\ORM\Model\Table as TableModel;
-
-    include_once 'ORM.php';
+### Создание модели таблицы
 
     class UserModel extend TableModel {
-        // set a table name of UserModel
+        // установите имя таблицы базы данных
+        // Обязательный параметр
         static $table = 'users';
     }
 
-    // collection of UserModel
+    // получаем коллекцию моделей UserModel
     $users = UserModel::all();
 
-    // set for all users name as 'John'
+    // к примеру надо установить всем пользователям одно и тоже имя
     foreach( $users as $user ) {
-        // method setUserName mean a set for users table column name `user_name`
-        $user->setUserName( 'John' );
+        // назначаем имя Джон для поля user_name
+        $user->setUserName( 'Джон' );
     }
 
-    // or use method from collection
+    // также можно использовать методы коллекции для прохождений по каждой модели
     $users->each( function( $i, $user ) {
         $user->setUserName( 'John' );
     } );
 
-    // and update all users
+    // обновляем всех пользователей
     $users->save();
