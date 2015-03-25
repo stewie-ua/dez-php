@@ -63,7 +63,7 @@
             return $this->get( 'id' );
         }
 		
-		public function login( array $auth_data = [] ){
+		public function login( array $auth_data = [] ) {
 
 			$login 		= trim( $auth_data[0] );
 			$password	= self::hashPassword( $auth_data[1] );
