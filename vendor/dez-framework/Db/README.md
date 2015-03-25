@@ -78,3 +78,22 @@
     die( var_dump( $user->id() ) );
 
 ```
+
+#### Удаление записей
+
+```php
+
+    // удаление всех записей
+    $users  = UserModel::all();
+    $users->delete();
+    // или
+    UserModel::all()->delete();
+    UserModel::query()->whereUserGroupId( 5 )->delete();
+
+    // для одной записи
+    $user   = UserModel::one( 17 );
+    $user->delete();
+    // или
+    UserModel::query()->whereUserGroupId( 5 )->first()->delete();
+
+```
