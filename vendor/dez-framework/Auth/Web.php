@@ -16,16 +16,10 @@
             if( null !== $authKey ) {
                 $session = SessionModel::query()->whereUniKey( $this->getHash( $authKey ) )->first();
                 if( $session->id() > 0 ) {
-                    $this->setModel( AuthModel::one( $session->getAuthId() ) );
-                } else {
-                    $this->setModel( new AuthModel() );
+                    $this->setModel( AuthModel::one( $session->getAuthId() ) ); return;
                 }
-            } else {
-                $this->setModel( new AuthModel() );
             }
-
-            dump( $this->getModel() );
-
+            $this->setModel( new AuthModel() );
         }
 
         public function authenticate( $login = null, $password = null ) {
@@ -34,10 +28,12 @@
 
             if( $auth->id() > 0 ) {
 
-                $hash           = $this->getHash( rand( 1, 1000000 ) );
+                $cookieHash     = md5( rand( 1, 1000000 ) );
+
+                $hash           = $this->getHash( $cookieHash );
                 $currentDate    = new DateTime( '+ 30 days ' );
 
-                Cookie::set( Request::AUTH_COOKIE_KEY, $hash, $currentDate->getTimestamp() );
+                Cookie::set( Request::AUTH_COOKIE_KEY, $cookieHash, $currentDate->getTimestamp() );
 
                 SessionModel::insert( [
                     'auth_id'       => $auth->id(),
@@ -67,7 +63,7 @@
         }
 
         protected function getHash( $salt = '' ) {
-            return sha1( $this->userAgent . ( $this->userIp & 0xffffff00 ) . $salt );
+            return md5( $this->userAgent . ( $this->userIp & 0xffffff00 ) . $salt );
         }
 
         static protected function hashPassword( $password = '' ) {
