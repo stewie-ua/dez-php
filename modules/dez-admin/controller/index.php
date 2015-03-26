@@ -15,18 +15,17 @@
 
         public function beforeExecute() {
             Layout::instance()->setName( 'start' );
-            $webAuth    = Web::instance();
-            $webAuth->authenticate( Request::instance()->cookie( 'uni_key', -1 ) );
-            \Dez::app()->attach( 'webAuth', $webAuth );
+            \Dez::app()->attach( 'auth', Web::instance() );
         }
 
         public function homeAction() {
             Message::info( 'Главная страница' );
+            return __METHOD__;
         }
 
         public function loginAction() {
 
-            $auth = \Dez::app()->webAuth;
+            $auth = \Dez::app()->auth;
 
             if( $auth->id() > 0 ) {
                 ErrorMessage::notify( 'Вы уже выторизированы. Сначала нужно '. HTML::a( adminUrl( 'index:logout' ), 'выйти' ) );
@@ -38,19 +37,20 @@
         }
 
         public function loginPostAction() {
-            $auth = \Dez::app()->webAuth;
-            $data = array(
-                'email'     => $this->request->post( 'email', null ),
-                'password'  => $this->request->post( 'password', null ),
-            );
-            try {
-                $auth->login( array( $data['email'], $data['password'] ) );
-                Message::success( 'Вы ('. $data['email'] .') успешно авторизированы' );
-                $this->redirect( adminUrl( 'index:home' ) );
-            } catch( \Exception $e ) {
-                ErrorMessage::critical( $e->getMessage() );
-                $this->redirect( adminUrl( 'index:login' ) );
-            }
+            return __METHOD__;
+//            $auth = \Dez::app()->auth;
+//            $data = array(
+//                'email'     => $this->request->post( 'email', null ),
+//                'password'  => $this->request->post( 'password', null ),
+//            );
+//            try {
+//                $auth->login( array( $data['email'], $data['password'] ) );
+//                Message::success( 'Вы ('. $data['email'] .') успешно авторизированы' );
+//                $this->redirect( adminUrl( 'index:home' ) );
+//            } catch( \Exception $e ) {
+//                ErrorMessage::critical( $e->getMessage() );
+//                $this->redirect( adminUrl( 'index:login' ) );
+//            }
         }
 
         public function logoutAction() {
@@ -60,25 +60,27 @@
         }
 
         public function processAction ( $controller = null, $action = null, $method = null ) {
-dump('asd');
+
             if( $controller != 'index' ) {
 
                 Layout::instance()->setName( 'index' );
-                $auth = \Dez::app()->webAuth;
-                //dump($auth->has('aaa'));
+                $auth = \Dez::app()->auth;
+
                 if( ! $auth->id() ) {
                     ErrorMessage::warning( 'Авторизируйтесь' );
                     $this->redirect( adminUrl( 'index:login' ) ); die;
+                } else if( ! $auth->has( 'DEZ_ADMIN_PANEL' ) ) {
+                    $auth->logout();
+                    ErrorMessage::warning( 'Не достаточно прав' );
+                    $this->redirect( adminUrl( 'index:login' ) );
                 }
-//                else if( ! $auth->has( 'DEZ_ADMIN_PANEL' ) ) {
-//                    $auth->logout();
-//                    ErrorMessage::warning( 'Не достаточно прав' );
-//                    $this->redirect( adminUrl( 'index:login' ) );
-//                }
 
             }
 
             try {
+                if( $method == 'post' ) {
+                    dump(123);
+                }
                 $moduleName = \Dez::app()->action->getWrapperRoute()->getModuleName();
                 return $this->forward( $controller, $action . ucfirst( $method ), [], $moduleName );
             } catch( \Exception $e ) {

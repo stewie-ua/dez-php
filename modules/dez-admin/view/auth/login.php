@@ -1,10 +1,9 @@
 <?php
-    use Dez\Core\UrlBuilder as UB,
-        Dez\Core\Url;
+    use Dez\Core\UrlBuilder as UB;
 ?>
 <h1>Вход в админ-панель</h1>
 <div class="auth-login form">
-    <form action="<?= url( UB::c( 'index:login' ) ) ?>" method="post">
+    <form action="<?= adminUrl( UB::c( 'index:login' ) ) ?>" method="post">
         <div>
             <label for="email">E-mail:
                 <input name="email" type="text" id="email" placeholder="email@example.com" value=""/>

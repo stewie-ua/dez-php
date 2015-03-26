@@ -58,12 +58,17 @@
 
 		public function run() {
             $this->dispatcher->dispatch( 'beforeRun', [ $this ] );
+
             try{
+
                 $this->response->setHeader( 'Dez-Powered',          \Dez::poweredBy() );
                 $this->response->addHeader( 'Dez-Powered',          DEZ_CODENAME );
                 $this->response->setHeader( 'Dez-Framework-Author', DEZ_AUTHOR );
+
                 $content = $this->action->execute();
+
                 $this->dispatcher->dispatch( 'afterExecute', [ $this ] );
+
                 if( $this->response->getFormat() == Response::RESPONSE_HTML ) {
                     $this->layout->setContent( $content )
                         ->set( 'errorMessages',     ErrorMessage::instance()->render() )
@@ -73,9 +78,13 @@
                 } else {
                     $this->response->setBody( $content );
                 }
+
                 $this->dispatcher->dispatch( 'beforeSend', [ $this ] );
+
                 $this->response->send();
+
                 $this->dispatcher->dispatch( 'afterSend', [ $this ] );
+
             }catch( \Exception $e ){
                 ErrorMessage::fatal( $e->getMessage() );
             }

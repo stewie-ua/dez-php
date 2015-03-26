@@ -47,7 +47,7 @@
 
 		}
 		
-		public function isLogged(){
+		public function (){
 			return (boolean) $this->get( 'id' );
 		}
 		

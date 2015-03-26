@@ -27,7 +27,7 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
         </ul>
 
         <ul class="auth-block">
-            <?if( ! Dez::app()->auth->isLogged() ):?>
+            <?if( ! Dez::app()->auth->id() ):?>
                 <li><a href="<?=adminUrl( 'index:login' )?>">Войти</a></li>
                 <li><a href="<?=adminUrl( 'index:registration' )?>">Регистрация</a></li>
             <?else:?>
