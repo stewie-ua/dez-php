@@ -5,6 +5,9 @@
 	class Request extends Object {
 
         use SingletonTrait;
+
+        const
+            AUTH_COOKIE_KEY     = 'auth_key';
 		
 		public 	$isAjax = false,
 				$isPost = false,

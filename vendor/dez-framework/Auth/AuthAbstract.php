@@ -3,6 +3,8 @@
     namespace Dez\Auth;
 
     use Dez\Auth\Model\Auth             as AuthModel;
+    use Dez\Core\Request;
+    use Dez\Core\Server;
     use Dez\ORM\Common\Object;
     use Dez\ORM\Common\SingletonTrait;
     use Dez\ORM\Model\Table;
@@ -14,10 +16,14 @@
         use SingletonTrait;
 
         protected
-            $model  = null;
+            $model          = null,
+
+            $userAgent      = null,
+            $userIp         = null;
 
         protected function init() {
-            $this->setModel( new AuthModel() );
+            $this->userIp       = Server::instance()->getUserIpLong();
+            $this->userAgent    = Request::instance()->http( 'user_agent' );
         }
 
         /**
@@ -26,6 +32,7 @@
 
         protected function setModel( AuthModel $model ) {
             $this->model     = $model;
+            return $this;
         }
 
         /**

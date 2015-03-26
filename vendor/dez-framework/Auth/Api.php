@@ -10,6 +10,10 @@
 
     class Api extends AuthAbstract {
 
+        protected function init() {
+            $this->setModel( new AuthModel() );
+        }
+
         /**
          * @return static
          * @param string $token
@@ -44,10 +48,10 @@
             if( $auth->id() > 0 ) {
                 $token
                     ->setAuthId( $auth->id() )
-                    ->setUserAgent( Request::instance()->http( 'user_agent' ) )
-                    ->setUserIp( Server::instance()->getUserIpLong() )
-                    ->setExpiredDate( ( new \DateTime( '+ 30 days' ) )->format( 'Y-m-d H:i:s' ) )
-                    ->setLastDate( ( new \DateTime( 'now' ) )->format( 'Y-m-d H:i:s' ) );
+                    ->setUserAgent( $this->userAgent )
+                    ->setUserIp( $this->userIp )
+                    ->setExpiredDate( ( new DateTime( '+ 30 days' ) )->mySQL() )
+                    ->setLastDate( ( new DateTime( 'now' ) )->mySQL() );
                 $token->setTokenKey( $this->getUniKey( $token ) )->save();
             }
             return $token;
