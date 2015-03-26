@@ -12,26 +12,46 @@
 
         protected function init() {
             parent::init();
-
             $authKey    = Request::instance()->cookie( Request::AUTH_COOKIE_KEY, null );
-
             if( null !== $authKey ) {
                 $session = SessionModel::query()->whereUniKey( $this->getHash( $authKey ) )->first();
                 if( $session->id() > 0 ) {
                     $this->setModel( AuthModel::one( $session->getAuthId() ) );
+                } else {
+                    $this->setModel( new AuthModel() );
                 }
             } else {
                 $this->setModel( new AuthModel() );
             }
 
+            dump( $this->getModel() );
+
         }
 
         public function authenticate( $login = null, $password = null ) {
-            $auth   = AuthModel::query()->whereEmail( $login )->wherePassword( $password )->first();
+
+            $auth       = AuthModel::query()->whereEmail( $login )->wherePassword( static::hashPassword( $password ) )->first();
 
             if( $auth->id() > 0 ) {
-                Cookie::set( Request::AUTH_COOKIE_KEY, $this->getHash( rand( 1, 1000000 ) ), ( new DateTime( '+ 30 days ' ) )->getTimestamp() );
+
+                $hash           = $this->getHash( rand( 1, 1000000 ) );
+                $currentDate    = new DateTime( '+ 30 days ' );
+
+                Cookie::set( Request::AUTH_COOKIE_KEY, $hash, $currentDate->getTimestamp() );
+
+                SessionModel::insert( [
+                    'auth_id'       => $auth->id(),
+                    'uni_key'       => $hash,
+                    'user_agent'    => $this->userAgent,
+                    'user_ip'       => $this->userIp,
+                    'expired_date'  => $currentDate->mySQL(),
+                    'last_date'     => ( new DateTime() )->mySQL()
+                ] );
+
                 $this->setModel( $auth );
+
+            } else {
+                throw new \Exception( 'Incorrect email or password' );
             }
 
             return $auth;
@@ -48,6 +68,10 @@
 
         protected function getHash( $salt = '' ) {
             return sha1( $this->userAgent . ( $this->userIp & 0xffffff00 ) . $salt );
+        }
+
+        static protected function hashPassword( $password = '' ) {
+            return md5( sha1( $password ) );
         }
 
     }

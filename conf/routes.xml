@@ -5,13 +5,13 @@
 
         <route match="admin_panel" controller="index" action="home" module="dez-admin" >
             <route
-                    match="{controllerName|str}-{actionName|str}.html"
+                    match="{controllerName|str}-{actionName|str}.php"
                     controller="index"
                     action="process"
                     module="dez-admin"
                     method="get" />
            <route
-                    match="{controllerName|str}-{actionName|str}.html"
+                    match="{controllerName|str}-{actionName|str}.php"
                     controller="index"
                     action="processPost"
                     module="dez-admin"

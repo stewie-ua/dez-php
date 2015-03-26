@@ -1,8 +1,6 @@
 <?php
 
     use Dez\Controller\Controller,
-        Dez\Response\Response,
-        Dez\Core\Request,
         Dez\Error\Error as ErrorMessage,
         Dez\Core\Message,
         Dez\Utils,
@@ -37,20 +35,19 @@
         }
 
         public function loginPostAction() {
-            return __METHOD__;
-//            $auth = \Dez::app()->auth;
-//            $data = array(
-//                'email'     => $this->request->post( 'email', null ),
-//                'password'  => $this->request->post( 'password', null ),
-//            );
-//            try {
-//                $auth->login( array( $data['email'], $data['password'] ) );
-//                Message::success( 'Вы ('. $data['email'] .') успешно авторизированы' );
-//                $this->redirect( adminUrl( 'index:home' ) );
-//            } catch( \Exception $e ) {
-//                ErrorMessage::critical( $e->getMessage() );
-//                $this->redirect( adminUrl( 'index:login' ) );
-//            }
+            $auth = \Dez::app()->auth;
+
+            $email      = $this->request->post( 'email', null );
+            $password   = $this->request->post( 'password', null );
+
+            try {
+                $auth->authenticate( $email, $password );
+                Message::success( 'Auth is success' );
+            } catch ( \Exception $e ) {
+                ErrorMessage::warning( $e->getMessage() );
+            }
+
+            $this->redirect( adminUrl( 'index:home' ) );
         }
 
         public function logoutAction() {
@@ -78,9 +75,6 @@
             }
 
             try {
-                if( $method == 'post' ) {
-                    dump(123);
-                }
                 $moduleName = \Dez::app()->action->getWrapperRoute()->getModuleName();
                 return $this->forward( $controller, $action . ucfirst( $method ), [], $moduleName );
             } catch( \Exception $e ) {

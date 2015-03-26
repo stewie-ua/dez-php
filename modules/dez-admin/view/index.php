@@ -27,13 +27,8 @@ use Dez\Core\Url, Dez\Core\UrlBuilder, Dez\Web;
         </ul>
 
         <ul class="auth-block">
-            <?if( ! Dez::app()->auth->id() ):?>
-                <li><a href="<?=adminUrl( 'index:login' )?>">Войти</a></li>
-                <li><a href="<?=adminUrl( 'index:registration' )?>">Регистрация</a></li>
-            <?else:?>
-                <li><a href="<?=adminUrl( 'account:index' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
-                <li><a href="<?=adminUrl( 'index:logout' )?>">Выйти</a></li>
-            <?endif;?>
+            <li><a href="<?=adminUrl( 'account:index' )?>"><b><?=Dez::app()->auth->get( 'email' )?></b></a></li>
+            <li><a href="<?=adminUrl( 'index:logout' )?>">Выйти</a></li>
         </ul>
 
     </header>
