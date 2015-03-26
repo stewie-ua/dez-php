@@ -6,7 +6,6 @@
     class UserController extends ApiController {
 
         public function itemGETAction( $id ) {
-            dump($this);
             return ApiResponse::success( [ 'user' => \DB\User::one( $id )->toArray() ] );
         }
 

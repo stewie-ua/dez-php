@@ -29,6 +29,7 @@
 
         /**
          * @return static
+         * @param int $id
         */
 
         static public function one( $id = 0 ) {

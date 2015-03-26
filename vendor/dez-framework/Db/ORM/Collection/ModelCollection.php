@@ -46,10 +46,14 @@
         }
 
         public function toArray() {
-            $items = $this->items;
-            foreach( $items as & $item ) {
-                $item = $item->toArray();
-            }
+            $items = [];
+            $this->each( function( $i, $item ) use ( & $items ) { $items[] = $item->toArray(); } );
+            return $items;
+        }
+
+        public function toObject() {
+            $items = [];
+            $this->each( function( $i, $item ) use ( & $items ) { $items[] = $item->toObject(); } );
             return $items;
         }
 

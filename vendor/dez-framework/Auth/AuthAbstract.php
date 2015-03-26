@@ -28,6 +28,7 @@
 
         /**
          * @return static
+         * @param AuthModel $model
          */
 
         protected function setModel( AuthModel $model ) {
